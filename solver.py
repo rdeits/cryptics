@@ -5,6 +5,7 @@ import re
 
 WORDS = set(word.lower() for word in nltk.corpus.words.words())
 
+FUNCTIONS = ['lit', 'syn', 'null']
 
 def functional_distribution(word):
     """
@@ -31,6 +32,64 @@ def wordplay(words, length):
     """
     for s in substrings(''.join(words), length):
         yield s
+
+
+def possible_word_beginning(s):
+    """
+    given a set of letters, return whether that set of letters can begin any word in our dictionary (used to prune out bad trees)
+    """
+    raise NotImplementedError
+
+def answers_from_functions(functions, active_set=['']):
+    if len(functions) == 0:
+        return active_set
+    else:
+        w, f = functions[0]
+        functions = functions[1:]
+        new_active_set = []
+        if f == 'null':
+            new_active_set = active_set
+        else:
+            for s in active_set:
+                if f == 'lit':
+                    new_active_set.append(s + w)
+                elif f == 'syn':
+                    for syn in synonyms(w):
+                        new_active_set.append(s + syn)
+        return answers_from_functions(functions, new_active_set)
+
+
+def find_all_functions(remaining_words, active_set=[[]]):
+    """
+    [[('cat', 'lit'), ('runs', 'syn')],
+     [('cat', 'syn'), ('runs', 'syn')]]
+    """
+    if len(remaining_words) == 0:
+        return sorted(active_set, key=lambda x: functional_likelihood(x), reverse=True)
+    else:
+        word = remaining_words[0]
+        remaining_words = remaining_words[1:]
+        new_active_set = []
+        for s in active_set:
+            for f in FUNCTIONS:
+                new_active_set.append(s + [(word, f)])
+        return find_all_functions(remaining_words,
+                                         new_active_set)
+
+
+def functional_likelihood(s):
+    p = 1
+    for (word, func) in s:
+        p *= functional_distribution(word)[func]
+    return p
+
+
+def possible_functions(words):
+    """
+    Given an ordered list of wordplay words, return all possible arrangements of the functional use of those words, sorted by descending likelihood.
+    """
+    active_set = []
+
 
 
 def substrings(sentence, length):
