@@ -1,6 +1,6 @@
 from nltk.corpus import wordnet as wn
 from collections import defaultdict
-from solver import WORDS
+from utils import WORDS
 import cPickle as pickle
 
 initial_ngrams = defaultdict(lambda: set([]))

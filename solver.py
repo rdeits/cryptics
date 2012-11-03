@@ -3,13 +3,15 @@ import nltk
 from nltk.corpus import wordnet as wn
 import re
 import cPickle as pickle
+from utils import WORDS
 
-WORDS = set(word.lower() for word in nltk.corpus.words.words())
-FUNCTIONS = ['lit', 'syn', 'null']
+FUNCTIONS = ['lit', 'syn', 'null', 'first', 'ana']
 
 def load_ngrams():
     with open('initial_ngrams.pck', 'rb') as f:
         return pickle.load(f)
+INITIAL_NGRAMS = load_ngrams()
+THRESHOLD = .5
 
 def functional_distribution(word):
     """
@@ -17,7 +19,7 @@ def functional_distribution(word):
 
     Currently a stub.
     """
-    return {'lit': .4, 'syn': .4, 'null': .2}
+    return {'lit': .4, 'syn': .4, 'null': .2, 'first': .3, 'ana': .2}
 
 def semantic_similarity(word1, word2):
     max_p = 0
@@ -36,6 +38,10 @@ def wordplay(words, length):
     """
     for s in substrings(''.join(words), length):
         yield s
+    for f in find_all_function_sets(words):
+        for a in answers_from_functions(f, length):
+            if len(a) == length:
+                yield a
 
 
 def possible_word_beginning(s):
@@ -44,7 +50,7 @@ def possible_word_beginning(s):
     """
     raise NotImplementedError
 
-def answers_from_functions(functions, active_set=['']):
+def answers_from_functions(functions, length, active_set=['']):
     if len(functions) == 0:
         return active_set
     else:
@@ -56,17 +62,26 @@ def answers_from_functions(functions, active_set=['']):
         else:
             for s in active_set:
                 if f == 'lit':
-                    new_active_set.append(s + w)
+                    candidate = s + w
+                    if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+                        new_active_set.append(candidate)
                 elif f == 'syn':
                     for syn in synonyms(w):
-                        new_active_set.append(s + syn)
-        return answers_from_functions(functions, new_active_set)
+                        candidate = s + syn
+                        if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+                            new_active_set.append(candidate)
+                elif f == 'first':
+                    candidate = s + w[0]
+                    if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+                        new_active_set.append(candidate)
+                elif f == 'ana':
+                    raise NotImplementedError
+        return answers_from_functions(functions, length, new_active_set)
 
 
-def find_all_functions(remaining_words, active_set=[[]]):
+def find_all_function_sets(remaining_words, active_set=[[]]):
     """
-    [[('cat', 'lit'), ('runs', 'syn')],
-     [('cat', 'syn'), ('runs', 'syn')]]
+    Given an ordered list of wordplay words, return all possible arrangements of the functional use of those words, sorted by descending likelihood.
     """
     if len(remaining_words) == 0:
         return sorted(active_set, key=lambda x: functional_likelihood(x), reverse=True)
@@ -77,7 +92,7 @@ def find_all_functions(remaining_words, active_set=[[]]):
         for s in active_set:
             for f in FUNCTIONS:
                 new_active_set.append(s + [(word, f)])
-        return find_all_functions(remaining_words,
+        return find_all_function_sets(remaining_words,
                                          new_active_set)
 
 
@@ -86,14 +101,6 @@ def functional_likelihood(s):
     for (word, func) in s:
         p *= functional_distribution(word)[func]
     return p
-
-
-def possible_functions(words):
-    """
-    Given an ordered list of wordplay words, return all possible arrangements of the functional use of those words, sorted by descending likelihood.
-    """
-    active_set = []
-
 
 
 def substrings(sentence, length):
@@ -155,12 +162,18 @@ if __name__ == '__main__':
         print "\n", raw_clue
         clue, length_str = raw_clue.lower().split('(')
         words = nltk.tokenize.word_tokenize(clue)
+        length_str, ans_str = length_str.split(')')
         length = int(re.sub(r'\)', '', length_str))
+        true_answer = ans_str.upper()
+        answers = []
         for def_word, clue_words in [(words[0], words[1:]),
                                      (words[-1], words[:-1])]:
             print "Trying definition:", def_word
             for candidate in wordplay(clue_words, length):
-                print candidate, semantic_similarity(candidate, def_word)
+                similarity = semantic_similarity(candidate, def_word)
+                if similarity > THRESHOLD:
+                    answers.append((candidate, similarity))
+            print sorted(answers, key = lambda x: x[1], reverse=True)
 
 
 """
