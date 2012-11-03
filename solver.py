@@ -3,11 +3,42 @@ import nltk
 from nltk.corpus import wordnet as wn
 import re
 
+WORDS = set(word.lower() for word in nltk.corpus.words.words())
+
+
+def functional_distribution(word):
+    """
+    Given a word, return a map from cryptic functions to relative probabilities.
+
+    Currently a stub.
+    """
+    return {'lit': .4, 'syn': .4, 'null': .2}
+
+def semantic_similarity(word1, word2):
+    max_p = 0
+    for s1 in wn.synsets(word1):
+        for st1 in [s1] + s1.similar_tos():
+            for s2 in wn.synsets(word2):
+                for st2 in [s2] + s2.similar_tos():
+                    p = wn.wup_similarity(st1, st2)
+                    if p > max_p:
+                        max_p = p
+    return max_p
+
+def wordplay(words, length):
+    """
+    Tries to do the wordplay part of the clue to get an answer of a given length
+    """
+    for s in substrings(''.join(words), length):
+        yield s
+
 
 def substrings(sentence, length):
     sentence = re.sub(' ', '', sentence)
     for i in range(len(sentence) - length + 1):
-        yield sentence[i:i + length]
+        s = sentence[i:i + length]
+        if s in WORDS:
+            yield s
 
 
 def synonyms(word):
@@ -62,10 +93,11 @@ if __name__ == '__main__':
         clue, length_str = raw_clue.lower().split('(')
         words = nltk.tokenize.word_tokenize(clue)
         length = int(re.sub(r'\)', '', length_str))
-        string = re.sub(' ', '', clue.lower())
-        for possible_a in possible_answers(words, length):
-            if possible_a in string:
-                print possible_a
+        for def_word, clue_words in [(words[0], words[1:]),
+                                     (words[-1], words[:-1])]:
+            print "Trying definition:", def_word
+            for candidate in wordplay(clue_words, length):
+                print candidate, semantic_similarity(candidate, def_word)
 
 
 """
