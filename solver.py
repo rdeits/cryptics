@@ -2,10 +2,14 @@ from __future__ import division
 import nltk
 from nltk.corpus import wordnet as wn
 import re
+import cPickle as pickle
 
 WORDS = set(word.lower() for word in nltk.corpus.words.words())
-
 FUNCTIONS = ['lit', 'syn', 'null']
+
+def load_ngrams():
+    with open('initial_ngrams.pck', 'rb') as f:
+        return pickle.load(f)
 
 def functional_distribution(word):
     """
