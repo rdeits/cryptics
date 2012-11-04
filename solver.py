@@ -157,17 +157,3 @@ def solve_cryptic_clue(raw_clue):
 if __name__ == '__main__':
     for raw_clue in open('clues.txt', 'r').readlines()[:]:
         solve_cryptic_clue(raw_clue)
-
-
-"""
-What can a word do?
-* appear literally (1)
-* first letter (1)
-* last letter (1)
-* outside letters (1)
-* middle letter(s) (1)
-* reverse part of the clue (?)
-* appear as a synonym (?, roughly 5, say)
-* yield a substring
-* do nothing
-"""
