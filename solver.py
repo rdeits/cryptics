@@ -6,7 +6,7 @@ import cPickle as pickle
 from utils import WORDS
 from anagram import anagrams
 
-FUNCTIONS = ['lit', 'syn', 'null', 'first', 'ana']
+FUNCTIONS = ['lit', 'syn', 'null', 'sub', 'ana']
 
 with open('initial_ngrams.pck', 'rb') as f:
     INITIAL_NGRAMS = pickle.load(f)
@@ -18,7 +18,7 @@ def functional_distribution(word):
 
     Currently a stub.
     """
-    return {'lit': .4, 'syn': .4, 'null': .2, 'first': .3, 'ana': .2}
+    return {'lit': .4, 'syn': .4, 'null': .2, 'sub': .3, 'ana': .2}
 
 def semantic_similarity(word1, word2):
     max_p = 0
@@ -35,7 +35,7 @@ def wordplay(words, length):
     """
     Tries to do the wordplay part of the clue to get an answer of a given length
     """
-    for s in substrings(''.join(words), length):
+    for s in substring_words(''.join(words), length):
         yield s
     for f in find_all_function_sets(words, length):
         for a in answers_from_functions(f, length):
@@ -69,10 +69,12 @@ def answers_from_functions(functions, length, active_set=['']):
                         candidate = s + syn
                         if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
                             new_active_set.append(candidate)
-                elif f == 'first':
-                    candidate = s + w[0]
-                    if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-                        new_active_set.append(candidate)
+                elif f == 'sub':
+                    for l in range(len(w)):
+                        for sub in legal_substrings(w, l + 1):
+                            candidate = s + sub
+                            if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+                                new_active_set.append(candidate)
                 elif f == 'ana':
                     for ana in anagrams(w):
                         candidate = s + ana
@@ -110,13 +112,17 @@ def functional_likelihood(s):
     return p
 
 
-def substrings(sentence, length):
+def legal_substrings(word, length):
+    yield word[:length]
+    yield word[-length:]
+
+
+def substring_words(sentence, length):
     sentence = re.sub(' ', '', sentence)
     for i in range(len(sentence) - length + 1):
         s = sentence[i:i + length]
         if s in WORDS:
             yield s
-
 
 def synonyms(word):
     answers = set([])
@@ -184,6 +190,7 @@ def solve_cryptic_clue(raw_clue):
         print 'Best guess:', answers[0][0]
     else:
         print "No solution found"
+    print answers
 
 if __name__ == '__main__':
     for raw_clue in open('clues.txt', 'r').readlines()[:]:
