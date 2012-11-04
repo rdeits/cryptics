@@ -50,42 +50,6 @@ def possible_word_beginning(s):
     """
     raise NotImplementedError
 
-# def answers_from_functions(functions, length, active_set=['']):
-#     if len(functions) == 0:
-#         return active_set
-#     else:
-#         w, f = functions[0]
-#         functions = functions[1:]
-#         new_active_set = []
-#         if f == 'null':
-#             new_active_set = active_set
-#         else:
-#             for s in active_set:
-#                 if f == 'lit':
-#                     candidate = s + w
-#                     if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-#                         new_active_set.append(candidate)
-#                 elif f == 'syn':
-#                     for syn in synonyms(w):
-#                         candidate = s + syn
-#                         if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-#                             new_active_set.append(candidate)
-#                 elif f == 'sub':
-#                     for l in range(len(w)):
-#                         for sub in legal_substrings(w, l + 1):
-#                             candidate = s + sub
-#                             if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-#                                 new_active_set.append(candidate)
-#                 elif f == 'ana':
-#                     for ana in anagrams(w):
-#                         candidate = s + ana
-#                         if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-#                             new_active_set.append(candidate)
-#         if len(new_active_set) == 0:
-#             return []
-#         else:
-#             return answers_from_functions(functions, length, new_active_set)
-
 
 def answers_from_function(f, w, length, answer_list=['']):
     if f == 'null':
