@@ -163,25 +163,31 @@ def constructed_answers(words):
             answers.add(action(words[0]) + substring)
     return answers
 
+def solve_cryptic_clue(raw_clue):
+    print "\n", raw_clue
+    clue, length_str = raw_clue.lower().split('(')
+    clue = re.sub(r'[^a-zA-Z\ ]', '', clue)
+    words = nltk.tokenize.word_tokenize(clue)
+    length_str, ans_str = length_str.split(')')
+    length = int(re.sub(r'\)', '', length_str))
+    true_answer = ans_str.upper()
+    answers = []
+    for def_word, clue_words in [(words[0], words[1:]),
+                                 (words[-1], words[:-1])]:
+        # print "Trying definition:", def_word
+        for candidate in wordplay(clue_words, length):
+            similarity = semantic_similarity(candidate, def_word)
+            if similarity > THRESHOLD:
+                answers.append((candidate, similarity))
+        answers = sorted(answers, key = lambda x: x[1], reverse=True)
+    if len(answers) > 0:
+        print 'Best guess:', answers[0][0]
+    else:
+        print "No solution found"
 
 if __name__ == '__main__':
     for raw_clue in open('clues.txt', 'r').readlines()[:]:
-        print "\n", raw_clue
-        clue, length_str = raw_clue.lower().split('(')
-        clue = re.sub(r'[^a-zA-Z\ ]', '', clue)
-        words = nltk.tokenize.word_tokenize(clue)
-        length_str, ans_str = length_str.split(')')
-        length = int(re.sub(r'\)', '', length_str))
-        true_answer = ans_str.upper()
-        answers = []
-        for def_word, clue_words in [(words[0], words[1:]),
-                                     (words[-1], words[:-1])]:
-            print "Trying definition:", def_word
-            for candidate in wordplay(clue_words, length):
-                similarity = semantic_similarity(candidate, def_word)
-                if similarity > THRESHOLD:
-                    answers.append((candidate, similarity))
-            print sorted(answers, key = lambda x: x[1], reverse=True)
+        solve_cryptic_clue(raw_clue)
 
 
 """
