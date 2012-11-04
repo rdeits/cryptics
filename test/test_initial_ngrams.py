@@ -1,16 +1,14 @@
 import unittest
-from solver import load_ngrams
-
-initial_ngrams = load_ngrams()
+from solver import INITIAL_NGRAMS
 
 
 class TestInitialNgrams(unittest.TestCase):
     def test_true(self):
-        self.assertTrue('br' in initial_ngrams[2])
-        self.assertTrue('rock' in initial_ngrams[4])
+        self.assertTrue('br' in INITIAL_NGRAMS[2])
+        self.assertTrue('rock' in INITIAL_NGRAMS[4])
 
     def test_false(self):
-        self.assertFalse('bx' in initial_ngrams[2])
+        self.assertFalse('bx' in INITIAL_NGRAMS[2])
 
 if __name__ == '__main__':
     unittest.main()

@@ -12,6 +12,7 @@ with open('initial_ngrams.pck', 'rb') as f:
     INITIAL_NGRAMS = pickle.load(f)
 THRESHOLD = .5
 
+
 def functional_distribution(word):
     """
     Given a word, return a map from cryptic functions to relative probabilities.
@@ -19,6 +20,7 @@ def functional_distribution(word):
     Currently a stub.
     """
     return {'lit': .4, 'syn': .4, 'null': .2, 'sub': .3, 'ana': .2}
+
 
 def semantic_similarity(word1, word2):
     max_p = 0
@@ -31,6 +33,7 @@ def semantic_similarity(word1, word2):
                         max_p = p
     return max_p
 
+
 def wordplay(words, length):
     """
     Tries to do the wordplay part of the clue to get an answer of a given length
@@ -42,13 +45,6 @@ def wordplay(words, length):
         # for a in answers_from_functions(f, length):
             if len(a) == length:
                 yield a
-
-
-def possible_word_beginning(s):
-    """
-    given a set of letters, return whether that set of letters can begin any word in our dictionary (used to prune out bad trees)
-    """
-    raise NotImplementedError
 
 
 def answers_from_function(f, w, length, answer_list=['']):
@@ -119,6 +115,7 @@ def substring_words(sentence, length):
         if s in WORDS:
             yield s
 
+
 def synonyms(word):
     answers = set([])
     for synset in wn.synsets(word):
@@ -131,38 +128,6 @@ def synonyms(word):
     return answers
 
 
-def possible_answers(words, length):
-    answers = set([])
-    for word in [words[0], words[-1]]:
-        answers.update(synonyms(word))
-    return answers
-
-
-def middle_letters(word):
-    if len(word) % 2 == 0:
-        return word[len(word) // 2 - 1:len(word) // 2]
-    else:
-        return word[len(word) // 2]
-
-word_functions = {
-    'literal': lambda x: x,
-    'first': lambda x: x[0],
-    'last': lambda x: x[-1],
-    'outside': lambda x: x[0] + x[-1],
-    'middle': middle_letters,
-    'synonym': synonyms,
-    'null': lambda x: ''
-    }
-
-
-def constructed_answers(words):
-    if len(words) == 0:
-        return ['']
-    answers = set([])
-    for action in word_functions:
-        for substring in constructed_answers(words[1:]):
-            answers.add(action(words[0]) + substring)
-    return answers
 
 def solve_cryptic_clue(raw_clue):
     print "\n", raw_clue
@@ -181,11 +146,13 @@ def solve_cryptic_clue(raw_clue):
             if similarity > THRESHOLD:
                 answers.append((candidate, similarity))
         answers = sorted(list(set(answers)), key = lambda x: x[1], reverse=True)
+    print answers
     if len(answers) > 0:
         print 'Best guess:', answers[0][0]
+        return answers[0][0].lower() == true_answer.strip().lower()
     else:
         print "No solution found"
-    print answers
+        return False
 
 if __name__ == '__main__':
     for raw_clue in open('clues.txt', 'r').readlines()[:]:
