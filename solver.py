@@ -37,8 +37,9 @@ def wordplay(words, length):
     """
     for s in substring_words(''.join(words), length):
         yield s
-    for f in find_all_function_sets(words, length):
-        for a in answers_from_functions(f, length):
+    for f, answer_list in find_all_function_sets(words, length):
+        for a in answer_list:
+        # for a in answers_from_functions(f, length):
             if len(a) == length:
                 yield a
 
@@ -49,58 +50,88 @@ def possible_word_beginning(s):
     """
     raise NotImplementedError
 
-def answers_from_functions(functions, length, active_set=['']):
-    if len(functions) == 0:
-        return active_set
+# def answers_from_functions(functions, length, active_set=['']):
+#     if len(functions) == 0:
+#         return active_set
+#     else:
+#         w, f = functions[0]
+#         functions = functions[1:]
+#         new_active_set = []
+#         if f == 'null':
+#             new_active_set = active_set
+#         else:
+#             for s in active_set:
+#                 if f == 'lit':
+#                     candidate = s + w
+#                     if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+#                         new_active_set.append(candidate)
+#                 elif f == 'syn':
+#                     for syn in synonyms(w):
+#                         candidate = s + syn
+#                         if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+#                             new_active_set.append(candidate)
+#                 elif f == 'sub':
+#                     for l in range(len(w)):
+#                         for sub in legal_substrings(w, l + 1):
+#                             candidate = s + sub
+#                             if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+#                                 new_active_set.append(candidate)
+#                 elif f == 'ana':
+#                     for ana in anagrams(w):
+#                         candidate = s + ana
+#                         if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+#                             new_active_set.append(candidate)
+#         if len(new_active_set) == 0:
+#             return []
+#         else:
+#             return answers_from_functions(functions, length, new_active_set)
+
+
+def answers_from_function(f, w, length, answer_list=['']):
+    if f == 'null':
+        return answer_list
     else:
-        w, f = functions[0]
-        functions = functions[1:]
-        new_active_set = []
-        if f == 'null':
-            new_active_set = active_set
-        else:
-            for s in active_set:
-                if f == 'lit':
-                    candidate = s + w
+        new_answer_list = []
+        for s in answer_list:
+            if f == 'lit':
+                candidate = s + w
+                if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+                    new_answer_list.append(candidate)
+            elif f == 'syn':
+                for syn in synonyms(w):
+                    candidate = s + syn
                     if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-                        new_active_set.append(candidate)
-                elif f == 'syn':
-                    for syn in synonyms(w):
-                        candidate = s + syn
+                        new_answer_list.append(candidate)
+            elif f == 'sub':
+                for l in range(len(w)):
+                    for sub in legal_substrings(w, l + 1):
+                        candidate = s + sub
                         if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-                            new_active_set.append(candidate)
-                elif f == 'sub':
-                    for l in range(len(w)):
-                        for sub in legal_substrings(w, l + 1):
-                            candidate = s + sub
-                            if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-                                new_active_set.append(candidate)
-                elif f == 'ana':
-                    for ana in anagrams(w):
-                        candidate = s + ana
-                        if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-                            new_active_set.append(candidate)
-        if len(new_active_set) == 0:
-            return []
-        else:
-            return answers_from_functions(functions, length, new_active_set)
+                            new_answer_list.append(candidate)
+            elif f == 'ana':
+                for ana in anagrams(w):
+                    candidate = s + ana
+                    if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+                        new_answer_list.append(candidate)
+        return new_answer_list
 
 
-def find_all_function_sets(remaining_words, length, active_set=[[]]):
+def find_all_function_sets(remaining_words, length, active_set=[([], [''])]):
     """
     Given an ordered list of wordplay words, return all possible arrangements of the functional use of those words, sorted by descending likelihood.
     """
     if len(remaining_words) == 0:
-        return sorted(active_set, key=lambda x: functional_likelihood(x), reverse=True)
+        return sorted(active_set, key=lambda x: functional_likelihood(x[0]), reverse=True)
     else:
         word = remaining_words[0]
         remaining_words = remaining_words[1:]
         new_active_set = []
-        for s in active_set:
+        for s, answer_list in active_set:
             for f in FUNCTIONS:
                 candidate = s + [(word, f)]
-                if len(answers_from_functions(candidate, length)) != 0:
-                    new_active_set.append(s + [(word, f)])
+                new_answer_list = answers_from_function(f, word, length, answer_list)
+                if len(new_answer_list) > 0:
+                    new_active_set.append((candidate, new_answer_list))
         return find_all_function_sets(remaining_words, length,
                                          new_active_set)
 
@@ -185,7 +216,7 @@ def solve_cryptic_clue(raw_clue):
             similarity = semantic_similarity(candidate, def_word)
             if similarity > THRESHOLD:
                 answers.append((candidate, similarity))
-        answers = sorted(answers, key = lambda x: x[1], reverse=True)
+        answers = sorted(list(set(answers)), key = lambda x: x[1], reverse=True)
     if len(answers) > 0:
         print 'Best guess:', answers[0][0]
     else:
