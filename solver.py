@@ -4,13 +4,12 @@ from nltk.corpus import wordnet as wn
 import re
 import cPickle as pickle
 from utils import WORDS
+from anagram import anagrams
 
 FUNCTIONS = ['lit', 'syn', 'null', 'first', 'ana']
 
-def load_ngrams():
-    with open('initial_ngrams.pck', 'rb') as f:
-        return pickle.load(f)
-INITIAL_NGRAMS = load_ngrams()
+with open('initial_ngrams.pck', 'rb') as f:
+    INITIAL_NGRAMS = pickle.load(f)
 THRESHOLD = .5
 
 def functional_distribution(word):
@@ -38,7 +37,7 @@ def wordplay(words, length):
     """
     for s in substrings(''.join(words), length):
         yield s
-    for f in find_all_function_sets(words):
+    for f in find_all_function_sets(words, length):
         for a in answers_from_functions(f, length):
             if len(a) == length:
                 yield a
@@ -75,11 +74,17 @@ def answers_from_functions(functions, length, active_set=['']):
                     if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
                         new_active_set.append(candidate)
                 elif f == 'ana':
-                    raise NotImplementedError
-        return answers_from_functions(functions, length, new_active_set)
+                    for ana in anagrams(w):
+                        candidate = s + ana
+                        if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
+                            new_active_set.append(candidate)
+        if len(new_active_set) == 0:
+            return []
+        else:
+            return answers_from_functions(functions, length, new_active_set)
 
 
-def find_all_function_sets(remaining_words, active_set=[[]]):
+def find_all_function_sets(remaining_words, length, active_set=[[]]):
     """
     Given an ordered list of wordplay words, return all possible arrangements of the functional use of those words, sorted by descending likelihood.
     """
@@ -91,8 +96,10 @@ def find_all_function_sets(remaining_words, active_set=[[]]):
         new_active_set = []
         for s in active_set:
             for f in FUNCTIONS:
-                new_active_set.append(s + [(word, f)])
-        return find_all_function_sets(remaining_words,
+                candidate = s + [(word, f)]
+                if len(answers_from_functions(candidate, length)) != 0:
+                    new_active_set.append(s + [(word, f)])
+        return find_all_function_sets(remaining_words, length,
                                          new_active_set)
 
 
@@ -158,9 +165,10 @@ def constructed_answers(words):
 
 
 if __name__ == '__main__':
-    for raw_clue in open('clues.txt', 'r').readlines():
+    for raw_clue in open('clues.txt', 'r').readlines()[:]:
         print "\n", raw_clue
         clue, length_str = raw_clue.lower().split('(')
+        clue = re.sub(r'[^a-zA-Z\ ]', '', clue)
         words = nltk.tokenize.word_tokenize(clue)
         length_str, ans_str = length_str.split(')')
         length = int(re.sub(r'\)', '', length_str))
