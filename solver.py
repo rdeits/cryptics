@@ -104,6 +104,11 @@ def functional_likelihood(s):
 def legal_substrings(word, length):
     yield word[:length]
     yield word[-length:]
+    if len(word) % 2 == 0 and length % 2 == 0:
+        yield word[:length//2] + word[-length//2:]
+        yield word[len(word)//2-length//2:len(word)//2+length//2]
+    elif len(word) % 2 == 1 and length % 2 == 1:
+        yield word[len(word)//2-length//2:len(word)//2+length//2+1]
 
 
 def substring_words(sentence, length):
@@ -157,4 +162,5 @@ def solve_cryptic_clue(raw_clue):
 
 if __name__ == '__main__':
     for raw_clue in open('clues.txt', 'r').readlines()[:]:
-        solve_cryptic_clue(raw_clue)
+        if raw_clue[0] != '#':
+            solve_cryptic_clue(raw_clue)
