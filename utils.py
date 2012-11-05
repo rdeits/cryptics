@@ -1,6 +1,12 @@
 import nltk
+import cPickle as pickle
 
-WORDS = set(word.lower() for word in nltk.corpus.words.words())
+with open('initial_ngrams.pck', 'rb') as f:
+    INITIAL_NGRAMS = pickle.load(f)
+with open('ngrams.pck', 'rb') as f:
+    NGRAMS = pickle.load(f)
+with open('words.pck', 'rb') as f:
+    WORDS = pickle.load(f)
 
 
 # def middle_letters(word):

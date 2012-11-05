@@ -1,9 +1,9 @@
 import cPickle as pickle
-
-with open('ngrams.pck', 'rb') as f:
-    NGRAMS = pickle.load(f)
+from utils import NGRAMS
+import re
 
 def anagrams(letters, active_set = ['']):
+    letters = re.sub(r'\ ', '', str(letters))
     if len(active_set[0]) == len(letters):
         return active_set
     else:

@@ -3,13 +3,11 @@ import nltk
 from nltk.corpus import wordnet as wn
 import re
 import cPickle as pickle
-from utils import WORDS
+from utils import WORDS, INITIAL_NGRAMS
 from anagram import anagrams
 
-FUNCTIONS = ['lit', 'syn', 'null', 'sub', 'ana']
+FUNCTIONS = ['syn', 'null', 'sub', 'ana']
 
-with open('initial_ngrams.pck', 'rb') as f:
-    INITIAL_NGRAMS = pickle.load(f)
 THRESHOLD = .5
 
 
@@ -19,7 +17,7 @@ def functional_distribution(word):
 
     Currently a stub.
     """
-    return {'lit': .4, 'syn': .4, 'null': .2, 'sub': .3, 'ana': .2}
+    return {'syn': .4, 'null': .2, 'sub': .3, 'ana': .3}
 
 
 def semantic_similarity(word1, word2):
@@ -117,6 +115,7 @@ def substring_words(sentence, length):
 
 
 def synonyms(word):
+    word = re.sub(r'\ ', '_', word)
     answers = set([])
     for synset in wn.synsets(word):
         all_synsets = synset.similar_tos()
@@ -138,11 +137,13 @@ def solve_cryptic_clue(raw_clue):
     length = int(re.sub(r'\)', '', length_str))
     true_answer = ans_str.upper()
     answers = []
-    for def_word, clue_words in [(words[0], words[1:]),
-                                 (words[-1], words[:-1])]:
+    for def_words, clue_words in [(words[0:1], words[1:]),
+                                 (words[:2], words[2:]),
+                                 (words[-2:], words[:-2]),
+                                 (words[-1:], words[:-1])]:
         # print "Trying definition:", def_word
         for candidate in wordplay(clue_words, length):
-            similarity = semantic_similarity(candidate, def_word)
+            similarity = semantic_similarity(candidate, ' '.join(def_words))
             if similarity > THRESHOLD:
                 answers.append((candidate, similarity))
         answers = sorted(list(set(answers)), key = lambda x: x[1], reverse=True)
