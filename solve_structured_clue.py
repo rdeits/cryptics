@@ -1,13 +1,12 @@
 from __future__ import division
 import sys
-from load_utils import load_words, load_initial_ngrams
-# from load_utils import load_anagrams, load_synonyms
-# ANAGRAMS = load_anagrams()
-# SYNONYMS = load_synonyms()
-from language_utils import anagrams, synonyms, all_legal_substrings, semantic_similarity, all_insertions
+from load_utils import load_words, load_initial_ngrams, load_anagrams, load_synonyms
+from language_utils import anagrams, synonyms, all_legal_substrings, semantic_similarity, all_insertions, AnagramDict
 
 WORDS = load_words()
 INITIAL_NGRAMS = load_initial_ngrams()
+ANAGRAMS = AnagramDict(load_anagrams())
+SYNONYMS = load_synonyms()
 
 clues = [[('initially', 'sub', [1]),
 ('babies', 'arg'),
@@ -28,7 +27,7 @@ clues = [[('initially', 'sub', [1]),
 ('balance', 'd')]]
 
 
-FUNCTIONS = {'ana': anagrams , 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': lambda x: reversed(x)}
+FUNCTIONS = {'ana': lambda x: ANAGRAMS[x], 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': lambda x: reversed(x)}
 
 def solve_structured_clue(clue):
     definition = clue.pop([x[1] for x in clue].index('d'))[0]
@@ -62,7 +61,7 @@ def solve_structured_clue(clue):
             elif kind == 'first':
                 answer_subparts[i] = [phrase[0]]
             elif kind == 'syn':
-                syns = synonyms(phrase.replace(' ', '_'))
+                syns = SYNONYMS[phrase.replace(' ', '_')]
                 answer_subparts[i] = list(syns)
     active_set = ['']
     for i, part in enumerate(answer_subparts):
