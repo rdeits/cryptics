@@ -11,18 +11,18 @@ SYNONYMS['siblings'].add('sis')
 
 clues = [
 [('initially', 'sub', [1]),
-('babies', 'arg'),
+('babies', 'lit'),
 ('are', 'lit'),
 ('naked', 'd', 4)],
 [('tenor', 'first'),
 ('and', 'null'),
-('alto', 'arg'),
+('alto', 'lit'),
 ('upset', 'ana', [-1]),
 ('count', 'd', 5)],
-[('ach cole', 'arg'),
+[('ach cole', 'lit'),
 ('wrecked', 'ana', [-1]),
 ('something in the ear', 'd', 7)],
-[('sat', 'arg'),
+[('sat', 'lit'),
 ('up', 'rev', [-1]),
 ('interrupting', 'ins', [-1, 1]),
 ('siblings', 'syn'),
@@ -50,8 +50,6 @@ def solve_structured_clue(clue):
                 for arg_set in arg_sets:
                     answer_subparts[i].extend(list(FUNCTIONS[kind](*arg_set)))
             elif kind == 'lit':
-                answer_subparts[i] = [phrase]
-            elif kind == 'arg':
                 answer_subparts[i] = [phrase]
             elif kind == 'null':
                 answer_subparts[i] = ['']
