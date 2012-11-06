@@ -1,7 +1,6 @@
 from __future__ import division
-import sys
 from load_utils import load_words, load_initial_ngrams, load_anagrams, load_synonyms
-from language_utils import anagrams, synonyms, all_legal_substrings, semantic_similarity, all_insertions, AnagramDict
+from language_utils import all_legal_substrings, semantic_similarity, all_insertions, AnagramDict
 from search import tree_search
 
 WORDS = load_words()
