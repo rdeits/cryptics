@@ -2,6 +2,7 @@ from __future__ import division
 from load_utils import load_words, load_initial_ngrams, load_anagrams, load_synonyms
 from language_utils import all_legal_substrings, semantic_similarity, all_insertions, anagrams
 from search import tree_search
+import re
 
 WORDS = load_words()
 INITIAL_NGRAMS = load_initial_ngrams()
@@ -43,7 +44,8 @@ all_phrases = [
                ['initially', 'babies', 'are', 'naked', 4],
                ['tenor', 'and', 'alto', 'upset', 'count', 5],
                ['sat', 'up', 'interrupting', 'siblings', 'balance', 6],
-               ['ach cole', 'wrecked', 'something in the ear', 7]
+               ['ach cole', 'wrecked', 'something in the ear', 7],
+               ['Bottomless', 'sea', 'stormy', 'sea', 'waters', 'surface', 'rises and falls', 7]
                ]
 
 
@@ -57,20 +59,28 @@ def valid_kinds(kinds):
         return False
     if any(k == 'd' for k in kinds[1:-1]):
         return False
-    if ('_l' in kinds[0] or kinds[0] == 'ins') or ('_r' in kinds[-1] or kinds[-1] == 'ins'):
+    if ('_r' in kinds[-1] or kinds[-1] == 'ins'):
+        return False
+    if not valid_intermediate(kinds):
+        return False
+    return True
+
+
+def valid_intermediate(kinds):
+    if len(kinds) < 2:
+        return True
+    if ('_l' in kinds[0] or kinds[0] == 'ins'):
         return False
     if kinds[0] == 'd':
         if '_l' in kinds[1] or kinds[1] == 'ins':
-            return False
-    elif kinds[-1] == 'd':
-        if '_r' in kinds[-2] or kinds[-2] == 'ins':
             return False
     if any('_r' in kinds[i] and ('_l' in kinds[i + 1] or kinds[i + 1] == 'ins') for i in range(len(kinds) - 1)):
         return False
     if any(kinds[i] == 'ins' and '_r' in kinds[i + 1] for i in range(len(kinds) - 1)):
         return False
-    if any(('_r' in kinds[i] and kinds[i + 1] == 'null') or ('_l' in kinds[i + 1] and kinds[i] == 'null') for i in range(len(kinds) - 1)):
-        return False
+    if kinds[-1] == 'd':
+        if '_r' in kinds[-2] or kinds[-2] == 'ins':
+            return False
     if kinds.count('ana_l') + kinds.count('ana_r') > 1:
         return False
     if any('_r' in kinds[i] and kinds[i + 1] != 'lit' for i in range(len(kinds) - 1)):
@@ -79,13 +89,18 @@ def valid_kinds(kinds):
         return False
     if any('_r' in kinds[i] and '_l' in kinds[i + 2] for i in range(len(kinds) - 2)):
         return False
+    if any(('_r' in kinds[i] and kinds[i + 1] == 'null') or ('_l' in kinds[i + 1] and kinds[i] == 'null') for i in range(len(kinds) - 1)):
+        return False
     return True
 
 
 def generate_structured_clues(phrases, length):
     potential_kinds = tree_search([], [KINDS] * (len(phrases)),
-                       combination_func=lambda s, w: s + [w])
-    return [zip(phrases, kinds) + [length] for kinds in potential_kinds if valid_kinds(kinds)]
+                       combination_func=lambda s, w: s + [w],
+                       member_test=valid_intermediate)
+    for kinds in potential_kinds:
+        if valid_kinds(kinds):
+            yield zip(phrases, kinds) + [length]
 
 
 def solve_structured_clue(clue):
@@ -145,18 +160,17 @@ def solve_phrases(phrases):
         # print clue
         new_answers = solve_structured_clue(clue)
         good_answers = [a for a in new_answers if a[1] > THRESHOLD]
-        # if len(good_answers) > 0:
-        #     print clue
-        #     print good_answers
+        if len(good_answers) > 0:
+            print clue
+            print good_answers
         answers.update(new_answers)
     return sorted(answers, key=lambda x: x[1], reverse=True)
 
 
 if __name__ == '__main__':
-    # solve_structured_clue([('tenor', 'lit'), ('and', 'syn'), ('alto', 'ana_r'), ('upset', 'lit'), ('count', 'd'), 5])
     for phrases in all_phrases:
         print phrases
-        print solve_phrases(phrases)[:10]
+        print solve_phrases(phrases)[:50]
         print "\n"
 
     # for clue in clues:
