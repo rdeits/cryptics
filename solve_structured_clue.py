@@ -37,6 +37,8 @@ def solve_structured_clue(clue):
     answer_subparts = [[] for x in clue]
     while any(s == [] for index, s in enumerate(answer_subparts) if index not in groups_to_skip):
         for i, group in enumerate(clue):
+            if answer_subparts[i] != []:
+                continue
             phrase, kind = group[:2]
             if len(group) == 3:
                 assert kind in FUNCTIONS
