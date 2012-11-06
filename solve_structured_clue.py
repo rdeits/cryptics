@@ -88,17 +88,6 @@ def solve_structured_clue(clue):
                     return []
             else:
                 answer_subparts[i] = TRANSFORMS[kind](phrase, length)
-            # elif kind == 'lit':
-            #     answer_subparts[i] = [phrase.replace(' ', '')]
-            # elif kind == 'null':
-            #     answer_subparts[i] = ['']
-            # elif kind == 'first':
-            #     answer_subparts[i] = [phrase[0]]
-            # elif kind == 'syn':
-            #     syns = SYNONYMS[phrase.replace(' ', '_')]
-            #     if len(syns) == 0:
-            #         syns = [phrase]
-            #     answer_subparts[i] = list(syns)
     potential_answers = set(tree_search('', answer_subparts,
                                     lambda x: x not in groups_to_skip,
                                     lambda x: len(x) <= length and x in INITIAL_NGRAMS[len(x)] and matches_pattern(x, pattern)))
@@ -122,7 +111,7 @@ def solve_phrases(phrases):
 if __name__ == '__main__':
     for phrases in all_phrases:
         print phrases
-        answers = solve_phrases(phrases)[:50]
+        answers = solve_phrases(phrases)[:15]
         for a in answers:
             print a
         print "\n"
