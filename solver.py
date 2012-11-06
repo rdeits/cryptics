@@ -1,12 +1,16 @@
 from __future__ import division
 import nltk
-from nltk.corpus import wordnet as wn
 import re
-import cPickle as pickle
-from utils import WORDS, INITIAL_NGRAMS
-from anagram import anagrams
+from load_utils import load_words, load_initial_ngrams, load_synonyms, load_anagrams
+from language_utils import semantic_similarity, legal_substrings, AnagramDict
+
+
 
 FUNCTIONS = ['syn', 'null', 'sub', 'ana']
+WORDS = load_words()
+INITIAL_NGRAMS = load_initial_ngrams()
+SYNONYMS = load_synonyms()
+ANAGRAMS = AnagramDict(load_anagrams())
 
 THRESHOLD = .5
 
@@ -19,17 +23,6 @@ def functional_distribution(word):
     """
     return {'syn': .4, 'null': .2, 'sub': .3, 'ana': .3}
 
-
-def semantic_similarity(word1, word2):
-    max_p = 0
-    for s1 in wn.synsets(word1):
-        for st1 in [s1] + s1.similar_tos():
-            for s2 in wn.synsets(word2):
-                for st2 in [s2] + s2.similar_tos():
-                    p = wn.wup_similarity(st1, st2)
-                    if p > max_p:
-                        max_p = p
-    return max_p
 
 
 def wordplay(words, length):
@@ -56,7 +49,7 @@ def answers_from_function(f, w, length, answer_list=['']):
                 if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
                     new_answer_list.append(candidate)
             elif f == 'syn':
-                for syn in synonyms(w):
+                for syn in SYNONYMS[w]:
                     candidate = s + syn
                     if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
                         new_answer_list.append(candidate)
@@ -67,7 +60,7 @@ def answers_from_function(f, w, length, answer_list=['']):
                         if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
                             new_answer_list.append(candidate)
             elif f == 'ana':
-                for ana in anagrams(w):
+                for ana in ANAGRAMS[w]:
                     candidate = s + ana
                     if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
                         new_answer_list.append(candidate)
@@ -101,36 +94,12 @@ def functional_likelihood(s):
     return p
 
 
-def legal_substrings(word, length):
-    yield word[:length]
-    yield word[-length:]
-    if len(word) % 2 == 0 and length % 2 == 0:
-        yield word[:length//2] + word[-length//2:]
-        yield word[len(word)//2-length//2:len(word)//2+length//2]
-    elif len(word) % 2 == 1 and length % 2 == 1:
-        yield word[len(word)//2-length//2:len(word)//2+length//2+1]
-
-
 def substring_words(sentence, length):
     sentence = re.sub(' ', '', sentence)
     for i in range(len(sentence) - length + 1):
         s = sentence[i:i + length]
         if s in WORDS:
             yield s
-
-
-def synonyms(word):
-    word = re.sub(r'\ ', '_', word)
-    answers = set([])
-    for synset in wn.synsets(word):
-        all_synsets = synset.similar_tos()
-        all_synsets.append(synset)
-        for similar_synset in all_synsets:
-            for lemma in similar_synset.lemmas:
-                if lemma.name != word:
-                    answers.add(lemma.name)
-    return answers
-
 
 
 def solve_cryptic_clue(raw_clue):

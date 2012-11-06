@@ -602,6 +602,35 @@ Now, each function acts either on a list of words or a list of function outputs.
 
 </pre>
 </div>
+<div title="2012-11-05 Greedy progress, and trying out clustering" modifier="RobinDeits" created="201211060041" tags="journal" changecount="1">
+<pre>The very dumb solver is actually working on a few clues, which is impressive, but I'd like to move to a more intelligent system. Let's take an example:
+
+&quot;Initially babies are naked (4) BARE&quot;
+[(initially, fun, [1]),
+ (babies, arg),
+ (are, lit),
+ (naked, def)]
+
+&quot;Tenor and alto upset count (5) TOTAL&quot;
+[(tenor, first),
+ (and, null),
+ (alto, arg),
+ (upset, fun, [-1]),
+ (count, def)]
+
+&quot;Ach, Cole wrecked something in the ear (7) COCHLEA&quot;
+[(ach cole, arg),
+ (wrecked, fun, [-1]),
+ (something in the ear, def)]
+
+&quot;Sat up, interrupting sibling's balance (6) STASIS&quot;
+[(sat, arg),
+ (up, fun, [-1]),
+ (interrupting, fun, [-1, 1])
+ (sibling's, syn),
+ (balance, def)]
+</pre>
+</div>
 <div title="CloseOnCancelPlugin" modifier="MPTW" created="201004131209" modified="201009151231" tags="systemConfig">
 <pre>/***
 |Name:|CloseOnCancelPlugin|
