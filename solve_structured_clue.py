@@ -2,6 +2,7 @@ from __future__ import division
 import sys
 from load_utils import load_words, load_initial_ngrams, load_anagrams, load_synonyms
 from language_utils import anagrams, synonyms, all_legal_substrings, semantic_similarity, all_insertions, AnagramDict
+from search import tree_search
 
 WORDS = load_words()
 INITIAL_NGRAMS = load_initial_ngrams()
@@ -45,13 +46,8 @@ def solve_structured_clue(clue):
                 groups_to_skip.update(arg_indices)
                 if any(answer_subparts[j] == [] for j in arg_indices):
                     continue
-                arg_sets = [[]]
-                for ai in arg_indices:
-                    new_arg_sets = []
-                    for arg_set in arg_sets:
-                        for s in answer_subparts[ai]:
-                            new_arg_sets.append(arg_set + [s])
-                    arg_sets = new_arg_sets
+                arg_sets = tree_search([],
+                                       [map(lambda x: [x], answer_subparts[ai]) for ai in arg_indices])
                 for arg_set in arg_sets:
                     answer_subparts[i].extend(list(FUNCTIONS[kind](*arg_set)))
             elif kind == 'lit':
@@ -65,18 +61,10 @@ def solve_structured_clue(clue):
             elif kind == 'syn':
                 syns = SYNONYMS[phrase.replace(' ', '_')]
                 answer_subparts[i] = list(syns)
-    active_set = ['']
-    for i, part in enumerate(answer_subparts):
-        if i in groups_to_skip:
-            continue
-        new_active_set = []
-        for s in active_set:
-            for w in part:
-                candidate = s + w
-                if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
-                    new_active_set.append(candidate)
-        active_set = set(new_active_set)
-    answers = [(s, semantic_similarity(s, definition)) for s in active_set if s in WORDS and len(s) == length]
+    potential_answers = set(tree_search('', answer_subparts,
+                                    lambda x: x not in groups_to_skip,
+                                    lambda x: len(x) <= length and x in INITIAL_NGRAMS[len(x)]))
+    answers = [(s, semantic_similarity(s, definition)) for s in potential_answers if s in WORDS and len(s) == length]
     return sorted(answers, key=lambda x: x[1], reverse=True)
 
 for clue in clues:
