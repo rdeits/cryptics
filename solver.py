@@ -1,7 +1,7 @@
 from __future__ import division
 import nltk
 import re
-from load_utils import load_words, load_initial_ngrams, load_synonyms, load_anagrams
+from load_utils import load_words, load_initial_ngrams, load_synonyms, load_anagrams, substring_words
 from language_utils import semantic_similarity, legal_substrings, AnagramDict
 
 
@@ -92,14 +92,6 @@ def functional_likelihood(s):
     for (word, func) in s:
         p *= functional_distribution(word)[func]
     return p
-
-
-def substring_words(sentence, length):
-    sentence = re.sub(' ', '', sentence)
-    for i in range(len(sentence) - length + 1):
-        s = sentence[i:i + length]
-        if s in WORDS:
-            yield s
 
 
 def solve_cryptic_clue(raw_clue):

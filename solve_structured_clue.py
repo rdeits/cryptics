@@ -1,18 +1,12 @@
 from __future__ import division
-from load_utils import load_words, load_initial_ngrams, load_anagrams, load_synonyms
-from language_utils import all_legal_substrings, semantic_similarity, all_insertions, anagrams, matches_pattern
-from cryptic_utils import valid_intermediate, valid_kinds, additional_synonyms, compute_arg_offsets
+from language_utils import all_legal_substrings, semantic_similarity, all_insertions, anagrams, matches_pattern, substring_words, WORDS, INITIAL_NGRAMS, ANAGRAMS, SYNONYMS
+from cryptic_utils import valid_intermediate, valid_kinds, compute_arg_offsets
 from search import tree_search
 import re
 
-WORDS = load_words()
-INITIAL_NGRAMS = load_initial_ngrams()
-ANAGRAMS = load_anagrams()
-SYNONYMS = load_synonyms()
-for s in additional_synonyms:
-    SYNONYMS[s].update(additional_synonyms[s])
 
 def cached_anagrams(x, length):
+    x = x.lower().replace(' ', '')
     if len(x) > length:
         return ['']
     if x in ANAGRAMS:
@@ -22,6 +16,7 @@ def cached_anagrams(x, length):
 
 
 def cached_synonyms(x, length):
+    x = x.lower()
     syns = [s for s in SYNONYMS[x.replace(' ', '_')] if len(s) <= length]
     if len(syns) == 0:
         syns = [x]
@@ -29,24 +24,11 @@ def cached_synonyms(x, length):
 
 THRESHOLD = 0.5
 
-all_phrases = [
-               ['attractive', 'female', 'engraving', 8, ''],
-               ['join', 'trio of', 'astronomers', 'in', 'marsh', 6, 'f.....'],
-               ['host', 'played in the pool', 'around', 'four', 'finally', (5), 's....'],
-               ['spin', 'broken', 'shingle', 7, 'e......'],
-               ['initially', 'babies', 'are', 'naked', 4, ''],
-               ['tenor', 'and', 'alto', 'upset', 'count', 5, ''],
-               ['sat', 'up', 'interrupting', 'siblings', 'balance', 6, ''],
-               ['ach cole', 'wrecked', 'something in the ear', 7, ''],
-               ['Bottomless', 'sea', 'stormy', 'sea', 'waters', 'surface', 'rises and falls', 7, '']
-               ]
-
-
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': lambda x, l: [''.join(reversed(x))]}
 
-TRANSFORMS = {'lit': lambda x, l: [x.replace(' ', '')],
+TRANSFORMS = {'lit': lambda x, l: [x.replace(' ', '').lower()],
               'null': lambda x, l: [''],
-              'first': lambda x, l: [x[0]],
+              'first': lambda x, l: [x[0].lower()],
               'syn': cached_synonyms}
 
 KINDS = ['ana_r', 'ana_l', 'sub_r', 'sub_l', 'ins', 'rev_l', 'rev_l', 'lit', 'd', 'syn', 'first', 'null']
@@ -101,18 +83,38 @@ def solve_phrases(phrases):
     answers = set([])
     answers_with_clues = []
     for clue in generate_structured_clues(phrases, length, pattern):
-        new_answers = solve_structured_clue(clue)
+        new_answers = solve_structured_clue(clue[:])
         new_answers = [a for a in new_answers if a not in answers]
         answers.update(new_answers)
         answers_with_clues.extend(zip(new_answers, [clue] * len(new_answers)))
     return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
 
+def parse_clue_text(clue_text):
+    clue_text = clue_text.lower()
+    clue, rest = clue_text.split('(')
+    length, rest = rest.split(')')
+    length = int(length)
+    foo, pattern, answer = rest.split('|')
+    pattern = pattern.strip()
+    clue = re.sub(r'[^a-zA-Z\ /]', '', clue)
+    clue = re.sub(r'\ +', ' ', clue)
+    if '/' in clue:
+        phrases = [s.strip() for s in clue.split('/')]
+    else:
+        phrases = clue.split(' ')
+    phrases = [p for p in phrases if p.strip() != '']
+    phrases += [length, pattern]
+    return phrases, answer
+
 
 if __name__ == '__main__':
-    for phrases in all_phrases:
-        print phrases
+    for clue_text in open('clues.txt', 'r').readlines():
+        if clue_text.startswith('#'):
+            continue
+        phrases, answer = parse_clue_text(clue_text)
+        print "Clue:", phrases
+        print "Known answer:", answer
         answers = solve_phrases(phrases)[:15]
         for a in answers:
             print a
         print "\n"
-

@@ -1,9 +1,17 @@
 import cPickle as pickle
-from load_utils import load_ngrams
+from load_utils import load_ngrams, load_words, load_initial_ngrams, load_anagrams, load_synonyms
 import re
 from nltk.corpus import wordnet as wn
+from cryptic_utils import additional_synonyms
+
 
 NGRAMS = load_ngrams()
+INITIAL_NGRAMS = load_initial_ngrams()
+WORDS = load_words()
+ANAGRAMS = load_anagrams()
+SYNONYMS = load_synonyms()
+for s in additional_synonyms:
+    SYNONYMS[s].update(additional_synonyms[s])
 
 
 def anagrams(letters, active_set = ['']):
@@ -47,10 +55,20 @@ def synonyms(word):
     return answers
 
 
+def substring_words(sentence, length):
+    sentence = re.sub(' ', '', sentence).lower()
+    for i in range(len(sentence) - length + 1):
+        s = sentence[i:i + length]
+        if s in WORDS:
+            yield s
+
+
 def all_legal_substrings(word, length):
+    word = word.lower()
     subs = []
     for l in range(1, min(len(word) - 1, length) + 1):
         subs.extend(legal_substrings(word, l))
+        subs.extend(substring_words(word, l))
     return subs
 
 

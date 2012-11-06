@@ -1,5 +1,5 @@
 import unittest
-from solver import INITIAL_NGRAMS
+from language_utils import INITIAL_NGRAMS
 
 
 class TestInitialNgrams(unittest.TestCase):

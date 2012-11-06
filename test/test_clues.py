@@ -1,7 +1,10 @@
 import unittest
-import solver
+from solve_structured_clue import parse_clue_text, solve_phrases
+
 
 class TestClues(unittest.TestCase):
     def test_known_clues(self):
-        for raw_clue in open('test/known_clues.txt', 'r').readlines():
-            self.assertTrue(solver.solve_cryptic_clue(raw_clue))
+        for clue_text in open('test/known_clues.txt', 'r').readlines():
+            phrases, known_answer = parse_clue_text(clue_text)
+            answer = solve_phrases(phrases)[0][0][0]
+            self.assertEqual(answer.lower(), known_answer.lower().strip())
