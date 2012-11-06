@@ -47,9 +47,9 @@ def synonyms(word):
     return answers
 
 
-def all_legal_substrings(word):
+def all_legal_substrings(word, length):
     subs = []
-    for l in range(1, len(word) + 1):
+    for l in range(1, max(len(word), length) + 1):
         subs.extend(legal_substrings(word, l))
     return subs
 
@@ -78,7 +78,7 @@ def semantic_similarity(word1, word2):
     return max_p
 
 
-def all_insertions(word1, word2):
+def all_insertions(word1, word2, length):
     """
     Try inserting word1 into word2 and vice-versa
     """

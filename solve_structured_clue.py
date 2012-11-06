@@ -1,13 +1,21 @@
 from __future__ import division
 from load_utils import load_words, load_initial_ngrams, load_anagrams, load_synonyms
-from language_utils import all_legal_substrings, semantic_similarity, all_insertions, AnagramDict
+from language_utils import all_legal_substrings, semantic_similarity, all_insertions, anagrams
 from search import tree_search
 
 WORDS = load_words()
 INITIAL_NGRAMS = load_initial_ngrams()
-ANAGRAMS = AnagramDict(load_anagrams())
+ANAGRAMS = load_anagrams()
 SYNONYMS = load_synonyms()
 SYNONYMS['siblings'].add('sis')
+
+def cached_anagrams(x, length):
+    if len(x) > length:
+        return ['']
+    if x in ANAGRAMS:
+        return ANAGRAMS[x]
+    else:
+        return anagrams(x)
 
 THRESHOLD = 0.5
 
@@ -32,11 +40,14 @@ clues = [
 
 
 all_phrases = [
-               # ['initially', 'babies', 'are', 'naked', 4],
-               ['tenor', 'and', 'alto', 'upset', 'count', 5]]
+               ['initially', 'babies', 'are', 'naked', 4],
+               ['tenor', 'and', 'alto', 'upset', 'count', 5],
+               ['sat', 'up', 'interrupting', 'siblings', 'balance', 6],
+               ['ach cole', 'wrecked', 'something in the ear', 7]
+               ]
 
 
-FUNCTIONS = {'ana': lambda x: ANAGRAMS[x], 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': lambda x: [''.join(reversed(x))]}
+FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': lambda x, l: [''.join(reversed(x))]}
 
 KINDS = ['ana_r', 'ana_l', 'sub_r', 'sub_l', 'ins', 'rev_l', 'rev_l', 'lit', 'd', 'syn', 'first', 'null']
 
@@ -105,9 +116,12 @@ def solve_structured_clue(clue):
                                        [answer_subparts[ai] for ai in arg_indices],
                                        combination_func=lambda s, w: s + [w])
                 for arg_set in arg_sets:
+                    arg_set += [length]
                     answer_subparts[i].extend(list(FUNCTIONS[func](*arg_set)))
+                if len(answer_subparts[i]) == 0:
+                    answer_subparts[i] == ['']
             elif kind == 'lit':
-                answer_subparts[i] = [phrase]
+                answer_subparts[i] = [phrase.replace(' ', '')]
             elif kind == 'null':
                 answer_subparts[i] = ['']
             elif kind == 'first':
@@ -128,19 +142,22 @@ def solve_phrases(phrases):
     length = phrases.pop()
     answers = set([])
     for clue in generate_structured_clues(phrases, length):
+        # print clue
         new_answers = solve_structured_clue(clue)
         good_answers = [a for a in new_answers if a[1] > THRESHOLD]
-        if len(good_answers) > 0:
-            print clue
-            print good_answers
-            answers.update(good_answers)
-    print sorted(answers, key=lambda x: x[1], reverse=True)
+        # if len(good_answers) > 0:
+        #     print clue
+        #     print good_answers
+        answers.update(new_answers)
+    return sorted(answers, key=lambda x: x[1], reverse=True)
 
 
 if __name__ == '__main__':
     # solve_structured_clue([('tenor', 'lit'), ('and', 'syn'), ('alto', 'ana_r'), ('upset', 'lit'), ('count', 'd'), 5])
     for phrases in all_phrases:
-        solve_phrases(phrases)
+        print phrases
+        print solve_phrases(phrases)[:10]
+        print "\n"
 
     # for clue in clues:
     #     print clue
