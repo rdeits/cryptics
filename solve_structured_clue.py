@@ -7,30 +7,32 @@ WORDS = load_words()
 INITIAL_NGRAMS = load_initial_ngrams()
 ANAGRAMS = AnagramDict(load_anagrams())
 SYNONYMS = load_synonyms()
+SYNONYMS['siblings'].add('sis')
 
-clues = [[('initially', 'sub', [1]),
+clues = [
+[('initially', 'sub', [1]),
 ('babies', 'arg'),
 ('are', 'lit'),
-('naked', 'd')],
+('naked', 'd', 4)],
 [('tenor', 'first'),
 ('and', 'null'),
 ('alto', 'arg'),
 ('upset', 'ana', [-1]),
-('count', 'd')],
+('count', 'd', 5)],
 [('ach cole', 'arg'),
 ('wrecked', 'ana', [-1]),
-('something in the ear', 'd')],
+('something in the ear', 'd', 7)],
 [('sat', 'arg'),
 ('up', 'rev', [-1]),
 ('interrupting', 'ins', [-1, 1]),
 ('siblings', 'syn'),
-('balance', 'd')]]
+('balance', 'd', 6)]]
 
 
-FUNCTIONS = {'ana': lambda x: ANAGRAMS[x], 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': lambda x: reversed(x)}
+FUNCTIONS = {'ana': lambda x: ANAGRAMS[x], 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': lambda x: [''.join(reversed(x))]}
 
 def solve_structured_clue(clue):
-    definition = clue.pop([x[1] for x in clue].index('d'))[0]
+    definition, d, length = clue.pop([x[1] for x in clue].index('d'))
     groups_to_skip = set([])
     answer_subparts = [[] for x in clue]
     while any(s == [] for index, s in enumerate(answer_subparts) if index not in groups_to_skip):
@@ -51,7 +53,7 @@ def solve_structured_clue(clue):
                             new_arg_sets.append(arg_set + [s])
                     arg_sets = new_arg_sets
                 for arg_set in arg_sets:
-                    answer_subparts[i] = FUNCTIONS[kind](*arg_set)
+                    answer_subparts[i].extend(list(FUNCTIONS[kind](*arg_set)))
             elif kind == 'lit':
                 answer_subparts[i] = [phrase]
             elif kind == 'arg':
@@ -71,10 +73,10 @@ def solve_structured_clue(clue):
         for s in active_set:
             for w in part:
                 candidate = s + w
-                if candidate in INITIAL_NGRAMS[len(candidate)]:
+                if len(candidate) <= length and candidate in INITIAL_NGRAMS[len(candidate)]:
                     new_active_set.append(candidate)
-        active_set = new_active_set
-    answers = [(s, semantic_similarity(s, definition)) for s in active_set if s in WORDS]
+        active_set = set(new_active_set)
+    answers = [(s, semantic_similarity(s, definition)) for s in active_set if s in WORDS and len(s) == length]
     return sorted(answers, key=lambda x: x[1], reverse=True)
 
 for clue in clues:
