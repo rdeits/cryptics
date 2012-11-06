@@ -20,32 +20,16 @@ def cached_anagrams(x, length):
 
 THRESHOLD = 0.5
 
-clues = [
-[('initially', 'sub_r'),
-('babies', 'lit'),
-('are', 'lit'),
-('naked', 'd'), 4],
-[('tenor', 'first'),
-('and', 'null'),
-('alto', 'lit'),
-('upset', 'ana_l'),
-('count', 'd'), 5],
-[('ach cole', 'lit'),
-('wrecked', 'ana_l'),
-('something in the ear', 'd'), 7],
-[('sat', 'lit'),
-('up', 'rev_l'),
-('interrupting', 'ins'),
-('siblings', 'syn'),
-('balance', 'd'), 6]]
-
-
 all_phrases = [
-               ['initially', 'babies', 'are', 'naked', 4],
-               ['tenor', 'and', 'alto', 'upset', 'count', 5],
-               ['sat', 'up', 'interrupting', 'siblings', 'balance', 6],
-               ['ach cole', 'wrecked', 'something in the ear', 7],
-               ['Bottomless', 'sea', 'stormy', 'sea', 'waters', 'surface', 'rises and falls', 7]
+               ['attractive', 'female', 'engraving', 8, ''],
+               ['join', 'trio of', 'astronomers', 'in', 'marsh', 6, 'f.....'],
+               ['host', 'played', 'in the', 'pool', 'around', 'four', 'finally', (5), 's....'],
+               ['spin', 'broken', 'shingle', 7, 'e......'],
+               ['initially', 'babies', 'are', 'naked', 4, ''],
+               ['tenor', 'and', 'alto', 'upset', 'count', 5, ''],
+               ['sat', 'up', 'interrupting', 'siblings', 'balance', 6, ''],
+               ['ach cole', 'wrecked', 'something in the ear', 7, ''],
+               ['Bottomless', 'sea', 'stormy', 'sea', 'waters', 'surface', 'rises and falls', 7, '']
                ]
 
 
@@ -94,16 +78,27 @@ def valid_intermediate(kinds):
     return True
 
 
-def generate_structured_clues(phrases, length):
+def generate_structured_clues(phrases, length, pattern):
     potential_kinds = tree_search([], [KINDS] * (len(phrases)),
                        combination_func=lambda s, w: s + [w],
                        member_test=valid_intermediate)
     for kinds in potential_kinds:
         if valid_kinds(kinds):
-            yield zip(phrases, kinds) + [length]
+            yield zip(phrases, kinds) + [length, pattern]
+
+
+def matches_pattern(word, pattern):
+    """
+    Pattern is a very basic regex, which must have a letter-for-letter mapping with the target string. For example, '.s...a.' is good, but '.s.*a.' will not work.
+    """
+    if pattern == '':
+        return True
+    else:
+        return bool(re.match(pattern[:len(word)], word))
 
 
 def solve_structured_clue(clue):
+    pattern = clue.pop()
     length = clue.pop()
     definition, d = clue.pop([x[1] for x in clue].index('d'))
     groups_to_skip = set([])
@@ -116,6 +111,10 @@ def solve_structured_clue(clue):
             if kind[:3] in FUNCTIONS:
                 if kind[:3] == 'ins':
                     arg_offsets = [-1, 1]
+                    if i > 1 and '_r' in clue[i - 2][1]:
+                        arg_offsets[0] = -2
+                    if i < len(clue) - 2 and '_l' in clue[i + 2][1]:
+                        arg_offsets[1] = 2
                     func = kind
                 else:
                     func, direction = kind.split('_')
@@ -148,31 +147,34 @@ def solve_structured_clue(clue):
                 answer_subparts[i] = list(syns)
     potential_answers = set(tree_search('', answer_subparts,
                                     lambda x: x not in groups_to_skip,
-                                    lambda x: len(x) <= length and x in INITIAL_NGRAMS[len(x)]))
+                                    lambda x: len(x) <= length and x in INITIAL_NGRAMS[len(x)] and matches_pattern(x, pattern)))
     answers = [(s, semantic_similarity(s, definition)) for s in potential_answers if s in WORDS and len(s) == length]
     return sorted(answers, key=lambda x: x[1], reverse=True)
 
 
 def solve_phrases(phrases):
+    pattern = phrases.pop()
     length = phrases.pop()
     answers = set([])
-    for clue in generate_structured_clues(phrases, length):
-        # print clue
+    answers_with_clues = []
+    for clue in generate_structured_clues(phrases, length, pattern):
         new_answers = solve_structured_clue(clue)
         good_answers = [a for a in new_answers if a[1] > THRESHOLD]
-        if len(good_answers) > 0:
-            print clue
-            print good_answers
+        # if len(good_answers) > 0:
+        #     print clue
+        #     print good_answers
+        new_answers = [a for a in new_answers if a not in answers]
         answers.update(new_answers)
-    return sorted(answers, key=lambda x: x[1], reverse=True)
+        answers_with_clues.extend(zip(new_answers, [clue] * len(new_answers)))
+    return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
 
 
 if __name__ == '__main__':
+    # print solve_structured_clue([('join', 'd'), ('trio of', 'sub_r'), ('astronomers', 'lit'), ('in', 'ins'), ('marsh', 'syn'), 6, 'f.....'])
     for phrases in all_phrases:
         print phrases
-        print solve_phrases(phrases)[:50]
+        answers = solve_phrases(phrases)[:50]
+        for a in answers:
+            print a
         print "\n"
 
-    # for clue in clues:
-    #     print clue
-    #     print solve_structured_clue(clue)
