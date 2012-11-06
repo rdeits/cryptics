@@ -1,5 +1,4 @@
-import cPickle as pickle
-from load_utils import load_ngrams, load_words, load_initial_ngrams, load_anagrams, load_synonyms
+from utils.load_utils import load_ngrams, load_words, load_initial_ngrams, load_anagrams, load_synonyms
 import re
 from nltk.corpus import wordnet as wn
 from cryptic_utils import additional_synonyms
@@ -31,10 +30,22 @@ def anagrams(letters, active_set = ['']):
             return anagrams(letters, new_active_set)
 
 
-class AnagramDict(dict):
-    def __missing__(self, key):
-        self[key] = anagrams(key)
-        return self[key]
+def cached_anagrams(x, length):
+    x = x.lower().replace(' ', '')
+    if len(x) > length:
+        return ['']
+    if x in ANAGRAMS:
+        return filter(lambda y: y != x, ANAGRAMS[x])
+    else:
+        return filter(lambda y: y != x, anagrams(x))
+
+
+def cached_synonyms(x, length):
+    x = x.lower()
+    syns = [s for s in SYNONYMS[x.replace(' ', '_')] if len(s) <= length]
+    if len(syns) == 0:
+        syns = [x]
+    return list(syns)
 
 
 def remaining_letters(letters, w):

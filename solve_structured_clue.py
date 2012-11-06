@@ -1,28 +1,9 @@
 from __future__ import division
-from language_utils import all_legal_substrings, semantic_similarity, all_insertions, anagrams, matches_pattern, substring_words, WORDS, INITIAL_NGRAMS, ANAGRAMS, SYNONYMS
-from cryptic_utils import valid_intermediate, valid_kinds, compute_arg_offsets
-from search import tree_search
+from utils.language_utils import all_legal_substrings, semantic_similarity, all_insertions, matches_pattern, WORDS, INITIAL_NGRAMS, cached_anagrams, cached_synonyms
+from utils.cryptic_utils import valid_intermediate, valid_kinds, compute_arg_offsets
+from utils.search import tree_search
 import re
 
-
-def cached_anagrams(x, length):
-    x = x.lower().replace(' ', '')
-    if len(x) > length:
-        return ['']
-    if x in ANAGRAMS:
-        return filter(lambda y: y != x, ANAGRAMS[x])
-    else:
-        return filter(lambda y: y != x, anagrams(x))
-
-
-def cached_synonyms(x, length):
-    x = x.lower()
-    syns = [s for s in SYNONYMS[x.replace(' ', '_')] if len(s) <= length]
-    if len(syns) == 0:
-        syns = [x]
-    return list(syns)
-
-THRESHOLD = 0.5
 
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': lambda x, l: [''.join(reversed(x))]}
 
