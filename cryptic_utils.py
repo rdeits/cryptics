@@ -23,7 +23,7 @@ def valid_intermediate(kinds):
         return False
     if any('_r' in kinds[i] and '_l' in kinds[i + 2] for i in range(len(kinds) - 2)):
         return False
-    if any(('_r' in kinds[i] and kinds[i + 1] == 'null') or ('_l' in kinds[i + 1] and kinds[i] == 'null') for i in range(len(kinds) - 1)):
+    if any((('_r' in kinds[i] or kinds[i] == 'ins') and kinds[i + 1] == 'null') or (('_l' in kinds[i + 1] or kinds[i + 1] == 'ins') and kinds[i] == 'null') for i in range(len(kinds) - 1)):
         return False
     return True
 
