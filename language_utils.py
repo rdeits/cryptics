@@ -49,7 +49,7 @@ def synonyms(word):
 
 def all_legal_substrings(word, length):
     subs = []
-    for l in range(1, max(len(word), length) + 1):
+    for l in range(1, min(len(word) - 1, length) + 1):
         subs.extend(legal_substrings(word, l))
     return subs
 
@@ -87,3 +87,14 @@ def all_insertions(word1, word2, length):
     for w0, w1 in [(word1, word2), (word2, word1)]:
         for j in range(len(w1)):
             yield w1[:j] + w0 + w1[j:]
+
+
+def matches_pattern(word, pattern):
+    """
+    Pattern is a very basic regex, which must have a letter-for-letter mapping with the target string. For example, '.s...a.' is good, but '.s.*a.' will not work.
+    """
+    if pattern == '':
+        return True
+    else:
+        return bool(re.match(pattern[:len(word)], word))
+

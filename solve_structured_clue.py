@@ -1,6 +1,7 @@
 from __future__ import division
 from load_utils import load_words, load_initial_ngrams, load_anagrams, load_synonyms
-from language_utils import all_legal_substrings, semantic_similarity, all_insertions, anagrams
+from language_utils import all_legal_substrings, semantic_similarity, all_insertions, anagrams, matches_pattern
+from cryptic_utils import valid_intermediate, valid_kinds, additional_synonyms, compute_arg_offsets
 from search import tree_search
 import re
 
@@ -8,22 +9,30 @@ WORDS = load_words()
 INITIAL_NGRAMS = load_initial_ngrams()
 ANAGRAMS = load_anagrams()
 SYNONYMS = load_synonyms()
-SYNONYMS['siblings'].add('sis')
+for s in additional_synonyms:
+    SYNONYMS[s].update(additional_synonyms[s])
 
 def cached_anagrams(x, length):
     if len(x) > length:
         return ['']
     if x in ANAGRAMS:
-        return ANAGRAMS[x]
+        return filter(lambda y: y != x, ANAGRAMS[x])
     else:
-        return anagrams(x)
+        return filter(lambda y: y != x, anagrams(x))
+
+
+def cached_synonyms(x, length):
+    syns = [s for s in SYNONYMS[x.replace(' ', '_')] if len(s) <= length]
+    if len(syns) == 0:
+        syns = [x]
+    return list(syns)
 
 THRESHOLD = 0.5
 
 all_phrases = [
                ['attractive', 'female', 'engraving', 8, ''],
                ['join', 'trio of', 'astronomers', 'in', 'marsh', 6, 'f.....'],
-               ['host', 'played', 'in the', 'pool', 'around', 'four', 'finally', (5), 's....'],
+               ['host', 'played in the pool', 'around', 'four', 'finally', (5), 's....'],
                ['spin', 'broken', 'shingle', 7, 'e......'],
                ['initially', 'babies', 'are', 'naked', 4, ''],
                ['tenor', 'and', 'alto', 'upset', 'count', 5, ''],
@@ -35,47 +44,12 @@ all_phrases = [
 
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': lambda x, l: [''.join(reversed(x))]}
 
+TRANSFORMS = {'lit': lambda x, l: [x.replace(' ', '')],
+              'null': lambda x, l: [''],
+              'first': lambda x, l: [x[0]],
+              'syn': cached_synonyms}
+
 KINDS = ['ana_r', 'ana_l', 'sub_r', 'sub_l', 'ins', 'rev_l', 'rev_l', 'lit', 'd', 'syn', 'first', 'null']
-
-
-def valid_kinds(kinds):
-    if (kinds[0] == 'd') == (kinds[-1] == 'd'):
-        return False
-    if any(k == 'd' for k in kinds[1:-1]):
-        return False
-    if ('_r' in kinds[-1] or kinds[-1] == 'ins'):
-        return False
-    if not valid_intermediate(kinds):
-        return False
-    return True
-
-
-def valid_intermediate(kinds):
-    if len(kinds) < 2:
-        return True
-    if ('_l' in kinds[0] or kinds[0] == 'ins'):
-        return False
-    if kinds[0] == 'd':
-        if '_l' in kinds[1] or kinds[1] == 'ins':
-            return False
-    if any('_r' in kinds[i] and ('_l' in kinds[i + 1] or kinds[i + 1] == 'ins') for i in range(len(kinds) - 1)):
-        return False
-    if any(kinds[i] == 'ins' and '_r' in kinds[i + 1] for i in range(len(kinds) - 1)):
-        return False
-    if kinds[-1] == 'd':
-        if '_r' in kinds[-2] or kinds[-2] == 'ins':
-            return False
-    if kinds.count('ana_l') + kinds.count('ana_r') > 1:
-        return False
-    if any('_r' in kinds[i] and kinds[i + 1] != 'lit' for i in range(len(kinds) - 1)):
-        return False
-    if any(kinds[i] != 'lit' and '_l' in kinds[i + 1] for i in range(len(kinds) - 1)):
-        return False
-    if any('_r' in kinds[i] and '_l' in kinds[i + 2] for i in range(len(kinds) - 2)):
-        return False
-    if any(('_r' in kinds[i] and kinds[i + 1] == 'null') or ('_l' in kinds[i + 1] and kinds[i] == 'null') for i in range(len(kinds) - 1)):
-        return False
-    return True
 
 
 def generate_structured_clues(phrases, length, pattern):
@@ -85,16 +59,6 @@ def generate_structured_clues(phrases, length, pattern):
     for kinds in potential_kinds:
         if valid_kinds(kinds):
             yield zip(phrases, kinds) + [length, pattern]
-
-
-def matches_pattern(word, pattern):
-    """
-    Pattern is a very basic regex, which must have a letter-for-letter mapping with the target string. For example, '.s...a.' is good, but '.s.*a.' will not work.
-    """
-    if pattern == '':
-        return True
-    else:
-        return bool(re.match(pattern[:len(word)], word))
 
 
 def solve_structured_clue(clue):
@@ -109,19 +73,7 @@ def solve_structured_clue(clue):
                 continue
             phrase, kind = group[:2]
             if kind[:3] in FUNCTIONS:
-                if kind[:3] == 'ins':
-                    arg_offsets = [-1, 1]
-                    if i > 1 and '_r' in clue[i - 2][1]:
-                        arg_offsets[0] = -2
-                    if i < len(clue) - 2 and '_l' in clue[i + 2][1]:
-                        arg_offsets[1] = 2
-                    func = kind
-                else:
-                    func, direction = kind.split('_')
-                    if direction == 'l':
-                        arg_offsets = [-1]
-                    else:
-                        arg_offsets = [1]
+                func, arg_offsets = compute_arg_offsets(i, clue)
                 arg_indices = [i + x for x in arg_offsets]
                 groups_to_skip.update(arg_indices)
                 if any(answer_subparts[j] == [] for j in arg_indices):
@@ -133,18 +85,20 @@ def solve_structured_clue(clue):
                     arg_set += [length]
                     answer_subparts[i].extend(list(FUNCTIONS[func](*arg_set)))
                 if len(answer_subparts[i]) == 0:
-                    answer_subparts[i] == ['']
-            elif kind == 'lit':
-                answer_subparts[i] = [phrase.replace(' ', '')]
-            elif kind == 'null':
-                answer_subparts[i] = ['']
-            elif kind == 'first':
-                answer_subparts[i] = [phrase[0]]
-            elif kind == 'syn':
-                syns = SYNONYMS[phrase.replace(' ', '_')]
-                if len(syns) == 0:
-                    syns = [phrase]
-                answer_subparts[i] = list(syns)
+                    return []
+            else:
+                answer_subparts[i] = TRANSFORMS[kind](phrase, length)
+            # elif kind == 'lit':
+            #     answer_subparts[i] = [phrase.replace(' ', '')]
+            # elif kind == 'null':
+            #     answer_subparts[i] = ['']
+            # elif kind == 'first':
+            #     answer_subparts[i] = [phrase[0]]
+            # elif kind == 'syn':
+            #     syns = SYNONYMS[phrase.replace(' ', '_')]
+            #     if len(syns) == 0:
+            #         syns = [phrase]
+            #     answer_subparts[i] = list(syns)
     potential_answers = set(tree_search('', answer_subparts,
                                     lambda x: x not in groups_to_skip,
                                     lambda x: len(x) <= length and x in INITIAL_NGRAMS[len(x)] and matches_pattern(x, pattern)))
@@ -159,10 +113,6 @@ def solve_phrases(phrases):
     answers_with_clues = []
     for clue in generate_structured_clues(phrases, length, pattern):
         new_answers = solve_structured_clue(clue)
-        good_answers = [a for a in new_answers if a[1] > THRESHOLD]
-        # if len(good_answers) > 0:
-        #     print clue
-        #     print good_answers
         new_answers = [a for a in new_answers if a not in answers]
         answers.update(new_answers)
         answers_with_clues.extend(zip(new_answers, [clue] * len(new_answers)))
@@ -170,7 +120,6 @@ def solve_phrases(phrases):
 
 
 if __name__ == '__main__':
-    # print solve_structured_clue([('join', 'd'), ('trio of', 'sub_r'), ('astronomers', 'lit'), ('in', 'ins'), ('marsh', 'syn'), 6, 'f.....'])
     for phrases in all_phrases:
         print phrases
         answers = solve_phrases(phrases)[:50]
