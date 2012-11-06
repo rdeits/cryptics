@@ -82,6 +82,8 @@ def all_insertions(word1, word2):
     """
     Try inserting word1 into word2 and vice-versa
     """
+    if word1 == '' or word2 == '':
+        yield word1 + word2
     for w0, w1 in [(word1, word2), (word2, word1)]:
-        for j in range(1, len(w1)):
+        for j in range(len(w1)):
             yield w1[:j] + w0 + w1[j:]

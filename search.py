@@ -1,7 +1,8 @@
 
 
 def tree_search(start, branching_list, branch_index_test=lambda x: True,
-                member_test=lambda x: True):
+                member_test=lambda x: True,
+                combination_func=lambda s, w: s + w):
     """
     A general tool for figuring out all the ways to combine a bunch of lists.
 
@@ -17,7 +18,7 @@ def tree_search(start, branching_list, branch_index_test=lambda x: True,
         new_active_set = []
         for s in active_set:
             for w in part:
-                candidate = s + w
+                candidate = combination_func(s, w)
                 if member_test(candidate):
                     new_active_set.append(candidate)
         active_set = new_active_set
