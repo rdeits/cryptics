@@ -89,9 +89,6 @@ def parse_clue_text(clue_text):
     pattern = pattern.strip()
     clue = re.sub(r'[^a-zA-Z\ _]', '', clue)
     clue = re.sub(r'\ +', ' ', clue)
-    # if '/' in clue:
-    #     phrases = [s.strip() for s in clue.split('/')]
-    # else:
     phrases = clue.split(' ')
     phrases = [p for p in phrases if p.strip() != '']
     phrases += [length, pattern]
@@ -99,8 +96,6 @@ def parse_clue_text(clue_text):
 
 
 if __name__ == '__main__':
-    # print solve_structured_clue([('canoe', 'lit'), ('wrecked', 'ins'), ('in', 'ins'), ('large', 'lit'), ('sea', 'd'), 5, ''])
-    print solve_phrases(['form_of', 'licit', 'sea', 'salt', 8, '.i......'])
     for clue_text in open('clues/clues.txt', 'r').readlines():
         if clue_text.startswith('#'):
             continue
