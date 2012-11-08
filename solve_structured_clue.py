@@ -1,11 +1,9 @@
 from __future__ import division
-from utils.language_utils import all_legal_substrings, fast_semantic_similarity, semantic_similarity, all_insertions, matches_pattern, WORDS, INITIAL_NGRAMS, cached_anagrams, cached_synonyms, string_reverse
-from utils.cryptic_utils import valid_intermediate, valid_kinds, compute_arg_offsets
+from utils.language_utils import all_legal_substrings, semantic_similarity, all_insertions, matches_pattern, WORDS, INITIAL_NGRAMS, cached_anagrams, cached_synonyms, string_reverse
+from utils.cryptics import compute_arg_offsets
+from utils.kinds import generate_kinds
 from utils.search import tree_search
-from utils.load_utils import load_kinds
 import re
-
-all_kinds = load_kinds()
 
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
 
@@ -14,19 +12,9 @@ TRANSFORMS = {'lit': lambda x, l: [x.replace(' ', '').lower()],
               'first': lambda x, l: [x[0].lower()],
               'syn': cached_synonyms}
 
-KINDS = ['ana_r', 'ana_l', 'sub_r', 'sub_l', 'ins', 'rev_l', 'rev_l', 'lit', 'd', 'syn', 'first', 'null']
-
 
 def generate_structured_clues(phrases, length, pattern):
-    if len(phrases) in all_kinds:
-        generated_kinds = all_kinds[len(phrases)]
-    else:
-        print "Warning: very long clue. This may take a very long time. Can you make fewer phrases out of this clue?"
-        potential_kinds = tree_search([], [KINDS] * (len(phrases)),
-                           combination_func=lambda s, w: s + [w],
-                           member_test=valid_intermediate)
-        generated_kinds = (k for k in potential_kinds if valid_kinds(k))
-    return (zip(phrases, k) + [length, pattern] for k in generated_kinds)
+    return (zip(phrases, k) + [length, pattern] for k in generate_kinds(phrases))
 
 
 def solve_structured_clue(clue):

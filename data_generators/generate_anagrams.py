@@ -1,8 +1,6 @@
-import sys
-sys.path.append('..')
 import cPickle as pickle
-from language_utils import WORDS, anagrams
-
+from utils.anagrams import anagrams
+from utils.words import WORDS
 
 all_anagrams = dict()
 

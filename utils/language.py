@@ -1,60 +1,11 @@
-from utils.load_utils import load_ngrams, load_words, load_initial_ngrams, load_anagrams, load_synonyms
 import re
+from utils.words import WORDS
+from utils.synonyms import cached_synonyms
 from nltk.corpus import wordnet as wn
-from cryptic_utils import additional_synonyms
-
-NGRAMS = load_ngrams()
-INITIAL_NGRAMS = load_initial_ngrams()
-WORDS = load_words()
-WORDS.add('manchu')
-ANAGRAMS = load_anagrams()
-SYNONYMS = load_synonyms()
-for s in additional_synonyms:
-    SYNONYMS[s].update(additional_synonyms[s])
-WORDS.update(additional_synonyms.keys())
 
 
 def string_reverse(x, length):
     return [''.join(reversed(x))]
-
-
-def remaining_letters(letters, w):
-    for c in set(letters):
-        if letters.count(c) > w.count(c):
-            yield c
-
-
-def anagrams(letters, active_set=['']):
-    letters = re.sub(r'_', '', str(letters))
-    if len(active_set[0]) == len(letters):
-        return active_set
-    else:
-        new_active_set = []
-        for w in active_set:
-            for l in set(remaining_letters(letters, w)):
-                candidate = w + l
-                if candidate in NGRAMS[len(candidate)]:
-                    new_active_set.append(candidate)
-        if len(new_active_set) == 0:
-            return []
-        else:
-            return anagrams(letters, new_active_set)
-
-
-def cached_anagrams(x, length=None):
-    x = x.lower().replace('_', '')
-    if length and (len(x) > length):
-        return []
-    if x in ANAGRAMS:
-        return filter(lambda y: y != x, ANAGRAMS[x])
-    else:
-        return filter(lambda y: y != x, anagrams(x))
-
-
-def cached_synonyms(x, length=None):
-    x = x.lower()
-    syns = [s for s in SYNONYMS[x] if (not length) or (len(s) <= length)]
-    return list(syns)
 
 
 def substring_words(sentence, length):

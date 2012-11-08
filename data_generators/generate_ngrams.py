@@ -1,10 +1,7 @@
-import sys
-sys.path.append('..')
 from collections import defaultdict
 import cPickle as pickle
-from load_utils import load_words
+from utils.words import WORDS
 
-WORDS = load_words()
 initial_ngrams = defaultdict(lambda: set([]))
 ngrams = defaultdict(lambda: set([]))
 

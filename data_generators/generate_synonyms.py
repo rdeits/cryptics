@@ -1,8 +1,6 @@
-import sys
 import re
-sys.path.append('..')
 import cPickle as pickle
-from language_utils import WORDS
+from utils.words import WORDS
 from nltk.corpus import wordnet as wn
 
 
@@ -17,8 +15,6 @@ def synonyms(word):
                 if lemma.name != word:
                     answers.add(lemma.name)
     return answers
-
-WORDS = load_words()
 
 all_synonyms = dict()
 

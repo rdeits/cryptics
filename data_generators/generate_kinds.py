@@ -1,10 +1,6 @@
-from utils.cryptic_utils import valid_intermediate, valid_kinds
+from utils.kinds import valid_intermediate, valid_kinds, KINDS
 from utils.search import tree_search
 import cPickle as pickle
-
-
-KINDS = ['ana_r', 'ana_l', 'sub_r', 'sub_l', 'ins', 'rev_l', 'rev_l', 'lit', 'd', 'syn', 'first', 'null']
-
 
 all_kinds = dict([])
 

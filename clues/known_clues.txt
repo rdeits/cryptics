@@ -21,3 +21,5 @@ Anagram_marvellously conceals structure_of_language (7) | g...... | GRAMMAR
 Made_mistake in deer_reduction (5) | e...d | ERRED
 Canoe wrecked in large sea (5) | | OCEAN
 Small_bricks included_among durable_goods (4) | | LEGO
+It's_lunacy for dam to_back onto ness (7) | m....s. | MADNESS
+Sink graduate with sin (5) | | BASIN
