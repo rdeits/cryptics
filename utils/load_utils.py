@@ -23,10 +23,15 @@ def load_words():
 
 def load_synonyms():
     with open('data/synonyms.pck', 'rb') as f:
-        syns = defaultdict(lambda: [])
+        syns = defaultdict(lambda: set([]))
         syns.update(pickle.load(f))
         return syns
 
 def load_anagrams():
     with open('data/anagrams.pck', 'rb') as f:
+        return pickle.load(f)
+
+
+def load_kinds():
+    with open('data/kinds.pck', 'rb') as f:
         return pickle.load(f)

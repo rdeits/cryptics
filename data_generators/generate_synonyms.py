@@ -1,8 +1,22 @@
 import sys
+import re
 sys.path.append('..')
 import cPickle as pickle
-from load_utils import load_words
-from language_utils import synonyms
+from language_utils import WORDS
+from nltk.corpus import wordnet as wn
+
+
+def synonyms(word):
+    word = re.sub(r'\ ', '_', word)
+    answers = set([])
+    for synset in wn.synsets(word):
+        all_synsets = synset.similar_tos()
+        all_synsets.append(synset)
+        for similar_synset in all_synsets:
+            for lemma in similar_synset.lemmas:
+                if lemma.name != word:
+                    answers.add(lemma.name)
+    return answers
 
 WORDS = load_words()
 

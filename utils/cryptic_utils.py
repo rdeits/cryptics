@@ -1,6 +1,8 @@
 
 
 def valid_intermediate(kinds):
+    if any(k == 'd' for k in kinds[1:-1]):
+        return False
     if len(kinds) < 2:
         return True
     if ('_l' in kinds[0] or kinds[0] == 'ins'):
@@ -11,6 +13,8 @@ def valid_intermediate(kinds):
     if any('_r' in kinds[i] and ('_l' in kinds[i + 1] or kinds[i + 1] == 'ins') for i in range(len(kinds) - 1)):
         return False
     if any(kinds[i] == 'ins' and '_r' in kinds[i + 1] for i in range(len(kinds) - 1)):
+        return False
+    if any(kinds[i] == 'ins' and kinds[i + 1] == 'ins' for i in range(len(kinds) - 1)):
         return False
     if kinds[-1] == 'd':
         if '_r' in kinds[-2] or kinds[-2] == 'ins':
@@ -25,13 +29,13 @@ def valid_intermediate(kinds):
         return False
     if any((('_r' in kinds[i] or kinds[i] == 'ins') and kinds[i + 1] == 'null') or (('_l' in kinds[i + 1] or kinds[i + 1] == 'ins') and kinds[i] == 'null') for i in range(len(kinds) - 1)):
         return False
+    if any(kinds[i] == 'null' and kinds[i + 1] == 'null' and kinds[i + 2] == 'null' for i in range(len(kinds) - 2)):
+        return False
     return True
 
 
 def valid_kinds(kinds):
     if (kinds[0] == 'd') == (kinds[-1] == 'd'):
-        return False
-    if any(k == 'd' for k in kinds[1:-1]):
         return False
     if ('_r' in kinds[-1] or kinds[-1] == 'ins'):
         return False
@@ -40,16 +44,27 @@ def valid_kinds(kinds):
     return True
 
 
-additional_synonyms = {'siblings': ['sis'], 'four': ['v'], 'one': ['a', 'i'], 'ten': ['x'], 'fifty': ['l']}
+additional_synonyms = {'siblings': ['sis'], 'four': ['v'], 'one': ['a', 'i'], 'ten': ['x'], 'fifty': ['l'], 'lego': ['small_bricks']}
+
+
+def is_func_argument(i, clue):
+    """
+    Returns True if clue sub-part i is the argument of a directional function (like 'ana_r' or 'sub_l').
+
+    We do this because insertion always happens after other functions have been resolved.
+    """
+    return (i > 0 and '_r' in clue[i - 1][1]) or (i < len(clue) - 1 and '_l' in clue[i + 1][1])
 
 
 def compute_arg_offsets(i, clue):
     kind = clue[i][1]
     if kind[:3] == 'ins':
         arg_offsets = [-1, 1]
-        if i > 1 and '_r' in clue[i - 2][1]:
+        if is_func_argument(i - 1, clue):
+        # if i > 1 and '_r' in clue[i - 2][1]:
             arg_offsets[0] = -2
-        if i < len(clue) - 2 and '_l' in clue[i + 2][1]:
+        if is_func_argument(i + 1, clue):
+        # if i < len(clue) - 2 and '_l' in clue[i + 2][1]:
             arg_offsets[1] = 2
         func = kind
     else:
