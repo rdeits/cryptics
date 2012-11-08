@@ -1,6 +1,6 @@
 
 
-additional_synonyms = {'siblings': ['sis'], 'four': ['v'], 'one': ['a', 'i'], 'ten': ['x'], 'fifty': ['l'], 'lego': ['small_bricks'], 'graduate': ['ba'], 'manchu': [], 'rearguard': []}
+additional_synonyms = {'siblings': ['sis'], 'four': ['v'], 'one': ['a', 'i'], 'ten': ['x'], 'fifty': ['l'], 'lego': ['small_bricks'], 'graduate': ['ba'], 'manchu': [], 'rearguard': [], 'somber': ['grave']}
 
 
 def is_func_argument(i, clue):

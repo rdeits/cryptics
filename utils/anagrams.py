@@ -2,12 +2,17 @@ import cPickle as pickle
 import os
 import re
 from utils.ngrams import NGRAMS
+from utils.search import tree_search
+import json
 
 
 def load_anagrams():
     if os.path.exists('data/anagrams.pck'):
         with open('data/anagrams.pck', 'rb') as f:
             return pickle.load(f)
+    elif os.path.exists('data/anagrams.json'):
+        with open('data/anagrams.json', 'r') as f:
+            return json.load(f)
     else:
         return dict()
 
@@ -24,7 +29,7 @@ def remaining_letters(letters, w):
 def anagrams(letters, active_set=['']):
     letters = re.sub(r'_', '', str(letters))
     if len(active_set[0]) == len(letters):
-        return active_set
+        return filter(lambda x: x != str(letters), active_set)
     else:
         new_active_set = []
         for w in active_set:

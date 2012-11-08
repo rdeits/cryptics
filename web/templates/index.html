@@ -1,0 +1,13 @@
+$def with (answers, form)
+
+<div id='clue'>
+	<form name='main' method='post'>
+		$:form.render()
+		<input type='submit' value='Solve'>
+	</form>
+</div>
+
+<div id='answers'>
+	$for a in answers:
+		$a <br>
+</div>

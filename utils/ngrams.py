@@ -12,5 +12,6 @@ def load_ngrams():
     with open('data/ngrams.pck', 'rb') as f:
         return pickle.load(f)
 
+
 INITIAL_NGRAMS = load_initial_ngrams()
 NGRAMS = load_ngrams()

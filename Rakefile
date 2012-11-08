@@ -9,7 +9,7 @@ file "data/synonyms.pck" => ["data_generators/generate_synonyms.py", "utils/syno
 	sh "python data_generators/generate_synonyms.py"
 end
 
-file "data/anagrams.pck" => ["data_generators/generate_anagrams.py", "utils/anagrams.py"] do
+file "data/anagrams.pck" => ["data_generators/generate_anagrams.py", "utils/anagrams.py", "data/ngrams.pck"] do
 	sh "python data_generators/generate_anagrams.py"
 end
 

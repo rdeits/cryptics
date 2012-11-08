@@ -1,15 +1,14 @@
-from collections import defaultdict
 import cPickle as pickle
 from utils.words import WORDS
 
-initial_ngrams = defaultdict(lambda: set([]))
-ngrams = defaultdict(lambda: set([]))
+initial_ngrams = dict()
+ngrams = dict()
 
 for word in WORDS:
     for i in range(1, len(word) + 1):
-        initial_ngrams[i].add(word[:i])
-        for j in range(len(word) - i + 2):
-            ngrams[i].add(word[j:j + i])
+        initial_ngrams.setdefault(i, set([])).add(word[:i])
+        for j in range(len(word) - i + 1):
+            ngrams.setdefault(i, set([])).add(word[j: j + i])
 
 with open('data/initial_ngrams.pck', 'wb') as f:
     pickle.dump(dict(initial_ngrams), f)

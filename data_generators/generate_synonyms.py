@@ -2,6 +2,7 @@ import re
 import cPickle as pickle
 from utils.words import WORDS
 from nltk.corpus import wordnet as wn
+import json
 
 
 def synonyms(word):
@@ -19,7 +20,12 @@ def synonyms(word):
 all_synonyms = dict()
 
 for word in WORDS:
-    all_synonyms[word] = synonyms(word)
+    syns = list(synonyms(word))
+    if len(syns) > 0:
+        all_synonyms[word] = syns
 
 with open('data/synonyms.pck', 'wb') as f:
     pickle.dump(dict(all_synonyms), f)
+
+with open('data/synonyms.json', 'w') as f:
+    json.dump(all_synonyms, f, separators=(',', ':'), indent=0)

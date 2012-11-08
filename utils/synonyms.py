@@ -5,13 +5,13 @@ from utils.cryptics import additional_synonyms
 
 def load_synonyms():
     with open('data/synonyms.pck', 'rb') as f:
-        syns = defaultdict(lambda: set([]))
+        syns = defaultdict(lambda: [])
         syns.update(pickle.load(f))
         return syns
 
 SYNONYMS = load_synonyms()
 for s in additional_synonyms:
-    SYNONYMS[s].update(additional_synonyms[s])
+    SYNONYMS[s].extend(additional_synonyms[s])
 
 
 def cached_synonyms(x, length=None):

@@ -1,5 +1,9 @@
 from __future__ import division
-from utils.language_utils import all_legal_substrings, semantic_similarity, all_insertions, matches_pattern, WORDS, INITIAL_NGRAMS, cached_anagrams, cached_synonyms, string_reverse
+from utils.language import all_legal_substrings, semantic_similarity, all_insertions, matches_pattern, string_reverse
+from utils.ngrams import INITIAL_NGRAMS
+from utils.words import WORDS
+from utils.anagrams import cached_anagrams
+from utils.synonyms import cached_synonyms
 from utils.cryptics import compute_arg_offsets
 from utils.kinds import generate_kinds
 from utils.search import tree_search
