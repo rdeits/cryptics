@@ -14,6 +14,7 @@ def load_all_kinds():
 
 
 all_kinds = load_all_kinds()
+all_kinds[1] = [['d']]
 
 
 def check_functions(kinds):

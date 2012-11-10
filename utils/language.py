@@ -44,6 +44,8 @@ def semantic_similarity(word1, word2):
             for s2 in wn.synsets(word2):
                 for st2 in [s2] + s2.similar_tos():
                     p = wn.wup_similarity(st1, st2)
+                    if p == 1:
+                        return p
                     if p > max_p:
                         max_p = p
     return max_p

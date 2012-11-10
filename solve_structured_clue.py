@@ -25,6 +25,10 @@ def solve_structured_clue(clue):
     pattern = clue.pop()
     length = clue.pop()
     definition, d = clue.pop([x[1] for x in clue].index('d'))
+    if len(clue) == 0:
+        # this must be just a regular crossword clue (no wordplay)
+        answers = [(s, semantic_similarity(s, definition)) for s in cached_synonyms(definition) if len(s) == length and matches_pattern(s, pattern)]
+        return sorted(answers, key=lambda x: x[1], reverse=True)
     groups_to_skip = set([])
     answer_subparts = [[] for x in clue]
     count = 0
@@ -50,10 +54,10 @@ def solve_structured_clue(clue):
                 answer_subparts[i] = TRANSFORMS[kind](phrase, length)
             if len(answer_subparts[i]) == 0:
                 return []
-    potential_answers = set(tree_search('', answer_subparts,
+    wordplay_answers = set(tree_search('', answer_subparts,
                                     lambda x: x not in groups_to_skip,
                                     lambda x: len(x) <= length and x in INITIAL_NGRAMS[len(x)] and matches_pattern(x, pattern)))
-    answers = [(s, semantic_similarity(s, definition)) for s in potential_answers if s in WORDS and len(s) == length]
+    answers = [(s, semantic_similarity(s, definition)) for s in wordplay_answers if s in WORDS and len(s) == length]
     return sorted(answers, key=lambda x: x[1], reverse=True)
 
 
