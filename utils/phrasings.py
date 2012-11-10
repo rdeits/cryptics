@@ -1,6 +1,11 @@
-def phrasings(remaining, active_set):
-    if len(remaining) == 0:
-        return active_set
+def phrasings(remaining):
+    if len(remaining) <= 1:
+        return [remaining]
     else:
-        for i in range(len(remaining) - 1):
-            active_set.extend(phrasings(rema
+        new_active_set = []
+        for i in range(len(remaining)):
+            new_phrase = '_'.join(remaining[:i + 1])
+            new_remaining = remaining[i + 1:]
+            for new_s in phrasings(new_remaining):
+                new_active_set.append([new_phrase] + new_s)
+        return new_active_set

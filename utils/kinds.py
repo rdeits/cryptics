@@ -21,9 +21,13 @@ def check_functions(kinds):
     if ('_l' in kinds[0] or kinds[0] == 'ins'):
         return False
     for i in range(len(kinds) - 1):
-        if '_r' in kinds[i] and kinds[i + 1] != 'lit':
+        if 'ana_r' == kinds[i] and kinds[i + 1] != 'lit':
             return False
-        if '_l' in kinds[i + 1] and kinds[i] != 'lit':
+        if 'ana_l' == kinds[i + 1] and kinds[i] != 'lit':
+            return False
+        if '_r' in kinds[i] and kinds[i + 1] not in ['lit', 'syn']:
+            return False
+        if '_l' in kinds[i + 1] and kinds[i] not in ['lit', 'syn']:
             return False
         if kinds[i] == 'ins' and kinds[i + 1] == 'ins':
             return False

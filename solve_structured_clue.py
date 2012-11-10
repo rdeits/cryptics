@@ -7,6 +7,7 @@ from utils.synonyms import cached_synonyms
 from utils.cryptics import compute_arg_offsets
 from utils.kinds import generate_kinds
 from utils.search import tree_search
+from utils.phrasings import phrasings
 import re
 
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
@@ -61,12 +62,12 @@ def solve_structured_clue(clue):
     return sorted(answers, key=lambda x: x[1], reverse=True)
 
 
-def solve_phrases(phrases):
-    pattern = phrases.pop()
-    length = phrases.pop()
+def solve_phrasing(phrasing):
+    pattern = phrasing.pop()
+    length = phrasing.pop()
     answers = set([])
     answers_with_clues = []
-    for clue in generate_structured_clues(phrases, length, pattern):
+    for clue in generate_structured_clues(phrasing, length, pattern):
         new_answers = solve_structured_clue(clue[:])
         new_answers = [a for a in new_answers if a not in answers]
         answers.update(new_answers)
@@ -76,22 +77,38 @@ def solve_phrases(phrases):
 
 def parse_clue_text(clue_text):
     if '|' not in clue_text:
-        clue_text += '| |'
+        clue_text += ' |'
     clue_text = clue_text.lower()
     clue, rest = clue_text.split('(')
     length, rest = rest.split(')')
     length = int(length)
-    foo, pattern, answer = rest.split('|')
+    pattern, answer = rest.split('|')
     pattern = pattern.strip()
     clue = re.sub(r'[^a-zA-Z\ _]', '', clue)
     clue = re.sub(r'\ +', ' ', clue)
     phrases = clue.split(' ')
     phrases = [p for p in phrases if p.strip() != '']
-    phrases += [length, pattern]
-    return phrases, answer
+    all_phrasings = []
+    for p in phrasings(phrases):
+        p += [length, pattern]
+        all_phrasings.append(p)
+    return all_phrasings, answer
 
+
+def solve_clue_text(clue_text):
+    all_phrasings, answer = parse_clue_text(clue_text)
+    answers = set([])
+    answers_with_clues = []
+    for p in all_phrasings:
+        print p
+        for ans, clue in solve_phrasing(p):
+            if ans not in answers:
+                answers.add(ans)
+                answers_with_clues.append((ans, clue))
+    return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
 
 if __name__ == '__main__':
+    # print solve_clue_text('initially babies are naked (4)')
     for clue_text in open('clues/clues.txt', 'r').readlines():
         if clue_text.startswith('#'):
             continue
