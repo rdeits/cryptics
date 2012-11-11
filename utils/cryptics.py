@@ -1,8 +1,5 @@
 
 
-additional_synonyms = {'siblings': ['sis'], 'four': ['v'], 'one': ['a', 'i'], 'ten': ['x'], 'fifty': ['l'], 'lego': ['small_bricks'], 'graduate': ['ba'], 'manchu': [], 'rearguard': [], 'somber': ['grave'], 'alaskan_city': ['nome'], 'quiet': ['p'], 'street': ['rd', 'ave']}
-
-
 def is_func_argument(i, clue):
     """
     Returns True if clue sub-part i is the argument of a directional function (like 'ana_r' or 'sub_l').
