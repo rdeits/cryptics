@@ -1,5 +1,5 @@
 
-def pull_from_file( file_name):
+def pull_from_file(file_name):
     abbreviation_dictionary = {}
     with open(file_name, "r") as reader:
         for line in reader.readlines():
@@ -39,5 +39,22 @@ def pull_from_file( file_name):
                         abbreviation_dictionary[defi] = abbreviation_dictionary[defi] + [abb]
     return abbreviation_dictionary
 
-ABBREVIATIONS = pull_from_file('data/abbr_text_list.txt')
+abbr_dict = pull_from_file('abbr_text_list.txt')
 
+def write_to_json(file_name, abbreviations):
+    with open(file_name, "w") as writer:
+        writer.write('{\n')
+        for key in abbreviations.keys():
+            writer.write('"'+key+'"'+':[\n')
+            last = abbreviations[key][-1]
+            for val in abbreviations[key]:
+                if not val == last:
+                    writer.write('"'+val+'",\n')
+                else:
+                    writer.write('"'+val+'"\n')
+            writer.write('],\n')
+
+
+        writer.write('}')
+
+write_to_json('abbreviations.json', abbr_dict)
