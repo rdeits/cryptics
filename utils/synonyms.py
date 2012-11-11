@@ -1,6 +1,5 @@
 import cPickle as pickle
 from collections import defaultdict
-from utils.cryptics import additional_synonyms
 import json
 
 def load_synonyms():

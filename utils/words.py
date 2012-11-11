@@ -1,4 +1,3 @@
-from utils.cryptics import additional_synonyms
 
 
 def load_words():
@@ -7,4 +6,3 @@ def load_words():
 
 
 WORDS = load_words()
-WORDS.update(additional_synonyms.keys())
