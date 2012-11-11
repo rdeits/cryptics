@@ -1978,6 +1978,7 @@
   "ant", 
   "bee"
  ], 
+ "small_bricks": ["lego"],
  "society": [
   "s"
  ], 

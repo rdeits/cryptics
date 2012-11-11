@@ -106,16 +106,3 @@ def solve_clue_text(clue_text):
                 answers.add(ans)
                 answers_with_clues.append((ans, clue))
     return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
-
-if __name__ == '__main__':
-    # print solve_clue_text('initially babies are naked (4)')
-    for clue_text in open('clues/clues.txt', 'r').readlines():
-        if clue_text.startswith('#'):
-            continue
-        phrases, answer = parse_clue_text(clue_text)
-        print "Clue:", phrases
-        print "Known answer:", answer
-        answers = solve_phrases(phrases)[:15]
-        for a in answers:
-            print a
-        print "\n"

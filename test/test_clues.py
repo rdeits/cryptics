@@ -1,12 +1,11 @@
 import unittest
-from solve_structured_clue import parse_clue_text, solve_phrases
+from solve_structured_clue import solve_clue_text, parse_clue_text
 
 
 class TestClues(unittest.TestCase):
     def test_known_clues(self):
         for clue_text in open('clues/known_clues.txt', 'r').readlines():
             phrases, known_answer = parse_clue_text(clue_text)
-            print clue_text
-            print phrases
-            answer = solve_phrases(phrases)[0][0][0]
-            self.assertEqual(answer.lower(), known_answer.lower().strip())
+            answers = solve_clue_text(clue_text)
+            print answers[:5]
+            self.assertEqual(answers[0][0][0].lower(), known_answer.lower().strip())
