@@ -1,162 +1,522 @@
 {
- "anglican": [
-  "ce"
+ "1": [
+  "i", 
+  "a"
  ], 
- "inning": [
-  "i"
+ "10": [
+  "x"
  ], 
- "dollar": [
-  "s"
- ], 
- "resistance": [
-  "r"
- ], 
- "estimated_time_of_arrival": [
-  "eta"
- ], 
- "four": [
-  "iv"
- ], 
- "disc": [
-  "o", 
-  "ep", 
-  "lp", 
-  "cd"
- ], 
- "asian": [
-  "e"
- ], 
- "zinc": [
-  "zn"
- ], 
- "cyprus": [
-  "cy"
- ], 
- "detectives": [
-  "cid"
- ], 
- "over_the_top": [
-  "ott"
- ], 
- "forte": [
-  "f"
- ], 
- "electricity": [
-  "ac", 
-  "dc"
- ], 
- "elizabeth": [
-  "e"
- ], 
- "wyoming": [
-  "wy"
- ], 
- "father": [
-  "da", 
-  "dad", 
-  "fr", 
-  "pa"
- ], 
- "thursday": [
-  "th", 
-  "thurs"
- ], 
- "painters": [
-  "ra"
- ], 
- "basque_nationalists": [
-  "eta"
- ], 
- "arkansas": [
-  "ar"
- ], 
- "maryland": [
-  "md"
- ], 
- "new_south_wales": [
-  "nsw"
- ], 
- "barium": [
-  "ba"
- ], 
- "circa": [
+ "100": [
   "c"
  ], 
- "jack": [
-  "j", 
-  "tar", 
-  "ab"
+ "101": [
+  "ci"
  ], 
- "cobalt": [
-  "co"
+ "11": [
+  "xi"
  ], 
- "minute": [
+ "150": [
+  "cl"
+ ], 
+ "151": [
+  "cli"
+ ], 
+ "1_000": [
   "m"
+ ], 
+ "1_001": [
+  "mi"
+ ], 
+ "2": [
+  "ii"
+ ], 
+ "4": [
+  "iv"
+ ], 
+ "5": [
+  "v"
+ ], 
+ "50": [
+  "l"
+ ], 
+ "500": [
+  "d"
+ ], 
+ "501": [
+  "di"
+ ], 
+ "51": [
+  "li"
+ ], 
+ "6": [
+  "vi"
+ ], 
+ "a_follower": [
+  "b"
+ ], 
+ "about": [
+  "c", 
+  "ca", 
+  "re", 
+  "ce"
+ ], 
+ "account": [
+  "ac"
+ ], 
+ "accountant": [
+  "ca", 
+  "cpa"
+ ], 
+ "ace": [
+  "a", 
+  "ai"
+ ], 
+ "actinium": [
+  "ac"
+ ], 
+ "advert": [
+  "ad"
+ ], 
+ "after_midday": [
+  "pm"
+ ], 
+ "afternoon": [
+  "pm"
+ ], 
+ "against": [
+  "v", 
+  "vs"
+ ], 
+ "agent": [
+  "rep"
+ ], 
+ "agricultural": [
+  "ag"
+ ], 
+ "air_conditioning": [
+  "ac"
+ ], 
+ "alabama": [
+  "al"
+ ], 
+ "alaska": [
+  "ak"
+ ], 
+ "albania": [
+  "al", 
+  "alb"
  ], 
  "alien": [
   "et"
  ], 
- "scholar": [
+ "also_known_as": [
+  "aka"
+ ], 
+ "alto": [
+  "a"
+ ], 
+ "aluminium": [
+  "al"
+ ], 
+ "aluminum": [
+  "al"
+ ], 
+ "ambassador": [
+  "he"
+ ], 
+ "america": [
+  "am", 
+  "ususa"
+ ], 
+ "american_soldier": [
+  "gi"
+ ], 
+ "amnesty": [
+  "ai"
+ ], 
+ "ancient_city": [
+  "ur"
+ ], 
+ "ancient_times": [
+  "bc"
+ ], 
+ "and_so_on": [
+  "etc"
+ ], 
+ "anglican": [
+  "ce"
+ ], 
+ "anglo-saxon": [
+  "as"
+ ], 
+ "answer": [
+  "a"
+ ], 
+ "approximately": [
+  "c"
+ ], 
+ "arabic": [
+  "ar"
+ ], 
+ "arbiter": [
+  "ref"
+ ], 
+ "argon": [
+  "ar"
+ ], 
+ "arizona": [
+  "az"
+ ], 
+ "arkansas": [
+  "ar"
+ ], 
+ "army_cop": [
+  "mp"
+ ], 
+ "around": [
+  "ca"
+ ], 
+ "arsenic": [
+  "as"
+ ], 
+ "article": [
+  "a", 
+  "an", 
+  "the"
+ ], 
+ "artificial_intelligence": [
+  "ai"
+ ], 
+ "artillery": [
+  "ra"
+ ], 
+ "artist": [
+  "ra"
+ ], 
+ "artists": [
+  "ra"
+ ], 
+ "asian": [
+  "e"
+ ], 
+ "astatine": [
+  "at"
+ ], 
+ "at_home": [
+  "in"
+ ], 
+ "attorney": [
+  "da", 
+  "pa"
+ ], 
+ "australia": [
+  "ausoz", 
+  "aus", 
+  "au", 
+  "oz"
+ ], 
+ "australian_capital_territory": [
+  "act"
+ ], 
+ "avenue": [
+  "ave"
+ ], 
+ "bachelor": [
   "ba"
+ ], 
+ "bachelor_of_arts": [
+  "ba"
+ ], 
+ "bachelor_of_medicine": [
+  "bm"
+ ], 
+ "barium": [
+  "ba"
+ ], 
+ "basque_nationalists": [
+  "eta"
+ ], 
+ "bass": [
+  "b"
+ ], 
+ "batting": [
+  "in"
+ ], 
+ "bearing": [
+  "n", 
+  "e", 
+  "s", 
+  "w", 
+  "ne", 
+  "nw"
+ ], 
+ "before_midday": [
+  "am"
+ ], 
+ "beginner": [
+  "l"
+ ], 
+ "belgium": [
+  "bel", 
+  "be"
+ ], 
+ "bend": [
+  "su", 
+  "s", 
+  "u"
+ ], 
+ "beryllium": [
+  "be"
+ ], 
+ "big": [
+  "os"
+ ], 
+ "bill": [
+  "ac", 
+  "iou"
+ ], 
+ "bird": [
+  "tit"
+ ], 
+ "bishop": [
+  "brr"
+ ], 
+ "bismuth": [
+  "bi"
+ ], 
+ "blood_group": [
+  "a", 
+  "ab", 
+  "o"
+ ], 
+ "bob": [
+  "s"
+ ], 
+ "bolivia": [
+  "bo", 
+  "bol"
+ ], 
+ "bonds_boss": [
+  "m"
+ ], 
+ "book": [
+  "nt", 
+  "ot"
+ ], 
+ "books": [
+  "ot", 
+  "nt"
+ ], 
+ "boron": [
+  "b"
+ ], 
+ "bowled": [
+  "b"
+ ], 
+ "boy": [
+  "b"
+ ], 
+ "brazil": [
+  "br", 
+  "bra"
+ ], 
+ "bridge_player": [
+  "n", 
+  "e", 
+  "s", 
+  "w"
+ ], 
+ "british": [
+  "b", 
+  "br"
+ ], 
+ "bromine": [
+  "br"
  ], 
  "by_the_day": [
   "pd"
  ], 
- "policeman": [
-  "pc"
+ "byte": [
+  "b"
  ], 
- "teas": [
-  "tt"
+ "calcium": [
+  "ca"
  ], 
- "wednesday": [
-  "w", 
-  "wed"
+ "california": [
+  "ca"
  ], 
- "no_good": [
-  "ng"
+ "capone": [
+  "al"
  ], 
- "united_nations": [
-  "un"
+ "car": [
+  "t", 
+  "rr"
  ], 
- "team": [
-  "xi"
+ "carbon": [
+  "c"
  ], 
- "round": [
-  "o"
+ "carbon_copy": [
+  "cc"
  ], 
- "force": [
-  "f"
+ "care_of": [
+  "co"
  ], 
- "ulster": [
-  "ni"
+ "castle": [
+  "r"
  ], 
- "ten": [
+ "catholic": [
+  "c"
+ ], 
+ "caught": [
+  "cct"
+ ], 
+ "celsius": [
+  "c"
+ ], 
+ "cent": [
+  "c"
+ ], 
+ "centigrade": [
+  "c"
+ ], 
+ "century": [
+  "c"
+ ], 
+ "cerium": [
+  "ce"
+ ], 
+ "certificate": [
   "x", 
-  "io"
+  "u", 
+  "pg", 
+  "r", 
+  "g"
  ], 
- "zero": [
-  "o"
+ "chapter": [
+  "c", 
+  "ch"
  ], 
- "street": [
-  "st", 
-  "ave", 
-  "rd", 
-  "way"
+ "chief": [
+  "ch"
  ], 
- "lawyer": [
-  "bl"
- ], 
- "established": [
-  "est"
+ "chlorine": [
+  "cl"
  ], 
  "christ": [
   "x"
  ], 
+ "chromium": [
+  "cr"
+ ], 
+ "chromosome": [
+  "xy"
+ ], 
+ "church": [
+  "chcerc", 
+  "ch", 
+  "ce"
+ ], 
+ "church_of_england": [
+  "ce"
+ ], 
+ "circa": [
+  "c"
+ ], 
+ "circle": [
+  "o"
+ ], 
+ "circuit": [
+  "o"
+ ], 
+ "city": [
+  "ny", 
+  "la", 
+  "ec"
+ ], 
+ "civil_engineer": [
+  "ce"
+ ], 
+ "clef": [
+  "c", 
+  "f"
+ ], 
+ "club": [
+  "y"
+ ], 
+ "clubs": [
+  "c"
+ ], 
+ "cobalt": [
+  "co"
+ ], 
+ "coin": [
+  "p", 
+  "d"
+ ], 
  "colonel": [
   "col"
  ], 
- "learner": [
-  "l"
+ "colorado": [
+  "co"
+ ], 
+ "colt": [
+  "c"
+ ], 
+ "common_era": [
+  "ce"
+ ], 
+ "company": [
+  "co"
+ ], 
+ "compare": [
+  "cf"
+ ], 
+ "compass_point": [
+  "n", 
+  "e", 
+  "s", 
+  "w"
+ ], 
+ "computer": [
+  "pc"
+ ], 
+ "concerning": [
+  "re"
+ ], 
+ "connecticut": [
+  "ct"
+ ], 
+ "conservationists": [
+  "nt"
+ ], 
+ "conservative": [
+  "c", 
+  "con"
+ ], 
+ "constable": [
+  "pc"
+ ], 
+ "copper": [
+  "p", 
+  "d", 
+  "cu", 
+  "pc"
+ ], 
+ "court": [
+  "ct"
+ ], 
+ "credit": [
+  "cr"
+ ], 
+ "criminal": [
+  "con"
+ ], 
+ "cross": [
+  "x"
+ ], 
+ "cuba": [
+  "cu", 
+  "cub"
  ], 
  "current": [
   "ac", 
@@ -164,37 +524,50 @@
   "ad", 
   "amp"
  ], 
- "french_art": [
-  "es"
+ "current_account": [
+  "ca"
  ], 
- "somalia": [
-  "so", 
-  "som"
+ "cyprus": [
+  "cy"
  ], 
- "cerium": [
-  "ce"
+ "cystic_fibrosis": [
+  "cf"
  ], 
- "shakespearean_king": [
-  "lear"
+ "date": [
+  "d"
  ], 
- "anglo-saxon": [
-  "as"
+ "daughter": [
+  "d"
  ], 
- "bird": [
-  "tit"
+ "day": [
+  "d", 
+  "v", 
+  "sun", 
+  "mon", 
+  "tue", 
+  "wed", 
+  "thu", 
+  "thurs", 
+  "fri", 
+  "sat"
  ], 
- "exercise": [
-  "pe", 
-  "pt"
+ "deaddied": [
+  "d", 
+  "dec", 
+  "ex", 
+  "ob"
  ], 
- "bowled": [
-  "b"
+ "debts": [
+  "ious"
  ], 
- "houses_of_parliament": [
-  "hp"
+ "deceased": [
+  "d", 
+  "dec", 
+  "ex"
  ], 
- "private_investigator": [
-  "pi"
+ "decoration": [
+  "vc", 
+  "gc"
  ], 
  "degree": [
   "deg", 
@@ -203,70 +576,558 @@
   "ba", 
   "ma"
  ], 
- "large_number": [
+ "delaware": [
+  "de"
+ ], 
+ "detective_inspector": [
+  "di"
+ ], 
+ "detectives": [
+  "cid"
+ ], 
+ "deutschmark": [
+  "dm"
+ ], 
+ "diamond": [
+  "d"
+ ], 
+ "diamonds": [
+  "d"
+ ], 
+ "diana": [
+  "di"
+ ], 
+ "direction": [
+  "n", 
+  "e", 
+  "s", 
+  "w"
+ ], 
+ "disc": [
+  "o", 
+  "ep", 
+  "lp", 
+  "cd"
+ ], 
+ "disease": [
+  "tb"
+ ], 
+ "doctor": [
+  "doc", 
+  "bm", 
+  "mb", 
+  "md", 
+  "mo", 
+  "gp", 
+  "dr"
+ ], 
+ "doctor_of_divinity": [
+  "dd"
+ ], 
+ "dollar": [
+  "s"
+ ], 
+ "dram": [
+  "dr"
+ ], 
+ "drip": [
+  "iv"
+ ], 
+ "drug": [
   "c", 
-  "d", 
-  "m", 
-  "k"
+  "e", 
+  "x", 
+  "h"
  ], 
- "honour": [
-  "obe"
+ "dry": [
+  "tt", 
+  "aa"
  ], 
- "tasmania": [
-  "tas"
+ "duck": [
+  "o"
+ ], 
+ "each": [
+  "ea"
+ ], 
+ "east": [
+  "e"
+ ], 
+ "east_germany": [
+  "gdr"
+ ], 
+ "ecstasy": [
+  "ex"
+ ], 
+ "editor": [
+  "ed"
+ ], 
+ "egg": [
+  "o"
+ ], 
+ "electricity": [
+  "ac", 
+  "dc"
+ ], 
+ "eleven": [
+  "ll", 
+  "xi"
+ ], 
+ "elizabeth": [
+  "e"
+ ], 
+ "energy": [
+  "e", 
+  "j"
+ ], 
+ "engineer": [
+  "ce", 
+  "re", 
+  "me"
+ ], 
+ "english": [
+  "e"
+ ], 
+ "era": [
+  "ad", 
+  "bc", 
+  "ce"
+ ], 
+ "escape": [
+  "esc"
+ ], 
+ "established": [
+  "est"
+ ], 
+ "estimated_time_of_arrival": [
+  "eta"
+ ], 
+ "europe": [
+  "eu", 
+  "ec"
+ ], 
+ "excellent": [
+  "ai"
+ ], 
+ "exercise": [
+  "pe", 
+  "pt"
+ ], 
+ "exist": [
+  "be"
+ ], 
+ "extra": [
+  "w"
+ ], 
+ "extra_large": [
+  "xl"
+ ], 
+ "extra_terrestrial": [
+  "et"
+ ], 
+ "fahrenheit": [
+  "f"
+ ], 
+ "father": [
+  "da", 
+  "dad", 
+  "fr", 
+  "pa"
+ ], 
+ "female": [
+  "f"
+ ], 
+ "fifty": [
+  "l"
+ ], 
+ "fighter_plane": [
+  "mig"
+ ], 
+ "fine": [
+  "f", 
+  "ok"
+ ], 
+ "finland": [
+  "fi", 
+  "fin"
+ ], 
+ "firm": [
+  "co"
+ ], 
+ "first": [
+  "ist"
+ ], 
+ "first_class": [
+  "ai", 
+  "a"
+ ], 
+ "first_woman": [
+  "eve"
+ ], 
+ "fish": [
+  "ling", 
+  "eel", 
+  "cod"
+ ], 
+ "five": [
+  "v"
+ ], 
+ "fleet": [
+  "rn"
+ ], 
+ "florida": [
+  "fl"
+ ], 
+ "fluorine": [
+  "f"
+ ], 
+ "flying_bomb": [
+  "vi"
+ ], 
+ "following": [
+  "f"
+ ], 
+ "football_association": [
+  "fa"
+ ], 
+ "football_club": [
+  "fc"
+ ], 
+ "footnote": [
+  "ps"
+ ], 
+ "for_example": [
+  "e.g.", 
+  "eg"
+ ], 
+ "force": [
+  "f"
+ ], 
+ "former": [
+  "ex"
+ ], 
+ "former_partner": [
+  "ex"
+ ], 
+ "forte": [
+  "f"
+ ], 
+ "four": [
+  "iv"
+ ], 
+ "france": [
+  "f"
  ], 
  "french": [
   "le"
  ], 
- "bromine": [
-  "br"
+ "french_art": [
+  "es"
  ], 
- "bachelor": [
-  "ba"
+ "frenchman": [
+  "m"
  ], 
- "boron": [
-  "b"
+ "friday": [
+  "f", 
+  "fri"
  ], 
- "november": [
+ "gallium": [
+  "ga"
+ ], 
+ "game": [
+  "ru"
+ ], 
+ "gas": [
+  "h", 
+  "o", 
   "n", 
-  "nov"
+  "cs", 
+  "co", 
+  "etc"
  ], 
- "101": [
-  "ci"
+ "george": [
+  "g"
+ ], 
+ "georgia": [
+  "ga", 
+  "ge"
+ ], 
+ "german": [
+  "g"
+ ], 
+ "german_submarine": [
+  "u"
+ ], 
+ "germany": [
+  "ger", 
+  "d", 
+  "de", 
+  "deu"
+ ], 
+ "gold": [
+  "au", 
+  "or"
+ ], 
+ "good": [
+  "pi", 
+  "a"
+ ], 
+ "good_man": [
+  "st"
+ ], 
+ "grade": [
+  "a", 
+  "b", 
+  "c", 
+  "d", 
+  "f"
+ ], 
+ "graduate": [
+  "ba", 
+  "ma", 
+  "mb"
+ ], 
+ "gram": [
+  "g"
+ ], 
+ "grand": [
+  "g", 
+  "m", 
+  "k"
+ ], 
+ "grand_prix": [
+  "gp"
+ ], 
+ "greece": [
+  "grc", 
+  "gr", 
+  "gre"
+ ], 
+ "greek_character": [
+  "pi", 
+  "nu", 
+  "mu", 
+  "xi"
+ ], 
+ "greek_letter": [
+  "pi", 
+  "nu", 
+  "mu", 
+  "xi"
+ ], 
+ "group": [
+  "gp"
+ ], 
+ "guevara": [
+  "che"
+ ], 
+ "gunners": [
+  "ra"
+ ], 
+ "gym": [
+  "pe"
+ ], 
+ "hand": [
+  "ab", 
+  "l", 
+  "r"
+ ], 
+ "hard": [
+  "h"
+ ], 
+ "hawaii": [
+  "hi"
+ ], 
+ "hear": [
+  "t"
+ ], 
+ "heart": [
+  "h"
+ ], 
+ "hearts": [
+  "h"
+ ], 
+ "hectare": [
+  "ha"
+ ], 
+ "helium": [
+  "he"
  ], 
  "her_majesty": [
   "hm"
  ], 
- "alto": [
-  "a"
+ "heroin": [
+  "h"
  ], 
- "boy": [
-  "b"
+ "hexadecimal": [
+  "hex"
  ], 
- "male": [
-  "m", 
-  "hepa"
+ "high_class": [
+  "ai", 
+  "u"
  ], 
- "daughter": [
-  "d"
+ "hire_purchase": [
+  "hp"
  ], 
- "alaska": [
-  "ak"
+ "holy_man": [
+  "st"
  ], 
- "old_boy": [
-  "ob"
+ "home_counties": [
+  "se"
  ], 
- "credit": [
-  "cr"
+ "honour": [
+  "obe"
  ], 
- "bob": [
-  "s"
+ "honours": [
+  "bama"
  ], 
- "deaddied": [
+ "horse": [
+  "g", 
+  "gg"
+ ], 
+ "hospital": [
+  "h"
+ ], 
+ "hour": [
+  "h", 
+  "hr"
+ ], 
+ "houses_of_parliament": [
+  "hp"
+ ], 
+ "hug": [
+  "o"
+ ], 
+ "hundred": [
+  "c"
+ ], 
+ "husband": [
+  "h"
+ ], 
+ "hush": [
+  "sh"
+ ], 
+ "hydrogen": [
+  "h"
+ ], 
+ "i_am": [
+  "im"
+ ], 
+ "iceland": [
+  "is"
+ ], 
+ "idaho": [
+  "id"
+ ], 
+ "illinois": [
+  "il"
+ ], 
+ "in_charge": [
+  "ic"
+ ], 
+ "in_this_matter": [
+  "re"
+ ], 
+ "inch": [
+  "in"
+ ], 
+ "india": [
+  "in", 
+  "ind"
+ ], 
+ "indiana": [
+  "in"
+ ], 
+ "information": [
+  "gen"
+ ], 
+ "information_technology": [
+  "it"
+ ], 
+ "inning": [
+  "i"
+ ], 
+ "instant_message": [
+  "im"
+ ], 
+ "integrated_circuit": [
+  "ic"
+ ], 
+ "intelligence": [
+  "iq"
+ ], 
+ "iodine": [
+  "i"
+ ], 
+ "iowa": [
+  "ia"
+ ], 
+ "ireland": [
+  "ire"
+ ], 
+ "iridium": [
+  "ir"
+ ], 
+ "irish_republican_army": [
+  "ira"
+ ], 
+ "iron": [
+  "fe"
+ ], 
+ "island": [
+  "i", 
+  "is"
+ ], 
+ "italy": [
+  "it", 
+  "ita"
+ ], 
+ "jack": [
+  "j", 
+  "tar", 
+  "ab"
+ ], 
+ "jet": [
+  "mig"
+ ], 
+ "jolly": [
+  "rm"
+ ], 
+ "journalist": [
+  "ed"
+ ], 
+ "judge": [
+  "j"
+ ], 
+ "junction": [
+  "t"
+ ], 
+ "junior": [
+  "jr"
+ ], 
+ "kansas": [
+  "ks"
+ ], 
+ "kelvin": [
+  "k"
+ ], 
+ "kentucky": [
+  "ky"
+ ], 
+ "key": [
+  "a", 
+  "b", 
+  "c", 
   "d", 
-  "dec", 
-  "ex", 
-  "ob"
+  "e", 
+  "fg", 
+  "f", 
+  "g"
+ ], 
+ "kick_off": [
+  "ko"
+ ], 
+ "kilo": [
+  "k"
  ], 
  "king": [
   "k", 
@@ -276,751 +1137,233 @@
   "gr", 
   "er"
  ], 
- "retired": [
-  "ret"
+ "kiss": [
+  "x"
  ], 
- "extra": [
-  "w"
+ "knave": [
+  "j"
  ], 
- "doctor_of_divinity": [
-  "dd"
- ], 
- "private": [
-  "gi"
- ], 
- "volt": [
-  "v"
- ], 
- "dram": [
-  "dr"
- ], 
- "quiet/quietly": [
-  "p"
- ], 
- "duck": [
-  "o"
- ], 
- "united_kingdom": [
-  "gbr", 
-  "uk"
- ], 
- "tar": [
-  "ab"
- ], 
- "certificate": [
-  "x", 
-  "u", 
-  "pg", 
-  "r", 
-  "g"
- ], 
- "hospital": [
-  "h"
- ], 
- "two": [
-  "duo", 
-  "ii"
- ], 
- "france": [
-  "f"
- ], 
- "eleven": [
-  "ll", 
-  "xi"
- ], 
- "master_of_arts": [
-  "ma"
- ], 
- "peru": [
-  "pe", 
-  "per"
- ], 
- "6": [
-  "vi"
- ], 
- "irish_republican_army": [
-  "ira"
- ], 
- "indiana": [
-  "in"
- ], 
- "midday": [
+ "knight": [
+  "k", 
+  "kt", 
+  "kbe", 
+  "kg", 
   "n"
  ], 
- "pencil": [
-  "hb"
+ "knock_out": [
+  "ko"
  ], 
- "diamond": [
-  "d"
+ "knot": [
+  "kt"
  ], 
- "club": [
-  "y"
+ "labour": [
+  "lab"
  ], 
- "tax": [
-  "vat"
+ "lake": [
+  "lla"
  ], 
- "company": [
-  "co"
- ], 
- "oregon": [
-  "or"
- ], 
- "connecticut": [
-  "ct"
- ], 
- "i_am": [
-  "im"
- ], 
- "cystic_fibrosis": [
-  "cf"
- ], 
- "excellent": [
-  "ai"
- ], 
- "yard": [
-  "ydy"
- ], 
- "first_class": [
-  "ai", 
-  "a"
- ], 
- "in_charge": [
-  "ic"
- ], 
- "150": [
-  "cl"
- ], 
- "account": [
-  "ac"
- ], 
- "rook": [
-  "r"
- ], 
- "ace": [
-  "a", 
-  "ai"
- ], 
- "hour": [
-  "h", 
-  "hr"
- ], 
- "car": [
-  "t", 
-  "rr"
- ], 
- "work": [
-  "w", 
-  "op", 
-  "opus"
- ], 
- "printers_measure": [
-  "en", 
-  "em"
- ], 
- "iridium": [
-  "ir"
- ], 
- "nebraska": [
-  "ne"
- ], 
- "era": [
-  "ad", 
-  "bc", 
-  "ce"
+ "large_number": [
+  "c", 
+  "d", 
+  "m", 
+  "k"
  ], 
  "last_character": [
   "z"
  ], 
- "island": [
-  "i", 
-  "is"
- ], 
- "following": [
-  "f"
- ], 
- "this_month": [
-  "inst"
- ], 
- "royal_navy": [
-  "rn"
- ], 
- "yemen": [
-  "ye", 
-  "yem"
- ], 
- "deceased": [
-  "d", 
-  "dec", 
-  "ex"
- ], 
- "heart": [
-  "h"
- ], 
- "compare": [
-  "cf"
- ], 
- "finland": [
-  "fi", 
-  "fin"
- ], 
- "iodine": [
-  "i"
- ], 
- "pawn": [
-  "p"
- ], 
- "blood_group": [
-  "a", 
-  "ab", 
-  "o"
- ], 
- "military_police": [
-  "mp"
- ], 
- "artillery": [
-  "ra"
- ], 
- "india": [
-  "in", 
-  "ind"
- ], 
- "agent": [
-  "rep"
- ], 
- "titanium": [
-  "ti"
- ], 
- "former_partner": [
-  "ex"
- ], 
- "celsius": [
-  "c"
- ], 
- "bend": [
-  "su", 
-  "s", 
-  "u"
- ], 
- "hydrogen": [
-  "h"
- ], 
- "not_out": [
-  "no"
- ], 
- "litre": [
-  "l"
- ], 
- "court": [
-  "ct"
- ], 
- "turn": [
-  "u"
- ], 
- "not_applicable": [
-  "na"
- ], 
- "1": [
-  "i", 
-  "a"
- ], 
- "very": [
-  "v"
- ], 
- "sunday": [
-  "s"
- ], 
- "pair": [
-  "pr"
- ], 
- "answer": [
-  "a"
- ], 
- "idaho": [
-  "id"
- ], 
- "sweat": [
-  "bo"
- ], 
- "top_class": [
-  "ai"
- ], 
- "information": [
-  "gen"
- ], 
- "long_wave": [
-  "lw"
- ], 
- "soldier": [
-  "rm", 
-  "re", 
-  "gi", 
-  "ant"
- ], 
- "astatine": [
-  "at"
- ], 
- "motorway": [
-  "mmi"
- ], 
- "plane": [
-  "mig"
- ], 
- "date": [
-  "d"
- ], 
- "castle": [
-  "r"
- ], 
- "vanadium": [
-  "v"
- ], 
- "chief": [
-  "ch"
- ], 
- "1_000": [
-  "m"
- ], 
- "road": [
-  "rdai", 
-  "rd"
- ], 
- "new_mexico": [
-  "nm"
- ], 
- "volunteers": [
-  "ta"
- ], 
- "egg": [
-  "o"
- ], 
- "playing": [
-  "on"
- ], 
- "hectare": [
-  "ha"
- ], 
- "colt": [
-  "c"
- ], 
- "physical_training": [
-  "pt"
- ], 
- "nitrogen": [
-  "n"
- ], 
- "honours": [
-  "bama"
- ], 
- "agricultural": [
-  "ag"
- ], 
- "post_office": [
-  "po"
- ], 
- "avenue": [
-  "ave"
- ], 
- "west_virginia": [
-  "wv"
- ], 
- "silk": [
-  "qckc"
- ], 
- "group": [
-  "gp"
- ], 
- "sodium": [
-  "na"
- ], 
- "theologian": [
-  "dd"
- ], 
- "australian_capital_territory": [
-  "act"
- ], 
- "selenium": [
-  "se"
- ], 
- "rhode_island": [
-  "ri"
- ], 
- "criminal": [
-  "con"
- ], 
- "tory": [
-  "con"
- ], 
- "bachelor_of_medicine": [
-  "bm"
- ], 
- "texas": [
-  "tx"
- ], 
- "versus": [
-  "vvs", 
-  "vs"
- ], 
- "for_example": [
-  "e.g.", 
-  "eg"
- ], 
- "good": [
-  "pi", 
-  "a"
- ], 
- "junction": [
-  "t"
- ], 
- "never-never": [
-  "hp"
- ], 
- "sappers": [
-  "re"
- ], 
- "kiss": [
-  "x"
- ], 
- "party": [
-  "lab", 
-  "lib", 
-  "conc"
- ], 
- "now": [
-  "ad"
- ], 
- "detective_inspector": [
-  "di"
- ], 
- "silver": [
-  "ag"
- ], 
- "east_germany": [
-  "gdr"
- ], 
- "oxygen": [
-  "o"
- ], 
- "university": [
-  "uou", 
-  "up", 
-  "ou"
- ], 
- "paramilitaries": [
-  "eta", 
-  "ira", 
-  "uff", 
-  "uda"
- ], 
- "each": [
-  "ea"
- ], 
- "amnesty": [
-  "ai"
- ], 
- "quarter": [
-  "n", 
-  "s", 
-  "e", 
-  "w", 
-  "ne", 
-  "nw", 
-  "etc"
- ], 
- "guevara": [
-  "che"
- ], 
- "square": [
-  "s"
- ], 
- "current_account": [
-  "ca"
- ], 
- "beginner": [
-  "l"
- ], 
- "diana": [
-  "di"
- ], 
- "hundred": [
-  "c"
- ], 
- "energy": [
-  "e", 
-  "j"
- ], 
- "peacekeepers": [
-  "un"
- ], 
- "sportsman": [
-  "blue"
- ], 
- "hawaii": [
-  "hi"
- ], 
- "society": [
-  "s"
- ], 
- "books": [
-  "ot", 
-  "nt"
- ], 
- "ancient_city": [
-  "ur"
- ], 
- "year": [
-  "yyr"
- ], 
- "navy": [
-  "rn", 
-  "abs", 
-  "tars"
- ], 
- "operation": [
-  "op"
- ], 
- "saturday": [
-  "s"
- ], 
- "northern_territory": [
-  "nt"
- ], 
- "member_of_parliament": [
-  "mp"
- ], 
- "rex": [
-  "r"
- ], 
- "oklahoma": [
-  "ok"
- ], 
- "jolly": [
-  "rm"
- ], 
- "reverend": [
-  "rr", 
-  "dd", 
-  "rev"
- ], 
- "piano": [
-  "p"
- ], 
- "oriental": [
-  "e"
- ], 
- "kelvin": [
-  "k"
- ], 
- "ref": [
-  "ump"
- ], 
- "gram": [
-  "g"
- ], 
- "fighter_plane": [
-  "mig"
- ], 
- "arizona": [
-  "az"
- ], 
- "wisconsin": [
-  "wi"
- ], 
- "bass": [
-  "b"
+ "last_month": [
+  "ult"
  ], 
  "lawrence": [
   "dh", 
   "te"
  ], 
- "friday": [
-  "f", 
-  "fri"
+ "lawyer": [
+  "bl"
  ], 
- "pub": [
-  "ph"
+ "lead": [
+  "pb"
  ], 
- "new_jersey": [
-  "nj"
+ "learner": [
+  "l"
  ], 
- "heroin": [
-  "h"
+ "left": [
+  "l"
  ], 
- "california": [
-  "ca"
+ "letter": [
+  "ef", 
+  "em", 
+  "el"
  ], 
- "ohio": [
-  "oh"
+ "liberal": [
+  "l", 
+  "lib"
  ], 
- "byte": [
-  "b"
+ "lieutenant": [
+  "lt"
  ], 
- "sex_appeal": [
-  "it"
+ "lincoln": [
+  "abe"
  ], 
- "princess": [
-  "di"
+ "line": [
+  "l"
  ], 
- "chlorine": [
-  "cl"
+ "lithium": [
+  "li"
  ], 
- "new_york": [
-  "ny"
+ "litre": [
+  "l"
  ], 
- "a_follower": [
-  "b"
+ "local_area_network": [
+  "lan"
+ ], 
+ "long_playing_record": [
+  "lp"
+ ], 
+ "long_wave": [
+  "lw"
  ], 
  "los_angeles": [
   "la"
- ], 
- "florida": [
-  "fl"
- ], 
- "british": [
-  "b", 
-  "br"
- ], 
- "times": [
-  "x"
- ], 
- "silicon": [
-  "si"
- ], 
- "american_soldier": [
-  "gi"
- ], 
- "circuit": [
-  "o"
- ], 
- "hexadecimal": [
-  "hex"
  ], 
  "loud": [
   "f", 
   "ff"
  ], 
- "south": [
-  "s"
+ "louisiana": [
+  "la"
  ], 
- "first": [
-  "ist"
- ], 
- "copper": [
-  "p", 
-  "d", 
-  "cu", 
-  "pc"
- ], 
- "grade": [
-  "a", 
-  "b", 
-  "c", 
-  "d", 
-  "f"
- ], 
- "number": [
-  "v", 
-  "x", 
-  "c", 
-  "d", 
-  "m", 
-  "l", 
-  "no", 
-  "pin"
- ], 
- "one": [
-  "i", 
-  "rarely", 
-  "a", 
-  "an", 
-  "ace"
- ], 
- "sailor": [
-  "ab", 
-  "tar", 
-  "rn", 
-  "salt", 
-  "jack", 
-  "hand"
- ], 
- "football_association": [
-  "fa"
- ], 
- "shilling": [
-  "s"
- ], 
- "spanish": [
-  "el"
- ], 
- "vote": [
-  "x"
- ], 
- "ring": [
+ "love": [
   "o"
  ], 
- "george": [
-  "g"
+ "maiden": [
+  "m"
  ], 
- "engineer": [
-  "ce", 
-  "re", 
+ "maine": [
   "me"
  ], 
- "city": [
-  "ny", 
-  "la", 
-  "ec"
+ "malaysia": [
+  "my", 
+  "mys"
  ], 
- "horse": [
-  "g", 
-  "gg"
+ "male": [
+  "m", 
+  "hepa"
  ], 
- "temperature": [
-  "t"
+ "many": [
+  "cl", 
+  "xd..."
  ], 
- "jet": [
-  "mig"
+ "map-makers": [
+  "os"
  ], 
- "unknown": [
-  "x", 
-  "yz", 
-  "y", 
-  "z"
+ "marines": [
+  "rm"
  ], 
- "caught": [
-  "cct"
+ "married": [
+  "m"
  ], 
- "instant_message": [
-  "im"
+ "maryland": [
+  "md"
  ], 
- "approximately": [
-  "c"
- ], 
- "fahrenheit": [
-  "f"
- ], 
- "2": [
-  "ii"
+ "massachusetts": [
+  "ma"
  ], 
  "master": [
   "m"
  ], 
- "saint": [
-  "st"
+ "master's": [
+  "ma"
  ], 
- "time": [
-  "t", 
-  "s", 
+ "master_of_arts": [
+  "ma"
+ ], 
+ "master_of_ceremonies": [
+  "mc"
+ ], 
+ "measure": [
+  "en", 
+  "em"
+ ], 
+ "medal": [
+  "vc", 
+  "gc", 
+  "obe", 
+  "om"
+ ], 
+ "medic": [
+  "doc", 
+  "bm", 
+  "mb", 
+  "md", 
+  "mo", 
+  "gp", 
+  "dr"
+ ], 
+ "megabyte": [
+  "mb"
+ ], 
+ "member": [
+  "mp"
+ ], 
+ "member_of_parliament": [
+  "mp"
+ ], 
+ "messerschmitt": [
+  "me"
+ ], 
+ "michigan": [
+  "mi"
+ ], 
+ "midday": [
+  "n"
+ ], 
+ "middle_east": [
+  "me"
+ ], 
+ "midfielder": [
+  "l"
+ ], 
+ "military_police": [
+  "mp"
+ ], 
+ "ministry_of_defence": [
+  "mod"
+ ], 
+ "minnesota": [
+  "mn"
+ ], 
+ "minute": [
+  "m"
+ ], 
+ "mississippi": [
+  "ms"
+ ], 
+ "missouri": [
+  "mo"
+ ], 
+ "model": [
+  "t"
+ ], 
+ "moment": [
+  "mo"
+ ], 
+ "monarch": [
+  "er", 
+  "gr", 
+  "q", 
+  "k", 
+  "r"
+ ], 
+ "monday": [
   "m", 
-  "hr"
+  "mon"
  ], 
- "second-class": [
-  "b"
+ "monsieur": [
+  "m"
  ], 
- "value_added_tax": [
-  "vat"
- ], 
- "hug": [
-  "o"
+ "montana": [
+  "mt"
  ], 
  "month": [
   "jan", 
@@ -1038,77 +1381,104 @@
   "nov", 
   "dec"
  ], 
- "upper_class": [
-  "u"
+ "months": [
+  "mos"
  ], 
- "ancient_times": [
-  "bc"
+ "morninghalf_day": [
+  "am"
  ], 
- "territorial_army": [
-  "ta"
+ "mother": [
+  "ma"
  ], 
- "argon": [
-  "ar"
+ "motorway": [
+  "mmi"
  ], 
- "kick_off": [
-  "ko"
+ "national_trust": [
+  "nt"
  ], 
- "11": [
-  "xi"
+ "navy": [
+  "rn", 
+  "abs", 
+  "tars"
  ], 
- "10": [
-  "x"
+ "nazis": [
+  "ss"
  ], 
- "old_city": [
-  "ur"
+ "nebraska": [
+  "ne"
  ], 
- "second": [
-  "s"
+ "neon": [
+  "ne"
  ], 
- "centigrade": [
-  "c"
+ "nevada": [
+  "nv"
  ], 
- "marines": [
-  "rm"
+ "never-never": [
+  "hp"
  ], 
- "footnote": [
-  "ps"
+ "new": [
+  "n"
  ], 
- "rolls_royce": [
-  "rr"
+ "new_hampshire": [
+  "nh"
  ], 
- "greece": [
-  "grc", 
-  "gr", 
-  "gre"
+ "new_jersey": [
+  "nj"
  ], 
- "measure": [
-  "en", 
-  "em"
+ "new_mexico": [
+  "nm"
+ ], 
+ "new_south_wales": [
+  "nsw"
+ ], 
+ "new_testament": [
+  "nt"
+ ], 
+ "new_york": [
+  "ny"
+ ], 
+ "new_zealand": [
+  "nzl", 
+  "nz"
+ ], 
+ "newton": [
+  "n"
+ ], 
+ "nickel": [
+  "ni"
+ ], 
+ "nil": [
+  "o"
+ ], 
+ "nitrogen": [
+  "n"
+ ], 
+ "no_ball": [
+  "nb"
+ ], 
+ "no_good": [
+  "ng"
+ ], 
+ "noon": [
+  "n"
+ ], 
+ "north": [
+  "n"
+ ], 
+ "north_carolina": [
+  "nc"
  ], 
  "north_dakota": [
   "nd"
  ], 
- "roughly": [
-  "ca"
+ "northern_territory": [
+  "nt"
  ], 
- "say": [
-  "e.g."
+ "not_applicable": [
+  "na"
  ], 
- "church_of_england": [
-  "ce"
- ], 
- "spade": [
-  "s"
- ], 
- "catholic": [
-  "c"
- ], 
- "grand_prix": [
-  "gp"
- ], 
- "home_counties": [
-  "se"
+ "not_out": [
+  "no"
  ], 
  "note": [
   "nb", 
@@ -1131,108 +1501,278 @@
   "soh", 
   "lah"
  ], 
- "labour": [
-  "lab"
- ], 
- "new": [
-  "n"
- ], 
- "gym": [
-  "pe"
- ], 
- "ultimate": [
-  "z"
- ], 
- "province": [
-  "ni"
- ], 
- "maiden": [
-  "m"
- ], 
- "iceland": [
-  "is"
- ], 
- "english": [
-  "e"
- ], 
- "victoria": [
-  "vic"
- ], 
- "translator": [
-  "tr"
- ], 
- "montana": [
-  "mt"
- ], 
- "germany": [
-  "ger", 
-  "d", 
-  "de", 
-  "deu"
- ], 
- "letter": [
-  "ef", 
-  "em", 
-  "el"
+ "note_well": [
+  "nb"
  ], 
  "nothing": [
   "o"
  ], 
- "america": [
-  "am", 
-  "ususa"
+ "november": [
+  "n", 
+  "nov"
+ ], 
+ "novice": [
+  "l"
+ ], 
+ "now": [
+  "ad"
+ ], 
+ "number": [
+  "v", 
+  "x", 
+  "c", 
+  "d", 
+  "m", 
+  "l", 
+  "no", 
+  "pin"
  ], 
  "number_one": [
   "adam"
  ], 
- "pages": [
-  "pp"
+ "ocean": [
+  "o"
  ], 
- "queens_honour": [
-  "obe"
+ "odds": [
+  "sp"
  ], 
- "holy_man": [
-  "st"
+ "officer": [
+  "oc"
  ], 
- "new_testament": [
-  "nt"
+ "ohio": [
+  "oh"
  ], 
- "very_soft": [
-  "pp"
+ "oklahoma": [
+  "ok"
  ], 
- "constable": [
-  "pc"
+ "old": [
+  "o"
+ ], 
+ "old_boy": [
+  "ob"
+ ], 
+ "old_city": [
+  "ur"
+ ], 
+ "old_english": [
+  "oe"
+ ], 
+ "old_person": [
+  "oap"
+ ], 
+ "old_record": [
+  "ep"
  ], 
  "old_testament": [
   "ot"
  ], 
+ "one": [
+  "i", 
+  "rarely", 
+  "a", 
+  "an", 
+  "ace"
+ ], 
+ "operating_system": [
+  "os"
+ ], 
+ "operation": [
+  "op"
+ ], 
+ "oregon": [
+  "or"
+ ], 
+ "oriental": [
+  "e"
+ ], 
+ "ounce": [
+  "oz"
+ ], 
  "outsize": [
   "os"
  ], 
- "knock_out": [
-  "ko"
+ "outsized": [
+  "os"
+ ], 
+ "over": [
+  "o"
+ ], 
+ "over_the_top": [
+  "ott"
+ ], 
+ "overdose": [
+  "od"
+ ], 
+ "oxygen": [
+  "o"
+ ], 
+ "page": [
+  "p"
+ ], 
+ "pages": [
+  "pp"
+ ], 
+ "painters": [
+  "ra"
+ ], 
+ "pair": [
+  "pr"
+ ], 
+ "paramilitaries": [
+  "eta", 
+  "ira", 
+  "uff", 
+  "uda"
+ ], 
+ "parking": [
+  "p"
+ ], 
+ "party": [
+  "lab", 
+  "lib", 
+  "conc"
+ ], 
+ "pawn": [
+  "p"
+ ], 
+ "peacekeepers": [
+  "un"
+ ], 
+ "pencil": [
+  "hb"
+ ], 
+ "pennsylvania": [
+  "pa"
+ ], 
+ "penny": [
+  "p", 
+  "d", 
+  "cu"
+ ], 
+ "performing": [
+  "on"
+ ], 
+ "peru": [
+  "pe", 
+  "per"
+ ], 
+ "phone_company": [
+  "bt"
+ ], 
+ "phosphorus": [
+  "p"
+ ], 
+ "physical_education": [
+  "pe"
+ ], 
+ "physical_training": [
+  "pt"
+ ], 
+ "piano": [
+  "p"
+ ], 
+ "plane": [
+  "mig"
+ ], 
+ "plate": [
+  "lp"
+ ], 
+ "playing": [
+  "on"
+ ], 
+ "poem": [
+  "if"
+ ], 
+ "poet": [
+  "ts"
+ ], 
+ "point": [
+  "n", 
+  "e", 
+  "s", 
+  "w"
+ ], 
+ "pole": [
+  "n", 
+  "s"
+ ], 
+ "policeman": [
+  "pc"
+ ], 
+ "policeman/men": [
+  "pc", 
+  "di", 
+  "met", 
+  "cid"
+ ], 
+ "politician": [
+  "mp"
+ ], 
+ "posh": [
+  "u"
+ ], 
+ "post_office": [
+  "po"
+ ], 
+ "potassium": [
+  "k"
+ ], 
+ "pound": [
+  "lb"
+ ], 
+ "power": [
+  "p"
+ ], 
+ "present_day": [
+  "ad"
+ ], 
+ "priest": [
+  "pr", 
+  "rev", 
+  "rr", 
+  "dd", 
+  "fr", 
+  "eli"
+ ], 
+ "prime_minister": [
+  "pm"
+ ], 
+ "princess": [
+  "di"
+ ], 
+ "printers_measure": [
+  "en", 
+  "em"
+ ], 
+ "prisoner_of_war": [
+  "pow"
+ ], 
+ "private": [
+  "gi"
+ ], 
+ "private_investigator": [
+  "pi"
+ ], 
+ "promises": [
+  "ious"
+ ], 
+ "province": [
+  "ni"
+ ], 
+ "pub": [
+  "ph"
  ], 
  "public_record_office": [
   "pro"
  ], 
- "salt": [
-  "ab"
- ], 
- "local_area_network": [
-  "lan"
- ], 
- "significant_other": [
-  "so"
- ], 
- "gold": [
-  "au", 
-  "or"
- ], 
- "german": [
-  "g"
- ], 
- "text": [
-  "ms"
+ "quarter": [
+  "n", 
+  "s", 
+  "e", 
+  "w", 
+  "ne", 
+  "nw", 
+  "etc"
  ], 
  "queen": [
   "q", 
@@ -1240,118 +1780,69 @@
   "hm", 
   "r"
  ], 
- "fifty": [
-  "l"
+ "queens_honour": [
+  "obe"
  ], 
- "soldiers": [
-  "men"
+ "queensland": [
+  "qld"
  ], 
- "nevada": [
-  "nv"
+ "question": [
+  "q", 
+  "qu"
  ], 
- "fine": [
-  "f", 
-  "ok"
+ "quiet": [
+  "p", 
+  "pp", 
+  "sh", 
+  "mum"
  ], 
- "maine": [
-  "me"
+ "quiet/quietly": [
+  "p"
  ], 
- "setter": [
-  "ime"
- ], 
- "ulster_defence_association": [
-  "uda"
- ], 
- "prime_minister": [
-  "pm"
- ], 
- "whistle-blower": [
-  "ref"
- ], 
- "debts": [
-  "ious"
- ], 
- "minnesota": [
-  "mn"
- ], 
- "new_hampshire": [
-  "nh"
- ], 
- "royal_artillery": [
+ "radium": [
   "ra"
  ], 
- "sulfur": [
-  "s"
+ "railway": [
+  "r", 
+  "rybr", 
+  "ry", 
+  "br"
  ], 
- "circle": [
-  "o"
+ "record": [
+  "ep", 
+  "lp"
+ ], 
+ "ref": [
+  "ump"
+ ], 
+ "regina": [
+  "r"
+ ], 
+ "resistance": [
+  "r"
+ ], 
+ "retired": [
+  "ret"
+ ], 
+ "reverend": [
+  "rr", 
+  "dd", 
+  "rev"
+ ], 
+ "rex": [
+  "r"
+ ], 
+ "rhode_island": [
+  "ri"
+ ], 
+ "right": [
+  "r"
  ], 
  "right_reverend": [
   "rr"
  ], 
- "plate": [
-  "lp"
- ], 
- "over": [
+ "ring": [
   "o"
- ], 
- "newton": [
-  "n"
- ], 
- "cuba": [
-  "cu", 
-  "cub"
- ], 
- "michigan": [
-  "mi"
- ], 
- "bismuth": [
-  "bi"
- ], 
- "before_midday": [
-  "am"
- ], 
- "tungsten": [
-  "w"
- ], 
- "old_english": [
-  "oe"
- ], 
- "greek_character": [
-  "pi", 
-  "nu", 
-  "mu", 
-  "xi"
- ], 
- "operating_system": [
-  "os"
- ], 
- "aluminum": [
-  "al"
- ], 
- "artist": [
-  "ra"
- ], 
- "married": [
-  "m"
- ], 
- "posh": [
-  "u"
- ], 
- "softly": [
-  "p"
- ], 
- "nazis": [
-  "ss"
- ], 
- "switzerland": [
-  "che", 
-  "ch", 
-  "sui", 
-  "swi"
- ], 
- "x": [
-  "io"
  ], 
  "river": [
   "r", 
@@ -1359,55 +1850,189 @@
   "dee", 
   "po"
  ], 
- "husband": [
-  "h"
+ "road": [
+  "rdai", 
+  "rd"
  ], 
- "albania": [
-  "al", 
-  "alb"
+ "rolls_royce": [
+  "rr"
  ], 
- "intelligence": [
-  "iq"
+ "rook": [
+  "r"
  ], 
- "radium": [
+ "roughly": [
+  "ca"
+ ], 
+ "round": [
+  "o"
+ ], 
+ "royal_academy": [
   "ra"
+ ], 
+ "royal_artillery": [
+  "ra"
+ ], 
+ "royal_engineers": [
+  "re"
+ ], 
+ "royal_marines": [
+  "rm"
+ ], 
+ "royal_navy": [
+  "rn"
+ ], 
+ "run": [
+  "r"
+ ], 
+ "sailor": [
+  "ab", 
+  "tar", 
+  "rn", 
+  "salt", 
+  "jack", 
+  "hand"
+ ], 
+ "sailors": [
+  "abs", 
+  "rn"
+ ], 
+ "saint": [
+  "st"
+ ], 
+ "salt": [
+  "ab"
+ ], 
+ "sappers": [
+  "re"
+ ], 
+ "saturday": [
+  "s"
+ ], 
+ "say": [
+  "e.g."
+ ], 
+ "scholar": [
+  "ba"
+ ], 
+ "seaman": [
+  "ab"
+ ], 
+ "second": [
+  "s"
+ ], 
+ "second-class": [
+  "b"
+ ], 
+ "secret_service": [
+  "ss"
  ], 
  "see": [
   "cf"
  ], 
- "computer": [
-  "pc"
+ "selenium": [
+  "se"
  ], 
- "information_technology": [
+ "setter": [
+  "ime"
+ ], 
+ "sex_appeal": [
   "it"
  ], 
- "parking": [
+ "shakespearean_king": [
+  "lear"
+ ], 
+ "shilling": [
+  "s"
+ ], 
+ "ship": [
+  "ss"
+ ], 
+ "short_time": [
+  "t"
+ ], 
+ "short_wave": [
+  "sw"
+ ], 
+ "sibling": ["sis"],
+ "siblings": ["sis"],
+ "significant_other": [
+  "so"
+ ], 
+ "silence": [
+  "sh", 
+  "mum"
+ ], 
+ "silicon": [
+  "si"
+ ], 
+ "silk": [
+  "qckc"
+ ], 
+ "silver": [
+  "ag"
+ ], 
+ "single": [
+  "i"
+ ], 
+ "six-footer": [
+  "ant", 
+  "bee"
+ ], 
+ "society": [
+  "s"
+ ], 
+ "sodium": [
+  "na"
+ ], 
+ "soft": [
+  "p", 
+  "b"
+ ], 
+ "softly": [
   "p"
  ], 
- "yours_truly": [
-  "i", 
-  "me"
+ "soldier": [
+  "rm", 
+  "re", 
+  "gi", 
+  "ant"
  ], 
- "clef": [
-  "c", 
-  "f"
+ "soldiers": [
+  "men"
  ], 
- "brazil": [
-  "br", 
-  "bra"
+ "somalia": [
+  "so", 
+  "som"
  ], 
- "capone": [
-  "al"
+ "son": [
+  "s"
  ], 
- "master's": [
-  "ma"
+ "soprano": [
+  "s"
  ], 
- "knight": [
-  "k", 
-  "kt", 
-  "kbe", 
-  "kg", 
-  "n"
+ "south": [
+  "s"
+ ], 
+ "south_australia": [
+  "sa"
+ ], 
+ "south_carolina": [
+  "sc"
+ ], 
+ "spade": [
+  "s"
+ ], 
+ "spades": [
+  "s"
+ ], 
+ "spanish": [
+  "el"
+ ], 
+ "sportsman": [
+  "blue"
+ ], 
+ "square": [
+  "s"
  ], 
  "state": [
   "al", 
@@ -1461,33 +2086,254 @@
   "wi", 
   "wy"
  ], 
- "flying_bomb": [
-  "vi"
+ "street": [
+  "st", 
+  "ave", 
+  "rd", 
+  "way"
  ], 
- "diamonds": [
-  "d"
+ "strings": [
+  "e", 
+  "a", 
+  "d", 
+  "g"
  ], 
- "tyro": [
-  "l"
+ "student": [
+  "l", 
+  "nus"
  ], 
- "wide": [
-  "w"
+ "submarine": [
+  "u", 
+  "sub"
  ], 
- "europe": [
-  "eu", 
-  "ec"
+ "sulfur": [
+  "s"
+ ], 
+ "sunday": [
+  "s"
+ ], 
+ "support": [
+  "bra"
+ ], 
+ "sweat": [
+  "bo"
+ ], 
+ "switzerland": [
+  "che", 
+  "ch", 
+  "sui", 
+  "swi"
+ ], 
+ "tar": [
+  "ab"
+ ], 
+ "tasmania": [
+  "tas"
+ ], 
+ "tax": [
+  "vat"
+ ], 
+ "teachers": [
+  "nut"
+ ], 
+ "team": [
+  "xi"
+ ], 
+ "teas": [
+  "tt"
+ ], 
+ "teetotal": [
+  "ttaa", 
+  "tt"
+ ], 
+ "temperature": [
+  "t"
+ ], 
+ "ten": [
+  "x", 
+  "io"
+ ], 
+ "tennessee": [
+  "tn"
+ ], 
+ "tenor": [
+  "t"
+ ], 
+ "territorial_army": [
+  "ta"
+ ], 
+ "terrorists": [
+  "eta", 
+  "ira", 
+  "uff", 
+  "uda"
+ ], 
+ "texas": [
+  "tx"
+ ], 
+ "text": [
+  "ms"
+ ], 
+ "thanks": [
+  "ta"
+ ], 
+ "that_is": [
+  "ie"
+ ], 
+ "the_same": [
+  "id"
  ], 
  "the_thing": [
   "it"
  ], 
- "iron": [
-  "fe"
+ "theologian": [
+  "dd"
  ], 
- "outsized": [
-  "os"
+ "this_month": [
+  "inst"
  ], 
- "at_home": [
+ "thousand": [
+  "g", 
+  "m", 
+  "k"
+ ], 
+ "thursday": [
+  "th", 
+  "thurs"
+ ], 
+ "thus": [
+  "ie", 
+  "sic"
+ ], 
+ "time": [
+  "t", 
+  "s", 
+  "m", 
+  "hr"
+ ], 
+ "times": [
+  "x"
+ ], 
+ "tin": [
+  "sn"
+ ], 
+ "titanium": [
+  "ti"
+ ], 
+ "toilet": [
+  "wc"
+ ], 
+ "top_class": [
+  "ai"
+ ], 
+ "tory": [
+  "con"
+ ], 
+ "translator": [
+  "tr"
+ ], 
+ "trendy": [
   "in"
+ ], 
+ "tripod": [
+  "y"
+ ], 
+ "tuesday": [
+  "t", 
+  "tues"
+ ], 
+ "tungsten": [
+  "w"
+ ], 
+ "turn": [
+  "u"
+ ], 
+ "two": [
+  "duo", 
+  "ii"
+ ], 
+ "tyro": [
+  "l"
+ ], 
+ "ulster": [
+  "ni"
+ ], 
+ "ulster_defence_association": [
+  "uda"
+ ], 
+ "ulster_freedom_fighters": [
+  "uff"
+ ], 
+ "ultimate": [
+  "z"
+ ], 
+ "united_kingdom": [
+  "gbr", 
+  "uk"
+ ], 
+ "united_nations": [
+  "un"
+ ], 
+ "united_states": [
+  "usa", 
+  "us"
+ ], 
+ "university": [
+  "uou", 
+  "up", 
+  "ou"
+ ], 
+ "unknown": [
+  "x", 
+  "yz", 
+  "y", 
+  "z"
+ ], 
+ "upper_class": [
+  "u"
+ ], 
+ "uranium": [
+  "u"
+ ], 
+ "utah": [
+  "ut"
+ ], 
+ "value_added_tax": [
+  "vat"
+ ], 
+ "vanadium": [
+  "v"
+ ], 
+ "variable": [
+  "x", 
+  "yz", 
+  "y", 
+  "z"
+ ], 
+ "vermont": [
+  "vt"
+ ], 
+ "versus": [
+  "vvs", 
+  "vs"
+ ], 
+ "very": [
+  "v"
+ ], 
+ "very_black": [
+  "bb"
+ ], 
+ "very_loud": [
+  "ff"
+ ], 
+ "very_soft": [
+  "pp"
+ ], 
+ "victoria": [
+  "vic"
+ ], 
+ "virginia": [
+  "va"
  ], 
  "vitamin": [
   "a", 
@@ -1497,957 +2343,113 @@
   "d", 
   "e"
  ], 
- "key": [
-  "a", 
-  "b", 
-  "c", 
-  "d", 
-  "e", 
-  "fg", 
-  "f", 
-  "g"
- ], 
- "carbon": [
-  "c"
- ], 
- "air_conditioning": [
-  "ac"
- ], 
- "last_month": [
-  "ult"
- ], 
- "many": [
-  "cl", 
-  "xd..."
- ], 
- "quiet": [
-  "p", 
-  "pp", 
-  "sh", 
-  "mum"
- ], 
- "drug": [
-  "c", 
-  "e", 
-  "x", 
-  "h"
- ], 
- "officer": [
-  "oc"
- ], 
- "western_australia": [
-  "wa"
- ], 
- "note_well": [
-  "nb"
- ], 
- "railway": [
-  "r", 
-  "rybr", 
-  "ry", 
-  "br"
- ], 
- "first_woman": [
-  "eve"
- ], 
- "point": [
-  "n", 
-  "e", 
-  "s", 
-  "w"
- ], 
- "tuesday": [
-  "t", 
-  "tues"
- ], 
- "lake": [
-  "lla"
- ], 
- "bridge_player": [
-  "n", 
-  "e", 
-  "s", 
-  "w"
- ], 
- "pole": [
-  "n", 
-  "s"
- ], 
- "tennessee": [
-  "tn"
- ], 
- "article": [
-  "a", 
-  "an", 
-  "the"
- ], 
- "arsenic": [
-  "as"
- ], 
- "chromium": [
-  "cr"
- ], 
- "100": [
-  "c"
- ], 
- "poem": [
-  "if"
- ], 
- "womens_supporter": [
-  "bra"
- ], 
- "cent": [
-  "c"
- ], 
- "advert": [
-  "ad"
- ], 
- "submarine": [
-  "u", 
-  "sub"
- ], 
- "actinium": [
-  "ac"
- ], 
- "ireland": [
-  "ire"
- ], 
- "poet": [
-  "ts"
- ], 
- "louisiana": [
-  "la"
- ], 
- "artificial_intelligence": [
-  "ai"
- ], 
- "500": [
-  "d"
- ], 
- "501": [
-  "di"
- ], 
- "firm": [
-  "co"
- ], 
- "dry": [
-  "tt", 
-  "aa"
- ], 
- "direction": [
-  "n", 
-  "e", 
-  "s", 
-  "w"
- ], 
- "nickel": [
-  "ni"
- ], 
- "monsieur": [
-  "m"
- ], 
- "thousand": [
-  "g", 
-  "m", 
-  "k"
- ], 
- "worker": [
-  "ant", 
-  "bee"
- ], 
- "belgium": [
-  "bel", 
-  "be"
- ], 
- "bonds_boss": [
-  "m"
- ], 
- "messerschmitt": [
-  "me"
- ], 
- "overdose": [
-  "od"
- ], 
- "former": [
-  "ex"
- ], 
- "georgia": [
-  "ga", 
-  "ge"
- ], 
- "politician": [
-  "mp"
- ], 
- "hire_purchase": [
-  "hp"
- ], 
- "bill": [
-  "ac", 
-  "iou"
- ], 
- "kentucky": [
-  "ky"
- ], 
- "will": [
-  "ll"
- ], 
- "calcium": [
-  "ca"
- ], 
- "teachers": [
-  "nut"
- ], 
- "fleet": [
-  "rn"
- ], 
- "aluminium": [
-  "al"
- ], 
- "pound": [
-  "lb"
- ], 
- "century": [
-  "c"
- ], 
- "national_trust": [
-  "nt"
- ], 
- "thus": [
-  "ie", 
-  "sic"
- ], 
- "royal_engineers": [
-  "re"
- ], 
- "decoration": [
-  "vc", 
-  "gc"
- ], 
- "ecstasy": [
-  "ex"
- ], 
- "in_this_matter": [
-  "re"
- ], 
- "against": [
-  "v", 
-  "vs"
- ], 
- "the_same": [
-  "id"
- ], 
- "tenor": [
-  "t"
- ], 
- "iowa": [
-  "ia"
- ], 
- "arabic": [
-  "ar"
- ], 
- "helium": [
-  "he"
- ], 
- "italy": [
-  "it", 
-  "ita"
- ], 
- "doctor": [
-  "doc", 
-  "bm", 
-  "mb", 
-  "md", 
-  "mo", 
-  "gp", 
-  "dr"
- ], 
- "medic": [
-  "doc", 
-  "bm", 
-  "mb", 
-  "md", 
-  "mo", 
-  "gp", 
-  "dr"
- ], 
- "cross": [
-  "x"
- ], 
- "member": [
-  "mp"
- ], 
- "south_australia": [
-  "sa"
- ], 
- "batting": [
-  "in"
- ], 
- "grand": [
-  "g", 
-  "m", 
-  "k"
- ], 
- "inch": [
-  "in"
- ], 
- "monarch": [
-  "er", 
-  "gr", 
-  "q", 
-  "k", 
-  "r"
- ], 
- "lithium": [
-  "li"
- ], 
- "week": [
-  "w"
- ], 
- "extra_terrestrial": [
-  "et"
- ], 
- "nil": [
-  "o"
- ], 
- "extra_large": [
-  "xl"
- ], 
- "hand": [
-  "ab", 
-  "l", 
-  "r"
- ], 
- "moment": [
-  "mo"
- ], 
- "six-footer": [
-  "ant", 
-  "bee"
- ], 
- "student": [
-  "l", 
-  "nus"
- ], 
- "prisoner_of_war": [
-  "pow"
- ], 
- "vermont": [
-  "vt"
- ], 
- "priest": [
-  "pr", 
-  "rev", 
-  "rr", 
-  "dd", 
-  "fr", 
-  "eli"
- ], 
- "pennsylvania": [
-  "pa"
- ], 
- "old_person": [
-  "oap"
- ], 
- "long_playing_record": [
-  "lp"
- ], 
- "drip": [
-  "iv"
- ], 
- "ocean": [
-  "o"
- ], 
- "without": [
-  "wo"
- ], 
- "mother": [
-  "ma"
- ], 
- "hearts": [
-  "h"
- ], 
- "alabama": [
-  "al"
- ], 
- "left": [
-  "l"
- ], 
- "ambassador": [
-  "he"
- ], 
- "novice": [
-  "l"
- ], 
- "united_states": [
-  "usa", 
-  "us"
- ], 
- "neon": [
-  "ne"
- ], 
- "1_001": [
-  "mi"
- ], 
- "civil_engineer": [
-  "ce"
- ], 
- "thanks": [
-  "ta"
- ], 
- "kilo": [
-  "k"
- ], 
- "love": [
-  "o"
- ], 
- "graduate": [
-  "ba", 
-  "ma", 
-  "mb"
- ], 
- "bearing": [
-  "n", 
-  "e", 
-  "s", 
-  "w", 
-  "ne", 
-  "nw"
- ], 
- "megabyte": [
-  "mb"
- ], 
- "and_so_on": [
-  "etc"
- ], 
- "day": [
-  "d", 
-  "v", 
-  "sun", 
-  "mon", 
-  "tue", 
-  "wed", 
-  "thu", 
-  "thurs", 
-  "fri", 
-  "sat"
- ], 
- "4": [
-  "iv"
- ], 
- "east": [
-  "e"
- ], 
- "very_black": [
-  "bb"
- ], 
- "beryllium": [
-  "be"
- ], 
- "australia": [
-  "ausoz", 
-  "aus", 
-  "au", 
-  "oz"
- ], 
- "teetotal": [
-  "ttaa", 
-  "tt"
- ], 
- "around": [
-  "ca"
- ], 
- "sailors": [
-  "abs", 
-  "rn"
- ], 
- "big": [
-  "os"
- ], 
- "utah": [
-  "ut"
- ], 
- "map-makers": [
-  "os"
- ], 
- "good_man": [
-  "st"
- ], 
- "game": [
-  "ru"
- ], 
- "five": [
+ "volt": [
   "v"
  ], 
- "knot": [
-  "kt"
+ "volume": [
+  "v"
  ], 
- "judge": [
-  "j"
+ "volunteers": [
+  "ta"
  ], 
- "lincoln": [
-  "abe"
- ], 
- "performing": [
-  "on"
- ], 
- "51": [
-  "li"
- ], 
- "50": [
-  "l"
- ], 
- "common_era": [
-  "ce"
- ], 
- "no_ball": [
-  "nb"
- ], 
- "that_is": [
-  "ie"
- ], 
- "morninghalf_day": [
-  "am"
- ], 
- "soft": [
-  "p", 
-  "b"
- ], 
- "page": [
-  "p"
- ], 
- "german_submarine": [
-  "u"
- ], 
- "attorney": [
-  "da", 
-  "pa"
- ], 
- "right": [
-  "r"
- ], 
- "old": [
-  "o"
- ], 
- "policeman/men": [
-  "pc", 
-  "di", 
-  "met", 
-  "cid"
- ], 
- "church": [
-  "chcerc", 
-  "ch", 
-  "ce"
- ], 
- "ministry_of_defence": [
-  "mod"
- ], 
- "hush": [
-  "sh"
- ], 
- "malaysia": [
-  "my", 
-  "mys"
- ], 
- "clubs": [
-  "c"
- ], 
- "old_record": [
-  "ep"
- ], 
- "escape": [
-  "esc"
- ], 
- "trendy": [
-  "in"
- ], 
- "carbon_copy": [
-  "cc"
- ], 
- "middle_east": [
-  "me"
- ], 
- "lead": [
-  "pb"
- ], 
- "conservationists": [
-  "nt"
- ], 
- "noon": [
-  "n"
- ], 
- "delaware": [
-  "de"
- ], 
- "seaman": [
-  "ab"
- ], 
- "conservative": [
-  "c", 
-  "con"
- ], 
- "virginia": [
-  "va"
- ], 
- "high_class": [
-  "ai", 
-  "u"
- ], 
- "journalist": [
-  "ed"
- ], 
- "short_wave": [
-  "sw"
- ], 
- "yttrium": [
-  "y"
- ], 
- "run": [
-  "r"
- ], 
- "power": [
-  "p"
- ], 
- "new_zealand": [
-  "nzl", 
-  "nz"
- ], 
- "greek_letter": [
-  "pi", 
-  "nu", 
-  "mu", 
-  "xi"
- ], 
- "lieutenant": [
-  "lt"
- ], 
- "frenchman": [
-  "m"
- ], 
- "chapter": [
-  "c", 
-  "ch"
- ], 
- "about": [
-  "c", 
-  "ca", 
-  "re", 
-  "ce"
- ], 
- "physical_education": [
-  "pe"
- ], 
- "army_cop": [
-  "mp"
- ], 
- "months": [
-  "mos"
- ], 
- "gallium": [
-  "ga"
- ], 
- "ounce": [
-  "oz"
- ], 
- "afternoon": [
-  "pm"
- ], 
- "knave": [
-  "j"
- ], 
- "very_loud": [
-  "ff"
- ], 
- "silence": [
-  "sh", 
-  "mum"
- ], 
- "colorado": [
-  "co"
- ], 
- "terrorists": [
-  "eta", 
-  "ira", 
-  "uff", 
-  "uda"
- ], 
- "present_day": [
-  "ad"
+ "vote": [
+  "x"
  ], 
  "washington": [
   "wa"
- ], 
- "son": [
-  "s"
- ], 
- "variable": [
-  "x", 
-  "yz", 
-  "y", 
-  "z"
- ], 
- "model": [
-  "t"
- ], 
- "female": [
-  "f"
- ], 
- "artists": [
-  "ra"
- ], 
- "short_time": [
-  "t"
- ], 
- "midfielder": [
-  "l"
- ], 
- "wicket": [
-  "w"
- ], 
- "fluorine": [
-  "f"
- ], 
- "deutschmark": [
-  "dm"
- ], 
- "mississippi": [
-  "ms"
- ], 
- "coin": [
-  "p", 
-  "d"
- ], 
- "weight": [
-  "g", 
-  "lb", 
-  "lbs"
- ], 
- "football_club": [
-  "fc"
- ], 
- "medal": [
-  "vc", 
-  "gc", 
-  "obe", 
-  "om"
- ], 
- "support": [
-  "bra"
- ], 
- "question": [
-  "q", 
-  "qu"
- ], 
- "royal_academy": [
-  "ra"
- ], 
- "width": [
-  "w"
- ], 
- "accountant": [
-  "ca", 
-  "cpa"
- ], 
- "south_carolina": [
-  "sc"
- ], 
- "editor": [
-  "ed"
  ], 
  "way": [
   "rd", 
   "st", 
   "ave"
  ], 
- "master_of_ceremonies": [
-  "mc"
+ "wednesday": [
+  "w", 
+  "wed"
  ], 
- "bolivia": [
-  "bo", 
-  "bol"
- ], 
- "royal_marines": [
-  "rm"
- ], 
- "fish": [
-  "ling", 
-  "eel", 
-  "cod"
- ], 
- "hard": [
-  "h"
- ], 
- "north": [
-  "n"
- ], 
- "potassium": [
-  "k"
- ], 
- "tripod": [
-  "y"
- ], 
- "gunners": [
-  "ra"
- ], 
- "volume": [
-  "v"
- ], 
- "ulster_freedom_fighters": [
-  "uff"
- ], 
- "soprano": [
-  "s"
- ], 
- "hear": [
-  "t"
- ], 
- "line": [
-  "l"
- ], 
- "with": [
+ "week": [
   "w"
  ], 
- "junior": [
-  "jr"
+ "weight": [
+  "g", 
+  "lb", 
+  "lbs"
  ], 
- "secret_service": [
-  "ss"
+ "west_virginia": [
+  "wv"
  ], 
- "record": [
-  "ep", 
-  "lp"
+ "western_australia": [
+  "wa"
  ], 
- "151": [
-  "cli"
- ], 
- "toilet": [
-  "wc"
- ], 
- "promises": [
-  "ious"
- ], 
- "liberal": [
-  "l", 
-  "lib"
- ], 
- "penny": [
-  "p", 
-  "d", 
-  "cu"
- ], 
- "phone_company": [
-  "bt"
- ], 
- "kansas": [
-  "ks"
- ], 
- "disease": [
-  "tb"
- ], 
- "single": [
-  "i"
- ], 
- "exist": [
-  "be"
- ], 
- "ship": [
-  "ss"
- ], 
- "bishop": [
-  "brr"
- ], 
- "chromosome": [
-  "xy"
- ], 
- "uranium": [
-  "u"
- ], 
- "illinois": [
-  "il"
- ], 
- "tin": [
-  "sn"
- ], 
- "book": [
-  "nt", 
-  "ot"
- ], 
- "5": [
-  "v"
- ], 
- "concerning": [
-  "re"
- ], 
- "north_carolina": [
-  "nc"
- ], 
- "bachelor_of_arts": [
-  "ba"
- ], 
- "monday": [
-  "m", 
-  "mon"
- ], 
- "gas": [
-  "h", 
-  "o", 
-  "n", 
-  "cs", 
-  "co", 
-  "etc"
- ], 
- "xenon": [
-  "xe"
- ], 
- "regina": [
-  "r"
- ], 
- "arbiter": [
+ "whistle-blower": [
   "ref"
  ], 
- "massachusetts": [
-  "ma"
- ], 
- "queensland": [
-  "qld"
- ], 
- "compass_point": [
-  "n", 
-  "e", 
-  "s", 
+ "wicket": [
   "w"
  ], 
- "phosphorus": [
-  "p"
+ "wide": [
+  "w"
  ], 
- "spades": [
-  "s"
+ "width": [
+  "w"
  ], 
  "wife": [
   "w"
  ], 
- "odds": [
-  "sp"
+ "will": [
+  "ll"
  ], 
- "care_of": [
-  "co"
+ "wisconsin": [
+  "wi"
  ], 
- "after_midday": [
-  "pm"
+ "with": [
+  "w"
  ], 
- "missouri": [
-  "mo"
+ "without": [
+  "wo"
  ], 
- "integrated_circuit": [
-  "ic"
+ "womens_supporter": [
+  "bra"
  ], 
- "strings": [
-  "e", 
-  "a", 
-  "d", 
-  "g"
+ "work": [
+  "w", 
+  "op", 
+  "opus"
  ], 
- "also_known_as": [
-  "aka"
+ "worker": [
+  "ant", 
+  "bee"
+ ], 
+ "wyoming": [
+  "wy"
+ ], 
+ "x": [
+  "io"
+ ], 
+ "xenon": [
+  "xe"
+ ], 
+ "yard": [
+  "ydy"
+ ], 
+ "year": [
+  "yyr"
+ ], 
+ "yemen": [
+  "ye", 
+  "yem"
+ ], 
+ "yours_truly": [
+  "i", 
+  "me"
+ ], 
+ "yttrium": [
+  "y"
+ ], 
+ "zero": [
+  "o"
+ ], 
+ "zinc": [
+  "zn"
  ]
 }

@@ -1,6 +1,5 @@
 import cPickle as pickle
 from collections import defaultdict
-from utils.cryptics import additional_synonyms
 import json
 
 def load_synonyms():
@@ -17,11 +16,8 @@ def load_abbreviations():
 SYNONYMS = load_synonyms()
 ABBREVIATIONS = load_abbreviations()
 
-for s in additional_synonyms:
-    SYNONYMS[s].extend(additional_synonyms[s])
-for s in ABBREVIATIONS:
-    SYNONYMS[s].extend(ABBREVIATIONS[s])
-
+for s, vals in ABBREVIATIONS.items():
+    SYNONYMS[s].extend(vals)
 
 def cached_synonyms(x, length=None):
     x = x.lower()

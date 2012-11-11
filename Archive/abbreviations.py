@@ -41,7 +41,7 @@ def pull_from_file(file_name):
                         abbreviation_dictionary[defi] = abbreviation_dictionary[defi] + [abb]
     return abbreviation_dictionary
 
-ABBREVIATIONS = pull_from_file('data/abbr_text_list.txt')
+ABBREVIATIONS = dict((key.lower(), [v.lower() for v in value]) for key, value in pull_from_file('data/abbr_text_list.txt').items())
 
 with open('data/abbreviations.json', 'w') as f:
-    json.dump(ABBREVIATIONS, f, indent=1)
+    json.dump(ABBREVIATIONS, f, indent=1, sort_keys=True)
