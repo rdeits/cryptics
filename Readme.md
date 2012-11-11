@@ -1,6 +1,4 @@
-Usage:
-
-	python solve_structured_clue.py
+# Usage:
 
 Web interface: http://localhost:8080/
 
@@ -10,8 +8,12 @@ Test cases (requires the python nose package):
 
 	nosetests
 
-Required python packages:
+# Required python packages:
 
 	nose
 	web
 	nltk
+
+# Installation:
+
+Just add the "cryptics" folder to your pythonpath
