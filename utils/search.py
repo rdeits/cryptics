@@ -11,7 +11,7 @@ def tree_search(start, branching_list, branch_index_test=lambda x: True,
     ['ac', 'ad', 'bc', 'bd']
     """
 
-    active_set = [start]
+    active_set = start
     for i, part in enumerate(branching_list):
         if not branch_index_test(i):
             continue

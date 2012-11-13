@@ -2,7 +2,6 @@ import cPickle as pickle
 import os
 import re
 from utils.ngrams import NGRAMS
-from utils.search import tree_search
 import json
 
 

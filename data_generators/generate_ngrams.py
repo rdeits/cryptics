@@ -5,8 +5,9 @@ initial_ngrams = dict()
 ngrams = dict()
 
 for word in WORDS:
-    for i in range(1, len(word) + 1):
-        initial_ngrams.setdefault(i, set([])).add(word[:i])
+    l = len(word)
+    for i in range(len(word) + 1):
+        initial_ngrams.setdefault(l, dict()).setdefault(i, set([])).add(word[:i])
         for j in range(len(word) - i + 1):
             ngrams.setdefault(i, set([])).add(word[j: j + i])
 

@@ -7,31 +7,31 @@ def string_reverse(x, length):
     return [''.join(reversed(x))]
 
 
-def substring_words(sentence, length):
-    sentence = re.sub('_', '', sentence).lower()
-    for i in range(len(sentence) - length + 1):
-        s = sentence[i:i + length]
-        if s in WORDS:
-            yield s
-
-
 def all_legal_substrings(word, length):
+    subs = set([])
     word = word.lower()
-    subs = []
-    for l in range(1, min(len(word) - 1, length) + 1):
-        subs.extend(legal_substrings(word, l))
-        subs.extend(substring_words(word, l))
+    if '_' in word:
+        word = word.replace('_', '')
+        for i in range(len(word) - length + 1):
+            s = word[i:i + length]
+            if s in WORDS:
+                subs.add(s)
+    else:
+        for l in range(1, min(len(word) - 1, length, 3) + 1):
+            subs.update(legal_substrings(word, l))
     return subs
 
 
 def legal_substrings(word, length):
-    yield word[:length]
-    yield word[-length:]
-    if len(word) % 2 == 0 and length % 2 == 0:
-        yield word[:length//2] + word[-length//2:]
-        yield word[len(word)//2-length//2:len(word)//2+length//2]
-    elif len(word) % 2 == 1 and length % 2 == 1:
-        yield word[len(word)//2-length//2:len(word)//2+length//2+1]
+    result = set([])
+    result.add(word[:length])
+    result.add(word[-length:])
+    if len(word) % 2 == 0 and length == 2:
+        result.add(word[:length//2] + word[-length//2:])
+        result.add(word[len(word)//2-length//2:len(word)//2+length//2])
+    elif len(word) % 2 == 1 and length in [1,3]:
+        result.add(word[len(word)//2-length//2:len(word)//2+length//2+1])
+    return result
 
 
 def semantic_similarity(word1, word2):

@@ -1,7 +1,7 @@
 
 
 def load_words():
-    with open('data/sowpods.txt', 'r') as f:
+    with open('raw_data/sowpods.txt', 'r') as f:
         words = set(w.strip() for w in f.readlines())
     return words
 
