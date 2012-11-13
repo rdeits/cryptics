@@ -1,6 +1,5 @@
 import re
-from utils.words import WORDS
-from utils.synonyms import cached_synonyms
+from utils.synonyms import cached_synonyms, WORDS
 from nltk.corpus import wordnet as wn
 
 

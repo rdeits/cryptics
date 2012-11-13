@@ -35,15 +35,24 @@ def check_functions(kinds):
             return False
         if kinds[i + 1] == 'ins' and not ('_l' in kinds[i] or kinds[i] in ['lit', 'syn', 'first']):
             return False
+    for i in range(len(kinds) - 2):
+        if '_r' in kinds[i] and '_l' in kinds[i + 2]:
+            return False
     return True
 
 
 def check_totals(kinds):
     if kinds.count('ana_l') + kinds.count('ana_r') > 1:
         return False
-    if any(kinds[i] == 'null' and kinds[i + 1] == 'null' and kinds[i + 2] == 'null' for i in range(len(kinds) - 2)):
+    if kinds.count('null') > 2:
+        return False
+    if kinds.count('d') > 1:
         return False
     if all(k == 'null' or k == 'd' for k in kinds):
+        return False
+    if kinds.count('syn') > 2:
+        return False
+    if kinds.count('ins') > 1:
         return False
     return True
 
