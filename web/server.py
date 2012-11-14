@@ -1,6 +1,6 @@
 import web
 from web import form
-from solve_structured_clue import solve_clue_text
+from solve_factored_clue import solve_clue_text
 
 render = web.template.render('web/templates/')
 
