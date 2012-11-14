@@ -19,6 +19,10 @@ TRANSFORMS = {'lit': lambda x, l: [x.lower()],
 
 
 def solve_clue_text(clue_text):
+    """
+    Solve a raw clue, like
+    Initially babies are naked (4) b... | BARE
+    """
     solved_parts = dict()
     all_phrasings, answer = parse_clue_text(clue_text)
     answers = set([])
@@ -53,6 +57,10 @@ def parse_clue_text(clue_text):
 
 
 def solve_phrasing(phrasing, solved_parts=dict()):
+    """
+    Solve a clue which has been broken down into phrases, like:
+    ['initially', 'babies', 'are', 'naked', 4, 'b...']
+    """
     pattern = phrasing.pop()
     length = phrasing.pop()
     answers = set([])
@@ -68,10 +76,18 @@ def solve_phrasing(phrasing, solved_parts=dict()):
 
 
 def generate_structured_clues(phrases, length, pattern):
+    """
+    Generate all the possible structured clues for a given phrasing. Each structured clue gives the function of each word in the clue, such as:
+    [('initially', 'sub_r'), ('babies', 'lit'), ('are', 'lit'), ('naked', 'd'), 4, 'b...']
+    """
     return [zip(phrases, k) + [length, pattern] for k in generate_kinds(phrases)]
 
 
 def solve_structured_clue(clue, solved_parts=dict()):
+    """
+    Solve a structured clue of the form:
+    [('initially', 'sub_r'), ('babies', 'lit'), ('are', 'lit'), ('naked', 'd'), 4, 'b...']
+    """
     pattern = clue.pop()
     length = clue.pop()
     definition, d = clue[[x[1] for x in clue].index('d')]
@@ -125,6 +141,18 @@ def factor_structured_clue(clue):
 
 
 def solve_factored_clue(clue, length, pattern, solved_parts=dict()):
+    """
+    Solve a factored clue of the form:
+    ('cat', ('initially', 'sub', ('babies', 'lit')), ('are', 'lit'), ('naked', 'd'))
+
+    length is the maximum length of an answer
+
+    pattern is a simple regex limiting the answer (only applied to the final 'cat' step)
+
+    solved_parts is a map from factored sub-clues such as:
+     ('initially', 'sub', ('babies', 'lit'))
+     to their answers which were previously computed
+     """
     if clue in solved_parts:
         return solved_parts[clue]
     if clue[1] in TRANSFORMS:
