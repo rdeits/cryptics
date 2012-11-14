@@ -3,7 +3,6 @@ from utils.language import all_legal_substrings, semantic_similarity, all_insert
 from utils.ngrams import INITIAL_NGRAMS
 from utils.anagrams import cached_anagrams
 from utils.synonyms import cached_synonyms, WORDS
-from utils.cryptics import compute_arg_offsets
 from utils.kinds import generate_kinds
 from utils.search import tree_search
 from utils.phrasings import phrasings
@@ -87,6 +86,12 @@ def solve_structured_clue(clue, solved_parts=dict()):
 
 
 def factor_structured_clue(clue):
+    """
+    Convert the flat clue structure to a lisp-like "factored" format. This might look something like this:
+    ('cat', ('initially', 'sub', ('babies', 'lit')), ('are', 'lit'), ('naked', 'd'))
+    Meaning that 'initially' extracts a substring of 'babies' and is concatenated with 'are' to get a word meaning 'naked' (BARE).
+    The reason we do this is that it allows us to recursively solve the sub-parts of the clue. More importantly, each sub-clue is now a tuple of strings and tuples and can therefore be a key in a dictionary. This means that we can cache the answers to sub-clues to save computation time.
+    """
     skip = set([])
     for i, group in enumerate(clue):
         if i in skip:
