@@ -12,16 +12,25 @@ import re
 VERBOSE = False
 
 
+class ClueUnsolvableException(Exception):
+    def __init__(self, clue):
+        self.clue = clue
+
+    def __str__(self):
+        print self.clue
+
+
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
 
 TRANSFORMS = {'lit': lambda x, l: [x.replace(' ', '').lower()],
               'null': lambda x, l: [''],
+              'd': lambda x, l: [''],
               'first': lambda x, l: [x[0].lower()],
               'syn': cached_synonyms}
 
 
 def generate_structured_clues(phrases, length, pattern):
-    return (zip(phrases, k) + [length, pattern] for k in generate_kinds(phrases))
+    return [zip(phrases, k) + [length, pattern] for k in generate_kinds(phrases)]
 
 
 def find_skipped_groups(clue):
@@ -38,8 +47,8 @@ def find_skipped_groups(clue):
 def solve_structured_clue(clue):
     pattern = clue.pop()
     length = clue.pop()
-    definition, d = clue.pop([x[1] for x in clue].index('d'))
-    if len(clue) == 0:
+    definition, d = clue[[x[1] for x in clue].index('d')]
+    if len(clue) == 1:
         # this must be just a regular crossword clue (no wordplay)
         answers = [(s, semantic_similarity(s, definition)) for s in cached_synonyms(definition) if len(s) == length and matches_pattern(s, pattern)]
         return sorted(answers, key=lambda x: x[1], reverse=True)
@@ -52,6 +61,8 @@ def solve_structured_clue(clue):
         count += 1
         for i, group in enumerate(clue):
             remaining_letters = length - min(len(s) for s in active_set)
+            if remaining_letters < 0:
+                return []
             if len(answer_subparts[i]) == 0:
                 phrase, kind = group
                 if kind[:3] in FUNCTIONS:
@@ -68,26 +79,25 @@ def solve_structured_clue(clue):
                 else:
                     answer_subparts[i] = set(TRANSFORMS[kind](phrase, remaining_letters))
                 if len(answer_subparts[i]) == 0:
-                    return []
+                    if kind[:3] in FUNCTIONS:
+                        base_clue = clue[:i + max(0, *arg_offsets) + 1]
+                    else:
+                        base_clue = clue[:i + 1]
+                    raise ClueUnsolvableException(base_clue)
             # print "index and subparts", i, answer_subparts
             if all(len(s) > 0 for s in answer_subparts[:i + 1]) and i not in groups_to_skip:
                 if i >= groups_added:
-                    if remaining_letters <= 0:
-                        return []
                     if VERBOSE:
                         print "updating"
                         print "current active set:", active_set
-                        print "branching list:", answer_subparts[groups_added:i+1]
+                        print "branching list:", answer_subparts[groups_added:i + 1]
                     active_set = set(tree_search(active_set, answer_subparts[groups_added:i + 1], lambda x: (x + groups_added) not in groups_to_skip, lambda x: len(x) <= length and x in INITIAL_NGRAMS[length][len(x)] and matches_pattern(x, pattern)))
                     if VERBOSE:
                         print "new active set:", active_set
                     groups_added = i + 1
                 if len(active_set) == 0:
-                    return []
+                    raise ClueUnsolvableException(clue[:i + 3])
 
-    # wordplay_answers = set(tree_search([''], answer_subparts,
-    #                                 lambda x: x not in groups_to_skip,
-    #                                 lambda x: len(x) <= length and x in INITIAL_NGRAMS[len(x)] and matches_pattern(x, pattern)))
     wordplay_answers = active_set
     answers = [(s, semantic_similarity(s, definition)) for s in wordplay_answers if s in WORDS and len(s) == length]
     return sorted(answers, key=lambda x: x[1], reverse=True)
@@ -98,12 +108,20 @@ def solve_phrasing(phrasing):
     length = phrasing.pop()
     answers = set([])
     answers_with_clues = []
-    for clue in generate_structured_clues(phrasing, length, pattern):
+    possible_clues = generate_structured_clues(phrasing, length, pattern)
+    for i, clue in enumerate(possible_clues):
         # print clue
-        new_answers = solve_structured_clue(clue[:])
-        new_answers = [a for a in new_answers if a not in answers]
-        answers.update(new_answers)
-        answers_with_clues.extend(zip(new_answers, [clue] * len(new_answers)))
+        try:
+            new_answers = solve_structured_clue(clue[:])
+            new_answers = [a for a in new_answers if a not in answers]
+            answers.update(new_answers)
+            answers_with_clues.extend(zip(new_answers, [clue] * len(new_answers)))
+        except ClueUnsolvableException as e:
+            print "base clue unsolvable:", e.clue
+            # import pdb; pdb.set_trace()
+            for j, c in enumerate(possible_clues[i + 1:]):
+                if c[:len(e.clue)] == e.clue:
+                    possible_clues.remove(c)
     return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
 
 
@@ -141,8 +159,8 @@ def solve_clue_text(clue_text):
 
 
 if __name__ == '__main__':
-    print solve_structured_clue([('tenor', 'lit'), ('and', 'sub_r'), ('alto', 'syn'), ('upset', 'syn'), ('count', 'd'), 5, 't....'])
-    # print solve_phrasing(['bottomless', 'sea', 'stormy', 'sea', 'waters', 'surface', 'rises_and_falls', 7, 's..s...'])
+    print solve_structured_clue([('join', 'd'), ('trio_of', 'sub_r'), ('astronomers', 'lit'), ('in', 'ins'), ('marsh', 'syn'), 6, 'f.....'])
+    # print solve_phrasing(['tenor', 'and', 'alto', 'upset', 'count', 5, 't....'])
     # for clue in open('clues/clues.txt', 'r').readlines():
     #     print solve_clue_text(clue)[:15]
     #     break
