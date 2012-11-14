@@ -1,5 +1,5 @@
 import unittest
-from solve_structured_clue import solve_clue_text, parse_clue_text
+from solve_factored_clue import solve_clue_text, parse_clue_text
 
 
 class TestClues(unittest.TestCase):
