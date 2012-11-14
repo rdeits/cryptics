@@ -1,10 +1,12 @@
 import cPickle as pickle
-from utils.words import WORDS
+from utils.synonyms import WORDS
 
 initial_ngrams = dict()
 ngrams = dict()
 
 for word in WORDS:
+    if '_' in word:
+        continue
     l = len(word)
     for i in range(len(word) + 1):
         initial_ngrams.setdefault(l, dict()).setdefault(i, set([])).add(word[:i])

@@ -1,6 +1,6 @@
 from __future__ import division
 from utils.language import all_legal_substrings, semantic_similarity, all_insertions, matches_pattern, string_reverse
-from utils.ngrams import NGRAMS
+from utils.ngrams import INITIAL_NGRAMS
 from utils.anagrams import cached_anagrams
 from utils.synonyms import cached_synonyms, WORDS
 from utils.cryptics import compute_arg_offsets
@@ -10,10 +10,9 @@ from utils.phrasings import phrasings
 import re
 
 
-
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
 
-TRANSFORMS = {'lit': lambda x, l: [x.replace(' ', '').lower()],
+TRANSFORMS = {'lit': lambda x, l: [x.lower()],
               'null': lambda x, l: [''],
               'd': lambda x, l: [''],
               'first': lambda x, l: [x[0].lower()],
@@ -82,7 +81,7 @@ def solve_structured_clue(clue, solved_parts=dict()):
     def valid_answer(x):
         return matches_pattern(x, pattern) and len(x) == length and x in WORDS
 
-    wordplay_answers = filter(valid_answer, solve_factored_clue(factored_clue, length, solved_parts))
+    wordplay_answers = filter(valid_answer, solve_factored_clue(factored_clue, length, pattern, solved_parts))
     answers = [(s, semantic_similarity(s, definition)) for s in wordplay_answers if s in WORDS and len(s) == length]
     return sorted(answers, key=lambda x: x[1], reverse=True)
 
@@ -120,7 +119,7 @@ def factor_structured_clue(clue):
     return ('cat',) + tuple(clue)
 
 
-def solve_factored_clue(clue, length, solved_parts=dict()):
+def solve_factored_clue(clue, length, pattern, solved_parts=dict()):
     if clue in solved_parts:
         return solved_parts[clue]
     if clue[1] in TRANSFORMS:
@@ -128,7 +127,7 @@ def solve_factored_clue(clue, length, solved_parts=dict()):
     elif clue[1] in FUNCTIONS:
         result = set([])
         arg_sets = tree_search([[]],
-                               [solve_factored_clue(c, length) for c in clue[2:]],
+                               [solve_factored_clue(c, length, pattern, solved_parts) for c in clue[2:]],
                                combination_func=lambda s, w: s + [w])
         for arg_set in arg_sets:
             arg_set += [length]
@@ -136,9 +135,11 @@ def solve_factored_clue(clue, length, solved_parts=dict()):
     elif clue[1] == 'd':
         result = ['']
     elif clue[0] == 'cat':
+        def member_test(x):
+            return len(x) <= length and matches_pattern(x, pattern) and x in INITIAL_NGRAMS[length][len(x)]
         result = tree_search([''],
-                           [solve_factored_clue(c, length) for c in clue[1:]],
-                           member_test=lambda x: len(x) <= length and x in NGRAMS[len(x)])
+                           [solve_factored_clue(c, length, pattern, solved_parts) for c in clue[1:]],
+                           member_test=member_test)
     else:
         import pdb; pdb.set_trace()
     solved_parts[clue] = result
@@ -148,7 +149,8 @@ def solve_factored_clue(clue, length, solved_parts=dict()):
 
 
 if __name__ == '__main__':
-    for clue in open('clues/clues.txt', 'r').readlines():
-        print solve_clue_text(clue)[:15]
-        break
+    print solve_structured_clue([('small_bricks', 'd'), ('included_among', 'sub_r'), ('durable_goods', 'lit'), 4, 'l...'])
+    # for clue in open('clues/clues.txt', 'r').readlines():
+    #     print solve_clue_text(clue)[:15]
+    #     break
 
