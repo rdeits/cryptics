@@ -9,6 +9,8 @@ from utils.search import tree_search
 from utils.phrasings import phrasings
 import re
 
+VERBOSE = False
+
 
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
 
@@ -49,6 +51,7 @@ def solve_structured_clue(clue):
     while any(len(s) == 0 for s in answer_subparts) and count < 2:
         count += 1
         for i, group in enumerate(clue):
+            remaining_letters = length - min(len(s) for s in active_set)
             if len(answer_subparts[i]) == 0:
                 phrase, kind = group
                 if kind[:3] in FUNCTIONS:
@@ -60,20 +63,24 @@ def solve_structured_clue(clue):
                                            [answer_subparts[ai] for ai in arg_indices],
                                            combination_func=lambda s, w: s + [w])
                     for arg_set in arg_sets:
-                        arg_set += [length]
+                        arg_set += [remaining_letters]
                         answer_subparts[i].update(list(FUNCTIONS[func](*arg_set)))
                 else:
-                    answer_subparts[i] = set(TRANSFORMS[kind](phrase, length))
+                    answer_subparts[i] = set(TRANSFORMS[kind](phrase, remaining_letters))
                 if len(answer_subparts[i]) == 0:
                     return []
             # print "index and subparts", i, answer_subparts
             if all(len(s) > 0 for s in answer_subparts[:i + 1]) and i not in groups_to_skip:
                 if i >= groups_added:
-                    print "updating"
-                    print "current active set:", active_set
-                    print "branching list:", answer_subparts[groups_added:i+1]
+                    if remaining_letters <= 0:
+                        return []
+                    if VERBOSE:
+                        print "updating"
+                        print "current active set:", active_set
+                        print "branching list:", answer_subparts[groups_added:i+1]
                     active_set = set(tree_search(active_set, answer_subparts[groups_added:i + 1], lambda x: (x + groups_added) not in groups_to_skip, lambda x: len(x) <= length and x in INITIAL_NGRAMS[length][len(x)] and matches_pattern(x, pattern)))
-                    print "new active set:", active_set
+                    if VERBOSE:
+                        print "new active set:", active_set
                     groups_added = i + 1
                 if len(active_set) == 0:
                     return []
@@ -92,7 +99,7 @@ def solve_phrasing(phrasing):
     answers = set([])
     answers_with_clues = []
     for clue in generate_structured_clues(phrasing, length, pattern):
-        print clue
+        # print clue
         new_answers = solve_structured_clue(clue[:])
         new_answers = [a for a in new_answers if a not in answers]
         answers.update(new_answers)
@@ -134,7 +141,7 @@ def solve_clue_text(clue_text):
 
 
 if __name__ == '__main__':
-    print solve_structured_clue([('bottomless', 'sub_r'), ('sea', 'lit'), ('stormy', 'ana_r'), ('sea', 'lit'), ('waters', 'lit'), ('surface', 'sub_l'), ('rises_and_falls', 'd'), 7, 's..s...'])
+    print solve_structured_clue([('tenor', 'lit'), ('and', 'sub_r'), ('alto', 'syn'), ('upset', 'syn'), ('count', 'd'), 5, 't....'])
     # print solve_phrasing(['bottomless', 'sea', 'stormy', 'sea', 'waters', 'surface', 'rises_and_falls', 7, 's..s...'])
     # for clue in open('clues/clues.txt', 'r').readlines():
     #     print solve_clue_text(clue)[:15]
