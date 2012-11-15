@@ -1,8 +1,8 @@
 
 
-def tree_search(start, branching_list, branch_index_test=lambda x: True,
+def tree_search(branching_list, start=[[]], branch_index_test=lambda x: True,
                 member_test=lambda x: True,
-                combination_func=lambda s, w: s + w):
+                combination_func=None):
     """
     A general tool for figuring out all the ways to combine a bunch of lists.
 
@@ -10,6 +10,11 @@ def tree_search(start, branching_list, branch_index_test=lambda x: True,
     Then tree_search('', branching_list) would return:
     ['ac', 'ad', 'bc', 'bd']
     """
+    if combination_func is None:
+        if isinstance(start[0], list):
+            combination_func = lambda s, w: s + [w]
+        else:
+            combination_func = lambda s, w: s + w
 
     active_set = start
     for i, part in enumerate(branching_list):

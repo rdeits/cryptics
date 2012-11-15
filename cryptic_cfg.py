@@ -26,32 +26,34 @@ sub_members = [lit, syn, rev]
 rev_members = [lit, syn]
 word_tags = [lit, d, syn, first, null, ana_, sub_, ins_, rev_]
 
+
+def check_clue_totals(clue):
+    if clue.count(ana) > 1:
+        return False
+    if clue.count(null) > 2:
+        return False
+    if all(c == null for c in clue):
+        return False
+    if clue.count('ins') > 1:
+        return False
+    return True
+
 base_clue_rules = []
 for i in range(1, 5):
-    base_clue_rules.extend(tree_search([[]], [clue_members] * i,
-                                  combination_func=lambda s, w: s + [w]))
+    base_clue_rules.extend(tree_search([clue_members] * i,
+                                       member_test=check_clue_totals))
 clue_rules = []
 for r in base_clue_rules:
     clue_rules.append(r + [d])
     clue_rules.append([d] + r)
 
 production_rules = {
-ins: tree_search([[]],
-                 [ins_members, [ins_], ins_members],
-                 combination_func=lambda s, w: s + [w]),
+ins: tree_search([ins_members, [ins_], ins_members]),
 ana: [[lit, ana_], [ana_, lit]],
-sub: (tree_search([[]],
-                 [sub_members, [sub_]],
-                 combination_func=lambda s, w: s + [w])
-           + tree_search([[]],
-                         [[sub_], sub_members],
-                         combination_func=lambda s, w: s + [w])),
-rev: (tree_search([[]],
-                  [rev_members, [rev_]],
-                  combination_func=lambda s, w: s + [w])
-    + tree_search([[]],
-                  [[rev_], rev_members],
-                  combination_func=lambda s, w: s + [w])),
+sub: (tree_search([sub_members, [sub_]])
+           + tree_search([[sub_], sub_members])),
+rev: (tree_search([rev_members, [rev_]])
+    + tree_search([[rev_], rev_members])),
 clue: clue_rules
 }
 

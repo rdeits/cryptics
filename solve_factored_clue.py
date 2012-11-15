@@ -6,6 +6,7 @@ from utils.synonyms import cached_synonyms, WORDS
 from cryptic_cfg import generate_clues
 from utils.search import tree_search
 from utils.phrasings import phrasings
+import time
 import re
 
 
@@ -67,7 +68,9 @@ def solve_phrasing(phrasing, solved_parts=dict()):
     length = phrasing.pop()
     answers = set([])
     answers_with_clues = []
+    now = time.time()
     possible_clues = generate_clues(phrasing)
+    print time.time() - now
 
     def answer_test(ans):
         return ans in WORDS and len(ans) == length and matches_pattern(ans, pattern)
@@ -91,9 +94,7 @@ def solve_factored_clue(clue, length, pattern, solved_parts=dict()):
         result = set(TRANSFORMS[clue[0]](clue[1], length))
     elif clue[0] in FUNCTIONS:
         result = set([])
-        arg_sets = tree_search([[]],
-                               [solve_factored_clue(c, length, pattern, solved_parts) for c in clue[1:] if c[0] not in HEADS],
-                               combination_func=lambda s, w: s + [w])
+        arg_sets = tree_search([solve_factored_clue(c, length, pattern, solved_parts) for c in clue[1:] if c[0] not in HEADS])
         for arg_set in arg_sets:
             arg_set += [length]
             result.update(FUNCTIONS[clue[0]](*arg_set))
@@ -102,9 +103,8 @@ def solve_factored_clue(clue, length, pattern, solved_parts=dict()):
     elif clue[0] == 'clue':
         def member_test(x):
             return len(x) <= length and matches_pattern(x, pattern) and x in INITIAL_NGRAMS[length][len(x)]
-        result = tree_search([''],
-                           [solve_factored_clue(c, length, pattern, solved_parts) for c in clue[1:]],
-                           member_test=member_test)
+        result = tree_search([solve_factored_clue(c, length, pattern, solved_parts) for c in clue[1:]],
+                             start = [''], member_test=member_test)
     else:
         import pdb; pdb.set_trace()
     solved_parts[clue] = result
