@@ -3,7 +3,7 @@ from utils.language import all_legal_substrings, semantic_similarity, all_insert
 from utils.ngrams import INITIAL_NGRAMS
 from utils.anagrams import cached_anagrams
 from utils.synonyms import cached_synonyms, WORDS
-from cryptic_cfg import generate_clues
+from utils.cfg import generate_clues
 from utils.search import tree_search
 from utils.phrasings import phrasings
 import time
