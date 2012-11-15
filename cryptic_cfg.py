@@ -1,13 +1,8 @@
 import nltk.grammar as cfg
 from nltk import parse
+from nltk.tree import Tree
 from utils.search import tree_search
 
-
-# raw_cfg = """
-# Clue -> D Syn | Syn D | Sub Lit D
-# Ana -> Ana_ Lit | Lit Ana_
-# Sub -> Sub_ Lit | Lit Sub_ | Sub_ Syn | Syn Sub_
-# """
 
 clue = cfg.Nonterminal('clue')
 lit = cfg.Nonterminal('lit')
@@ -28,6 +23,7 @@ clue_members = [lit, syn, first, null, ana, sub, ins, rev]
 ins_members = [lit, ana, syn, sub, first, rev]
 ana_members = [lit]
 sub_members = [lit, syn, rev]
+word_tags = [lit, d, syn, first, null, ana_, sub_, ins_, rev_]
 
 base_clue_rules = []
 for i in range(1, 5):
@@ -52,31 +48,29 @@ sub: (tree_search([[]],
 clue: clue_rules
 }
 
-prods = []
+base_prods = []
 
 for n, rules in production_rules.items():
     for r in rules:
-        prods.append(cfg.Production(n, r))
-
-base_grammar = cfg.ContextFreeGrammar(clue, prods)
-
-word_tags = [lit, d, syn, first, null, ana_, sub_, ins_, rev_]
+        base_prods.append(cfg.Production(n, r))
 
 
-def generate_grammar(phrasing):
+def clue_from_tree(tree):
+    if not isinstance(tree, Tree):
+        return tree
+    else:
+        return tuple([tree.node] + [clue_from_tree(t) for t in tree])
+
+
+def generate_grammar(phrases):
     prods = []
-    for p in phrasing:
+    for p in phrases:
         for t in word_tags:
             prods.append(cfg.Production(t, [p]))
-    return cfg.ContextFreeGrammar(clue, base_grammar.productions() + prods)
+    return cfg.ContextFreeGrammar(clue, base_prods + prods)
 
 
-snt = 'initially babies are naked'.split()
-print snt
-g = generate_grammar(snt)
-# print g
-parser = parse.ChartParser(g)
-
-for tree in parser.nbest_parse(snt):
-    import pdb; pdb.set_trace()
-    print tree
+def generate_clues(phrases):
+    g = generate_grammar(phrases)
+    parser = parse.ChartParser(g)
+    return [clue_from_tree(t) for t in parser.nbest_parse(phrases)]
