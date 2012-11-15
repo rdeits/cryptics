@@ -85,18 +85,6 @@ def solve_phrasing(phrasing, solved_parts=dict()):
 
 
 def solve_factored_clue(clue, length, pattern, solved_parts=dict()):
-    """
-    Solve a factored clue of the form:
-    ('cat', ('initially', 'sub', ('babies', 'lit')), ('are', 'lit'), ('naked', 'd'))
-
-    length is the maximum length of an answer
-
-    pattern is a simple regex limiting the answer (only applied to the final 'cat' step)
-
-    solved_parts is a map from factored sub-clues such as:
-     ('initially', 'sub', ('babies', 'lit'))
-     to their answers which were previously computed
-     """
     if clue in solved_parts:
         return solved_parts[clue]
     if clue[0] in TRANSFORMS:

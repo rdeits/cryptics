@@ -23,6 +23,7 @@ clue_members = [lit, syn, first, null, ana, sub, ins, rev]
 ins_members = [lit, ana, syn, sub, first, rev]
 ana_members = [lit]
 sub_members = [lit, syn, rev]
+rev_members = [lit, syn]
 word_tags = [lit, d, syn, first, null, ana_, sub_, ins_, rev_]
 
 base_clue_rules = []
@@ -45,6 +46,12 @@ sub: (tree_search([[]],
            + tree_search([[]],
                          [[sub_], sub_members],
                          combination_func=lambda s, w: s + [w])),
+rev: (tree_search([[]],
+                  [rev_members, [rev_]],
+                  combination_func=lambda s, w: s + [w])
+    + tree_search([[]],
+                  [[rev_], rev_members],
+                  combination_func=lambda s, w: s + [w])),
 clue: clue_rules
 }
 
