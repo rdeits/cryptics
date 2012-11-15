@@ -72,11 +72,13 @@ def solve_phrasing(phrasing, solved_parts=dict()):
     def answer_test(ans):
         return ans in WORDS and len(ans) == length and matches_pattern(ans, pattern)
     for i, clue in enumerate(possible_clues):
+        d, definition = clue[[x[0] for x in clue].index('d')]
         # print clue
         new_answers = solve_factored_clue(clue[:], length, pattern,
                                           solved_parts)
         new_answers = filter(answer_test, new_answers)
         new_answers = [a for a in new_answers if a not in answers]
+        new_answers = zip(new_answers, [semantic_similarity(a, definition) for a in new_answers])
         answers.update(new_answers)
         answers_with_clues.extend(zip(new_answers, [clue] * len(new_answers)))
     return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
