@@ -2,7 +2,7 @@ import web
 from web import form
 from solve_factored_clue import solve_clue_text
 
-render = web.template.render('web/templates/')
+render = web.template.render('crypticweb/templates/')
 
 urls = ('/', 'index')
 app = web.application(urls, globals())

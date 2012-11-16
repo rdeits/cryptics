@@ -22,7 +22,7 @@ def split_words(ans, lengths):
 
 def partial_answer_test(ans, lengths, pattern, initial_ngrams):
     words = split_words(ans, lengths)
-    return len(ans) <= sum(lengths) and matches_pattern(ans, pattern) and all(words[i] in INITIAL_NGRAMS[l][len(ans)] for i, l in lengths)
+    return len(ans) <= sum(lengths) and matches_pattern(ans, pattern) and all(words[i] in initial_ngrams[l][len(ans)] for i, l in enumerate(lengths))
 
 
 def answer_test(ans, lengths, pattern, word_list):

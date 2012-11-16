@@ -115,7 +115,7 @@ def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
         elif clue[0] == 'clue':
             def member_test(x):
                 return partial_answer_test(x, lengths, pattern, INITIAL_NGRAMS)
-            result = tree_search([solve_factored_clue(c, length, pattern, solved_parts) for c in clue[1:]],
+            result = tree_search([solve_factored_clue(c, lengths, pattern, solved_parts) for c in clue[1:]],
                                  start=[''], member_test=member_test)
         else:
             raise ValueError('Unrecognized clue: %s' % clue)
