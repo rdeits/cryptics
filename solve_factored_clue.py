@@ -6,7 +6,7 @@ from utils.synonyms import cached_synonyms, WORDS
 from utils.cfg import generate_clues
 from utils.search import tree_search
 from utils.phrasings import phrasings
-from utils.crossword import answer_test, partial_answer_test
+from utils.crossword import answer_test, partial_answer_test, split_words
 import time
 import re
 
@@ -20,11 +20,12 @@ class ClueUnsolvableError(Exception):
 
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
 
-TRANSFORMS = {'lit': lambda x, l: [x.lower()],
+TRANSFORMS = {'lit': lambda x, l: [x.lower().replace('_', '')],
               'null': lambda x, l: [''],
               'd': lambda x, l: [''],
               'first': lambda x, l: [x[0].lower()],
               'syn': cached_synonyms}
+
 
 HEADS = ['ana_', 'sub_', 'ins_', 'rev_']
 
@@ -90,7 +91,7 @@ def solve_phrasing(phrasing, solved_parts=dict()):
             # Clue was unsolvable, so skip it
             continue
         new_answers = filter(lambda ans: answer_test(ans, lengths, pattern, WORDS), new_answers)
-        new_answers = [a for a in new_answers if a not in answers]
+        new_answers = ['_'.join(split_words(a, lengths)) for a in new_answers if a not in answers]
         new_answers = zip(new_answers, [semantic_similarity(a, definition) for a in new_answers])
         answers.update(new_answers)
         answers_with_clues.extend(zip(new_answers, [clue] * len(new_answers)))
@@ -103,7 +104,8 @@ def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
         result = solved_parts[clue]
     else:
         if clue[0] in TRANSFORMS:
-            result = set(TRANSFORMS[clue[0]](clue[1], length))
+            result = set(map(lambda x: x.replace('_', ''), 
+                             TRANSFORMS[clue[0]](clue[1], length)))
         elif clue[0] in FUNCTIONS:
             result = set([])
             arg_sets = tree_search([solve_factored_clue(c, lengths, pattern, solved_parts) for c in clue[1:] if c[0] not in HEADS])
@@ -120,13 +122,15 @@ def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
         else:
             raise ValueError('Unrecognized clue: %s' % clue)
     solved_parts[clue] = result
+    print clue, result
     if len(result) == 0:
         raise ClueUnsolvableError(clue)
     return result
 
 
 if __name__ == '__main__':
-    print solve_phrasing(['small_bricks', 'included_among', 'durable_goods', 4, 'l...'])
+    # print solve_phrasing(['small_bricks', 'included_among', 'durable_goods', 4, 'l...'])
+    print solve_clue_text('small_bricks small_bricks (5, 6)')
     # for clue in open('clues/clues.txt', 'r').readlines():
     #     print solve_clue_text(clue)[:15]
     #     break

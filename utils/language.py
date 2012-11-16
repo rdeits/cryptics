@@ -65,6 +65,8 @@ def all_insertions(word1, word2, length):
     """
     Try inserting word1 into word2 and vice-versa
     """
+    word1 = word1.replace('_', '')
+    word2 = word2.replace('_', '')
     if word1 == '' or word2 == '':
         yield word1 + word2
     for w0, w1 in [(word1, word2), (word2, word1)]:
