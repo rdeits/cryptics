@@ -19,6 +19,17 @@ sub_ = cfg.Nonterminal('sub_')
 ins_ = cfg.Nonterminal('ins_')
 rev_ = cfg.Nonterminal('rev_')
 
+
+known_functions = {
+'in': [ins_, lit, null, sub_],
+'a': [lit, syn, null],
+'strange': [ana_, syn],
+'broken': [ana_, syn],
+'on_the_way_up': [rev_, syn],
+'going_up': [rev_, syn],
+'returning': [rev_, syn]}
+
+
 clue_members = [lit, syn, first, null, ana, sub, ins, rev]
 ins_members = [lit, ana, syn, sub, first, rev]
 ana_members = [lit]
@@ -74,12 +85,16 @@ def clue_from_tree(tree):
 def generate_grammar(phrases):
     prods = []
     for p in phrases:
-        for t in word_tags:
+        if p in known_functions:
+            tags = known_functions[p]
+        else:
+            tags = word_tags
+        for t in tags:
             prods.append(cfg.Production(t, [p]))
     return cfg.ContextFreeGrammar(clue, base_prods + prods)
 
 
 def generate_clues(phrases):
     g = generate_grammar(phrases)
-    parser = parse.ChartParser(g)
+    parser = parse.EarleyChartParser(g)
     return [clue_from_tree(t) for t in parser.nbest_parse(phrases)]
