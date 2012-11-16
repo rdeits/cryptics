@@ -20,7 +20,7 @@ class ClueUnsolvableError(Exception):
 
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
 
-TRANSFORMS = {'lit': lambda x, l: [x.lower().replace('_', '')],
+TRANSFORMS = {'lit': lambda x, l: [x.lower()],
               'null': lambda x, l: [''],
               'd': lambda x, l: [''],
               'first': lambda x, l: [x[0].lower()],
@@ -104,8 +104,7 @@ def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
         result = solved_parts[clue]
     else:
         if clue[0] in TRANSFORMS:
-            result = set(map(lambda x: x.replace('_', ''), 
-                             TRANSFORMS[clue[0]](clue[1], length)))
+            result = set(TRANSFORMS[clue[0]](clue[1], length))
         elif clue[0] in FUNCTIONS:
             result = set([])
             arg_sets = tree_search([solve_factored_clue(c, lengths, pattern, solved_parts) for c in clue[1:] if c[0] not in HEADS])
@@ -117,11 +116,13 @@ def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
         elif clue[0] == 'clue':
             def member_test(x):
                 return partial_answer_test(x, lengths, pattern, INITIAL_NGRAMS)
-            result = tree_search([solve_factored_clue(c, lengths, pattern, solved_parts) for c in clue[1:]],
+            result = tree_search([map(lambda x: x.replace('_', ''),
+                                      solve_factored_clue(c, lengths, pattern, solved_parts)) for c in clue[1:]],
                                  start=[''], member_test=member_test)
         else:
             raise ValueError('Unrecognized clue: %s' % clue)
     solved_parts[clue] = result
+    # print clue, result
     if len(result) == 0:
         raise ClueUnsolvableError(clue)
     return result
@@ -129,7 +130,8 @@ def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
 
 if __name__ == '__main__':
     # print solve_phrasing(['small_bricks', 'included_among', 'durable_goods', 4, 'l...'])
-    print solve_clue_text('small_bricks small_bricks (5, 6)')
+    print solve_factored_clue(('clue', ('sub', ('lit', 'significant_ataxia'), ('sub_', 'overshadows')), ('d', 'choral_piece')), (7,), '')
+    # print solve_clue_text('small_bricks small_bricks (5, 6)')
     # for clue in open('clues/clues.txt', 'r').readlines():
     #     print solve_clue_text(clue)[:15]
     #     break
