@@ -1,14 +1,22 @@
 from __future__ import division
-from utils.language import all_legal_substrings, semantic_similarity, all_insertions, matches_pattern, string_reverse
+from utils.language import all_legal_substrings, semantic_similarity, all_insertions, string_reverse
 from utils.ngrams import INITIAL_NGRAMS
 from utils.anagrams import cached_anagrams
 from utils.synonyms import cached_synonyms, WORDS
 from utils.cfg import generate_clues
 from utils.search import tree_search
 from utils.phrasings import phrasings
+from utils.crossword import answer_test, partial_answer_test
 import time
 import re
 
+
+class ClueUnsolvableError(Exception):
+    def __init__(self, clue):
+        self.clue = clue
+
+    def __str__(self):
+        print self.clue
 
 FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
 
@@ -44,8 +52,8 @@ def parse_clue_text(clue_text):
         clue_text += ' |'
     clue_text = clue_text.lower()
     clue, rest = clue_text.split('(')
-    length, rest = rest.split(')')
-    length = int(length)
+    lengths, rest = rest.split(')')
+    lengths = tuple(int(x) for x in lengths.split(','))
     pattern, answer = rest.split('|')
     pattern = pattern.strip()
     clue = re.sub(r'[^a-zA-Z\ _]', '', clue)
@@ -54,7 +62,7 @@ def parse_clue_text(clue_text):
     phrases = [p for p in phrases if p.strip() != '']
     all_phrasings = []
     for p in phrasings(phrases):
-        p += [length, pattern]
+        p += [lengths, pattern]
         all_phrasings.append(p)
     return all_phrasings, answer
 
@@ -65,21 +73,23 @@ def solve_phrasing(phrasing, solved_parts=dict()):
     ['initially', 'babies', 'are', 'naked', 4, 'b...']
     """
     pattern = phrasing.pop()
-    length = phrasing.pop()
+    lengths = phrasing.pop()
     answers = set([])
     answers_with_clues = []
     now = time.time()
     possible_clues = generate_clues(phrasing)
     print time.time() - now
 
-    def answer_test(ans):
-        return ans in WORDS and len(ans) == length and matches_pattern(ans, pattern)
     for i, clue in enumerate(possible_clues):
         d, definition = clue[[x[0] for x in clue].index('d')]
         # print clue
-        new_answers = solve_factored_clue(clue[:], length, pattern,
-                                          solved_parts)
-        new_answers = filter(answer_test, new_answers)
+        try:
+            new_answers = solve_factored_clue(clue[:], lengths, pattern,
+                                              solved_parts)
+        except ClueUnsolvableError:
+            # Clue was unsolvable, so skip it
+            continue
+        new_answers = filter(lambda ans: answer_test(ans, lengths, pattern, WORDS), new_answers)
         new_answers = [a for a in new_answers if a not in answers]
         new_answers = zip(new_answers, [semantic_similarity(a, definition) for a in new_answers])
         answers.update(new_answers)
@@ -87,27 +97,31 @@ def solve_phrasing(phrasing, solved_parts=dict()):
     return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
 
 
-def solve_factored_clue(clue, length, pattern, solved_parts=dict()):
+def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
+    length = sum(lengths)
     if clue in solved_parts:
-        return solved_parts[clue]
-    if clue[0] in TRANSFORMS:
-        result = set(TRANSFORMS[clue[0]](clue[1], length))
-    elif clue[0] in FUNCTIONS:
-        result = set([])
-        arg_sets = tree_search([solve_factored_clue(c, length, pattern, solved_parts) for c in clue[1:] if c[0] not in HEADS])
-        for arg_set in arg_sets:
-            arg_set += [length]
-            result.update(FUNCTIONS[clue[0]](*arg_set))
-    elif clue[0] == 'd':
-        result = ['']
-    elif clue[0] == 'clue':
-        def member_test(x):
-            return len(x) <= length and matches_pattern(x, pattern) and x in INITIAL_NGRAMS[length][len(x)]
-        result = tree_search([solve_factored_clue(c, length, pattern, solved_parts) for c in clue[1:]],
-                             start = [''], member_test=member_test)
+        result = solved_parts[clue]
     else:
-        import pdb; pdb.set_trace()
+        if clue[0] in TRANSFORMS:
+            result = set(TRANSFORMS[clue[0]](clue[1], length))
+        elif clue[0] in FUNCTIONS:
+            result = set([])
+            arg_sets = tree_search([solve_factored_clue(c, lengths, pattern, solved_parts) for c in clue[1:] if c[0] not in HEADS])
+            for arg_set in arg_sets:
+                arg_set += [length]
+                result.update(FUNCTIONS[clue[0]](*arg_set))
+        elif clue[0] == 'd':
+            result = ['']
+        elif clue[0] == 'clue':
+            def member_test(x):
+                return partial_answer_test(x, lengths, pattern, INITIAL_NGRAMS)
+            result = tree_search([solve_factored_clue(c, length, pattern, solved_parts) for c in clue[1:]],
+                                 start=[''], member_test=member_test)
+        else:
+            raise ValueError('Unrecognized clue: %s' % clue)
     solved_parts[clue] = result
+    if len(result) == 0:
+        raise ClueUnsolvableError(clue)
     return result
 
 

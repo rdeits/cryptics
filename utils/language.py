@@ -72,12 +72,5 @@ def all_insertions(word1, word2, length):
             yield w1[:j] + w0 + w1[j:]
 
 
-def matches_pattern(word, pattern):
-    """
-    Pattern is a very basic regex, which must have a letter-for-letter mapping with the target string. For example, '.s...a.' is good, but '.s.*a.' will not work.
-    """
-    if pattern == '':
-        return True
-    else:
-        return bool(re.match(pattern[:len(word)], word))
+
 
