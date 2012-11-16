@@ -4,6 +4,12 @@
 	web
 	nltk
 
+# Other requirements:
+
+	python (tested with 2.7)
+	rake
+	git
+
 # Installation:
 
 Add the cryptics folder to your PYTHONPATH. Then generate the n-grams and synonyms datasets by running
@@ -16,17 +22,17 @@ in the main cryptics folder (this will take a few minutes to finish).
 
 Web interface: http://localhost:8080/
 
-	python crypticweb/server.py
+	rake server
 
 Test cases (requires the python nose package):
 
-	nosetests --nocapture
+	rake test
 
 # Clue format:
 
 Clue:
 
-	Initially babies are naked (4) b.r. 
+	Initially babies are naked (4)
 
 Answer:
 

@@ -13,3 +13,11 @@ end
 file "data/anagrams.pck" do
 	sh "python data_generators/generate_anagrams.py"
 end
+
+task :server => [:data] do
+	sh "python crypticweb/server.py"
+end
+
+task :test => [:data] do
+	sh "nosetests --nocapture"
+end
