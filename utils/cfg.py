@@ -39,7 +39,7 @@ def check_clue_totals(clue):
     return True
 
 base_clue_rules = []
-for i in range(1, 5):
+for i in range(1, 4):
     base_clue_rules.extend(tree_search([clue_members] * i,
                                        member_test=check_clue_totals))
 clue_rules = []

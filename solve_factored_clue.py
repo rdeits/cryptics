@@ -122,7 +122,6 @@ def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
         else:
             raise ValueError('Unrecognized clue: %s' % clue)
     solved_parts[clue] = result
-    print clue, result
     if len(result) == 0:
         raise ClueUnsolvableError(clue)
     return result
