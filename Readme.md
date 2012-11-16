@@ -2,7 +2,7 @@
 
 Web interface: http://localhost:8080/
 
-	python web/server.py
+	python crypticweb/server.py
 
 Test cases (requires the python nose package):
 
