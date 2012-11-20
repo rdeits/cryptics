@@ -57,6 +57,7 @@ def parse_clue_text(clue_text):
     lengths = tuple(int(x) for x in lengths.split(','))
     pattern, answer = rest.split('|')
     pattern = pattern.strip()
+    clue = re.sub('-', '_', clue)
     clue = re.sub(r'[^a-zA-Z\ _]', '', clue)
     clue = re.sub(r'\ +', ' ', clue)
     phrases = clue.split(' ')

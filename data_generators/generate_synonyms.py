@@ -22,6 +22,7 @@ def cleanup(clue):
     clue = re.sub('___', '', clue)
     clue = re.sub('"', '', clue)
     clue = re.sub(' ', '_', clue)
+    clue = re.sub('-', '_', clue)
     clue = re.sub(r'\ +', ' ', clue)
     clue = re.sub(r'[^a-zA-Z0-9\ _]', '', clue)
     clue = clue.encode('ascii', 'ignore')
