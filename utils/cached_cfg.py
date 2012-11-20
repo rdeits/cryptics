@@ -1,4 +1,5 @@
 import cPickle as pickle
+from utils.cfg import generate_clues
 
 
 def load_clue_structures():
@@ -19,5 +20,8 @@ def convert_indexed_clue(clue, phrases):
 
 
 def cached_clue_structures(phrases):
-    for indexed_clue in CLUE_STRUCTURES[len(phrases)]:
-        yield convert_indexed_clue(indexed_clue, phrases)
+    if len(phrases) in CLUE_STRUCTURES:
+        for indexed_clue in CLUE_STRUCTURES[len(phrases)]:
+            yield convert_indexed_clue(indexed_clue, phrases)
+    else:
+        return generate_clues(phrases)
