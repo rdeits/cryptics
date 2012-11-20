@@ -136,5 +136,5 @@ if __name__ == '__main__':
     # print solve_clue_text('small_bricks small_bricks (5, 6)')
     for clue in open('clues/clues.txt', 'r').readlines():
         print solve_clue_text(clue)[:1]
-        break
+        # break
 
