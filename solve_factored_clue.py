@@ -57,7 +57,7 @@ def parse_clue_text(clue_text):
     lengths = tuple(int(x) for x in lengths.split(','))
     pattern, answer = rest.split('|')
     pattern = pattern.strip()
-    assert len(pattern) == sum(lengths), "Answer lengths and length of pattern string must match: sum(%s) != %d" % (lengths, len(pattern))
+    assert len(pattern) == 0 or len(pattern) == sum(lengths), "Answer lengths and length of pattern string must match: sum(%s) != %d" % (lengths, len(pattern))
     clue = re.sub('-', '_', clue)
     clue = re.sub(r'[^a-zA-Z\ _]', '', clue)
     clue = re.sub(r'\ +', ' ', clue)
@@ -132,9 +132,9 @@ def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
 
 if __name__ == '__main__':
     # print solve_phrasing(['small_bricks', 'included_among', 'durable_goods', 4, 'l...'])
-    print solve_factored_clue(('clue', ('sub', ('lit', 'significant_ataxia'), ('sub_', 'overshadows')), ('d', 'choral_piece')), (7,), '')
+    # print solve_factored_clue(('clue', ('sub', ('lit', 'significant_ataxia'), ('sub_', 'overshadows')), ('d', 'choral_piece')), (7,), '')
     # print solve_clue_text('small_bricks small_bricks (5, 6)')
-    # for clue in open('clues/clues.txt', 'r').readlines():
-    #     print solve_clue_text(clue)[:15]
-    #     break
+    for clue in open('clues/clues.txt', 'r').readlines():
+        print solve_clue_text(clue)[:1]
+        break
 
