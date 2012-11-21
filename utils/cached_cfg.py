@@ -4,7 +4,7 @@ from utils.cfg import generate_clues
 
 def load_clue_structures():
     with open('data/clue_structures.pck', 'rb') as f:
-        c = load(f)
+        c = pickle.load(f)
     return c
 
 
@@ -16,12 +16,13 @@ def convert_indexed_clue(clue, phrases):
     elif isinstance(clue, int):
         return phrases[clue]
     else:
-        return tuple([convert_indexed_clue(c) for c in clue])
+        return tuple([convert_indexed_clue(c, phrases) for c in clue])
 
 
-def cached_clue_structures(phrases):
+def generate_cached_clues(phrases):
     if len(phrases) in CLUE_STRUCTURES:
         for indexed_clue in CLUE_STRUCTURES[len(phrases)]:
             yield convert_indexed_clue(indexed_clue, phrases)
     else:
-        return generate_clues(phrases)
+        for c in generate_clues(phrases):
+            yield c
