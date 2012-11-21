@@ -52,7 +52,7 @@ def check_clue_totals(clue):
         return False
     return True
 
-base_clue_rules = []
+base_clue_rules = [[]]
 for i in range(1, 4):
     base_clue_rules.extend(tree_search([clue_members] * i,
                                        member_test=check_clue_totals))
@@ -101,3 +101,5 @@ def generate_clues(phrases):
     g = generate_grammar(phrases)
     parser = parse.EarleyChartParser(g)
     return [clue_from_tree(t) for t in parser.nbest_parse(phrases)]
+
+
