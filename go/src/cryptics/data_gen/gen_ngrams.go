@@ -4,19 +4,29 @@ import(
 	"io/ioutil"
 	"strings"
 	"fmt"
-	// "encoding/json"
 	"os"
 )
 
 func GenerateNgrams() {
-	content, err := ioutil.ReadFile("/Users/rdeits/Projects/Cryptics/raw_data/sowpods.txt")
+	content, err := ioutil.ReadFile("../raw_data/sowpods.txt")
 	if err != nil{
 		fmt.Println(err)
 	}
 	lines := strings.Split(string(content), "\n")
 	ngrams := map[string]bool {}
 	initial_ngrams := map[string]bool {}
+	var skip bool
 	for _, word := range(lines) {
+		skip = false
+		for _, c := range(word) {
+			if string(c) == "_" {
+				skip = true
+				break
+			}
+		}
+		if skip {
+			break
+		}
 		for i := 1; i <= len(word); i++ {
 			initial_ngrams[word[0:i]] = true
 			for j := 0; j <= len(word) - i; j ++ {
