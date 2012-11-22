@@ -1,22 +1,17 @@
 package data_gen
 
 import(
-	"io/ioutil"
-	"strings"
 	"fmt"
 	"os"
+	"cryptics/utils"
 )
 
 func GenerateNgrams() {
-	content, err := ioutil.ReadFile("../raw_data/sowpods.txt")
-	if err != nil{
-		fmt.Println(err)
-	}
-	lines := strings.Split(string(content), "\n")
+	syns := utils.LoadSynonyms()
 	ngrams := map[string]bool {}
 	initial_ngrams := map[string]bool {}
 	var skip bool
-	for _, word := range(lines) {
+	for word, _ := range(syns) {
 		skip = false
 		for _, c := range(word) {
 			if string(c) == "_" {
@@ -25,7 +20,7 @@ func GenerateNgrams() {
 			}
 		}
 		if skip {
-			break
+			continue
 		}
 		for i := 1; i <= len(word); i++ {
 			initial_ngrams[word[0:i]] = true
