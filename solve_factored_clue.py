@@ -92,7 +92,7 @@ def solve_phrasing(phrasing, solved_parts=dict()):
         except ClueUnsolvableError:
             # Clue was unsolvable, so skip it
             continue
-        new_answers = filter(lambda ans: answer_test(ans, clue, lengths, pattern, WORDS), new_answers)
+        new_answers = filter(lambda ans: answer_test(ans, phrasing, lengths, pattern, WORDS), new_answers)
         new_answers = ['_'.join(split_words(a, lengths)) for a in new_answers if a not in answers]
         new_answers = zip(new_answers, [semantic_similarity(a, definition) for a in new_answers])
         answers.update(new_answers)
