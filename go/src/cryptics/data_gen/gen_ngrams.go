@@ -58,13 +58,13 @@ func GenerateNgrams() {
 			}
 		}
 	}
-	ngrams_file, err := os.Create("ngrams.json")
+	ngrams_file, err := os.Create("data/ngrams.json")
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer ngrams_file.Close()
 
-	initial_ngrams_file, err := os.Create("initial_ngrams.json")
+	initial_ngrams_file, err := os.Create("data/initial_ngrams.json")
 	if err != nil {
 		fmt.Println(err)
 	}
