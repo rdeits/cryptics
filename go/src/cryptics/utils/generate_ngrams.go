@@ -49,27 +49,43 @@ func main() {
 	}
 	lines := strings.Split(string(content), "\n")
 	ngrams := map[string]bool {}
+	initial_ngrams := map[string]bool {}
 	for _, word := range(lines) {
 		for i := 1; i <= len(word); i++ {
+			initial_ngrams[word[0:i]] = true
 			for j := 0; j <= len(word) - i; j ++ {
 				ngrams[word[j:j+i]] = true
 			}
 		}
 	}
-	file, err := os.Create("ngrams.json")
+	ngrams_file, err := os.Create("ngrams.json")
 	if err != nil {
 		fmt.Println(err)
 	}
-	defer file.Close()
-	enc := json.NewEncoder(file)
+	defer ngrams_file.Close()
+
+	initial_ngrams_file, err := os.Create("initial_ngrams.json")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer initial_ngrams_file.Close()
+
+	ngrams_enc := json.NewEncoder(ngrams_file)
 	ngrams_json := []string {}
 	for s, _ := range ngrams {
 		ngrams_json = append(ngrams_json, s)
 	}
-	if err := enc.Encode(&ngrams_json); err != nil {
+	if err := ngrams_enc.Encode(&ngrams_json); err != nil {
 		fmt.Println(err)
 	}
-
+	initial_ngrams_enc := json.NewEncoder(initial_ngrams_file)
+	initial_ngrams_json := []string {}
+	for s, _ := range initial_ngrams {
+		initial_ngrams_json = append(initial_ngrams_json, s)
+	}
+	if err := initial_ngrams_enc.Encode(&initial_ngrams_json); err != nil {
+		fmt.Println(err)
+	}
 	// const jsonStream = `
 	// 	{"Name": ["Ed"]}
 	// 	{"Name": ["Sam"]}
