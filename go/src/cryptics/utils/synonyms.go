@@ -7,11 +7,11 @@ import (
 	)
 
 func LoadSynonyms() map[string][]string {
-	var raw_syns interface{}
 	data, err := ioutil.ReadFile("../data/synonyms.json")
 	if err != nil {
 		fmt.Println(err)
 	}
+	var raw_syns interface{}
 	err = json.Unmarshal(data, &raw_syns)
 	if err != nil {
 		fmt.Println(err)
@@ -23,6 +23,5 @@ func LoadSynonyms() map[string][]string {
 			syns[k] = append(syns[k], s.(string))
 		}
 	}
-	// fmt.Println(syns)
 	return syns
 }
