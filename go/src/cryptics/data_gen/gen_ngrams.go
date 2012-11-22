@@ -46,21 +46,4 @@ func GenerateNgrams() {
 	for s, _ := range initial_ngrams {
 		initial_ngrams_file.WriteString(s + "\n")
 	}
-
-	// ngrams_enc := json.NewEncoder(ngrams_file)
-	// ngrams_json := []string {}
-	// for s, _ := range ngrams {
-	// 	ngrams_json = append(ngrams_json, s)
-	// }
-	// if err := ngrams_enc.Encode(&ngrams_json); err != nil {
-	// 	fmt.Println(err)
-	// }
-	// initial_ngrams_enc := json.NewEncoder(initial_ngrams_file)
-	// initial_ngrams_json := []string {}
-	// for s, _ := range initial_ngrams {
-	// 	initial_ngrams_json = append(initial_ngrams_json, s)
-	// }
-	// if err := initial_ngrams_enc.Encode(&initial_ngrams_json); err != nil {
-	// 	fmt.Println(err)
-	// }
 }
