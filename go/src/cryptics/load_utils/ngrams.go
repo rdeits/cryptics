@@ -33,3 +33,5 @@ func LoadNgrams() Ngrams {
 	ngrams := Ngrams{Initial: initial_ngrams, All: all_ngrams}
 	return ngrams
 }
+
+var NGRAMS Ngrams = LoadNgrams()

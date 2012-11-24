@@ -5,7 +5,7 @@ import (
 	"strings"
 	)
 
-var NGRAMS load_utils.Ngrams = load_utils.LoadNgrams()
+var NGRAMS load_utils.Ngrams = load_utils.NGRAMS
 
 func remaining_letters(letters []byte, word []byte) map[byte]bool {
 	remaining := map[byte]bool {}
