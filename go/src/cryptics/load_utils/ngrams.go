@@ -1,4 +1,4 @@
-package utils
+package load_utils
 
 import (
 	"io/ioutil"
@@ -6,8 +6,13 @@ import (
 	"fmt"
 	)
 
-func LoadNgrams() (map[string]bool, map[string]bool) {
-	ngrams := map[string]bool {}
+type Ngrams struct {
+	Initial map[string]bool
+	All map[string]bool
+}
+
+func LoadNgrams() Ngrams {
+	all_ngrams := map[string]bool {}
 	initial_ngrams := map[string]bool {}
 	raw_ngrams, err := ioutil.ReadFile("data/ngrams.txt")
 	if err != nil {
@@ -15,7 +20,7 @@ func LoadNgrams() (map[string]bool, map[string]bool) {
 	}
 	ngrams_list := strings.Split(string(raw_ngrams), "\n")
 	for _, n := range ngrams_list {
-		ngrams[n] = true
+		all_ngrams[n] = true
 	}
 	raw_init, err := ioutil.ReadFile("data/initial_ngrams.txt")
 	if err != nil {
@@ -25,6 +30,6 @@ func LoadNgrams() (map[string]bool, map[string]bool) {
 	for _, n := range init_ngrams_list {
 		initial_ngrams[n] = true
 	}
-	return ngrams, initial_ngrams
+	ngrams := Ngrams{Initial: initial_ngrams, All: all_ngrams}
+	return ngrams
 }
-

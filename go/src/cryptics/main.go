@@ -14,5 +14,5 @@ func main() {
 	// fmt.Println(syns["big"])
 	// fmt.Println(ngrams["cat"])
 	// fmt.Println(initial_ngrams["fbsx"])
-	fmt.Println(utils.Anagrams("foo"))
+	fmt.Println(utils.Anagrams([]byte("pal")))
 }
