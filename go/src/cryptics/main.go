@@ -5,7 +5,7 @@ import (
 	// "cryptics/load_utils"
 	"cryptics/utils"
 	"fmt"
-	)
+)
 
 func main() {
 	// data_gen.GenerateNgrams()
@@ -14,5 +14,11 @@ func main() {
 	// fmt.Println(syns["big"])
 	// fmt.Println(ngrams["cat"])
 	// fmt.Println(initial_ngrams["fbsx"])
-	fmt.Println(utils.Anagrams([]byte("pal")))
+	// fmt.Println(utils.Anagrams([]byte("pal")))
+	foo := []byte("foo")
+	bar := []byte("bar")
+	baz := []byte("baz")
+	bap := []byte("bap")
+	branching_list := [][][]byte{{foo, bar}, {baz, bap}}
+	fmt.Println(utils.ByteTreeSearch(branching_list, func(foo []byte) bool { return true }))
 }
