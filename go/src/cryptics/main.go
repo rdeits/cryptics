@@ -15,10 +15,11 @@ func main() {
 	// fmt.Println(ngrams["cat"])
 	// fmt.Println(initial_ngrams["fbsx"])
 	// fmt.Println(utils.Anagrams([]byte("pal")))
-	foo := []byte("foo")
-	bar := []byte("bar")
-	baz := []byte("baz")
-	bap := []byte("bap")
-	branching_list := [][][]byte{{foo, bar}, {baz, bap}}
-	fmt.Println(utils.ByteTreeSearch(branching_list, func(foo []byte) bool { return true }))
+	// foo := []byte("foo")
+	// bar := []byte("bar")
+	// baz := []byte("baz")
+	// bap := []byte("bap")
+	// branching_list := [][][]byte{{foo, bar}, {baz, bap}}
+	// fmt.Println(utils.ByteTreeSearch(branching_list, func(foo []byte) bool { return true }))
+	fmt.Println(utils.AllLegalSubstrings("aca_tb", 3))
 }
