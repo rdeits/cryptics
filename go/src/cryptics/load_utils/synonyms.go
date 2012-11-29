@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 )
 
-func LoadSynonyms() map[string][]string {
+func LoadSynonyms() *map[string][]string {
 	data, err := ioutil.ReadFile("../data/synonyms.json")
 	if err != nil {
 		fmt.Println(err)
@@ -23,5 +23,7 @@ func LoadSynonyms() map[string][]string {
 			syns[k] = append(syns[k], s.(string))
 		}
 	}
-	return syns
+	return &syns
 }
+
+var SYNONYMS *map[string][]string = LoadSynonyms()

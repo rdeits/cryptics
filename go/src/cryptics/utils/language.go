@@ -1,11 +1,8 @@
 package utils
 
 import (
-	"cryptics/load_utils"
 	"strings"
 )
-
-var SYNONYMS = load_utils.LoadSynonyms()
 
 func Reverse(word string) string {
 	ans := []rune(word)
@@ -23,7 +20,7 @@ func AllLegalSubstrings(word string, length int) map[string]bool {
 		word = strings.Replace(word, "_", "", -1)
 		for i := 0; i < len(word)-length+1; i++ {
 			s := word[i : i+length]
-			if _, ok := SYNONYMS[s]; ok {
+			if _, ok := (*SYNONYMS)[s]; ok {
 				subs[s] = true
 			}
 		}
