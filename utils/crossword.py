@@ -20,10 +20,11 @@ def split_words(ans, lengths):
     return words
 
 
-def partial_answer_test(ans, phrasing, lengths, pattern, initial_ngrams):
+def partial_answer_test(ans, lengths, pattern, initial_ngrams):
     words = split_words(ans, lengths)
-    return len(ans) <= sum(lengths) and matches_pattern(ans, pattern) and all(words[i] in initial_ngrams[l][len(words[i])] for i, l in enumerate(lengths)) and not any(w in phrasing for w in words)
+    return len(ans) <= sum(lengths) and matches_pattern(ans, pattern) and all(words[i] in initial_ngrams[l][len(words[i])] for i, l in enumerate(lengths))
 
 
-def answer_test(ans, lengths, pattern, word_list):
-    return len(ans) == sum(lengths) and matches_pattern(ans, pattern) and all(w in word_list for w in split_words(ans, lengths)) and 
+def answer_test(ans, phrasing, lengths, pattern, word_list):
+    words = split_words(ans, lengths)
+    return len(ans) == sum(lengths) and matches_pattern(ans, pattern) and all(w in word_list for w in words) and not any(w in phrasing for w in words)
