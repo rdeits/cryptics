@@ -61,3 +61,21 @@ func min(x ...int) int {
 	}
 	return result
 }
+
+func AllInsertions(word1, word2 string, length int) map[string]bool {
+	result := map[string]bool{}
+	word1 = strings.Replace(word1, "_", "", -1)
+	word2 = strings.Replace(word2, "_", "", -1)
+	if word1 == "" || word2 == "" {
+		result[word1+word2] = true
+	}
+	w0, w1 := word1, word2
+	for j := 0; j < len(w1); j++ {
+		result[w1[0:j]+w0+w1[j:len(w1)]] = true
+	}
+	w1, w0 = word1, word2
+	for j := 0; j < len(w1); j++ {
+		result[w1[0:j]+w0+w1[j:len(w1)]] = true
+	}
+	return result
+}

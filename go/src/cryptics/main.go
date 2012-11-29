@@ -23,4 +23,5 @@ func main() {
 	// fmt.Println(utils.ByteTreeSearch(branching_list, func(foo []byte) bool { return true }))
 	fmt.Println(utils.AllLegalSubstrings("aca_tb", 3))
 	fmt.Println(utils.AllLegalSubstrings("acatb", 2))
+	fmt.Println(utils.AllInsertions("foo", "bar", 1))
 }
