@@ -24,4 +24,8 @@ func main() {
 	fmt.Println(utils.AllLegalSubstrings("aca_tb", 3))
 	fmt.Println(utils.AllLegalSubstrings("acatb", 2))
 	fmt.Println(utils.AllInsertions("foo", "bar", 1))
+	fmt.Println(utils.MatchesPattern("foobar", "f..b.r"))
+	fmt.Println(utils.MatchesPattern("foobar", "f..a.r"))
+	fmt.Println(utils.MatchesPattern("foobar", ""))
+	fmt.Println(utils.MatchesPattern("foo", "f..b.r"))
 }
