@@ -4,13 +4,13 @@ import (
 	"strings"
 )
 
-func Reverse(word string) string {
+func Reverse(word string, length int) map[string]bool {
 	ans := []rune(word)
 	l := len(word)
 	for i, c := range word {
 		ans[l-i-1] = c
 	}
-	return string(ans)
+	return map[string]bool{string(ans): true}
 }
 
 func AllLegalSubstrings(word string, length int) map[string]bool {

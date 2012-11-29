@@ -3,6 +3,7 @@ package main
 import (
 	// "cryptics/data_gen"
 	// "cryptics/load_utils"
+	"cryptics/solver"
 	"cryptics/utils"
 	"fmt"
 )
@@ -23,4 +24,5 @@ func main() {
 	// fmt.Println(utils.MatchesPattern("foobar", "f..a.r"))
 	// fmt.Println(utils.MatchesPattern("foobar", ""))
 	// fmt.Println(utils.MatchesPattern("foo", "f..b.r"))
+	fmt.Println(solver.TRANSFORMS["syn"]("cat", 10))
 }
