@@ -1,19 +1,19 @@
 package utils
 
-import "bytes"
+import "strings"
 
-func ByteTreeSearch(branching_list [][][]byte, member_test func([]byte) bool) [][]byte {
-	start := [][]byte{[]byte{}}
-	active_set := start
-	new_active_set := [][]byte{}
-	candidate := []byte{}
+func StringTreeSearch(branching_list []map[string]bool, member_test func(string) bool) map[string]bool {
+	active_set := map[string]bool{"": true}
+	var new_active_set map[string]bool
+	var candidate string
 	for _, part := range branching_list {
-		new_active_set = [][]byte{}
-		for _, s := range active_set {
-			for _, w := range part {
-				candidate = bytes.Join([][]byte{s, w}, []byte{})
+		new_active_set = map[string]bool{}
+		for s := range active_set {
+			for w := range part {
+				candidate = s + w
+				candidate = strings.Replace(candidate, "_", "", -1)
 				if member_test(candidate) {
-					new_active_set = append(new_active_set, candidate)
+					new_active_set[candidate] = true
 				}
 			}
 		}

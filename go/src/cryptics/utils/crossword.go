@@ -34,17 +34,17 @@ func split_words(ans string, lengths []int) []string {
 	return words
 }
 
-func PartialAnswerTest(ans string, phrasing Phrasing) bool {
-	words := split_words(ans, phrasing.Lengths)
-	return len(ans) <= sum(phrasing.Lengths) && matches_pattern(ans, phrasing.Pattern) && valid_initial_words(words)
+func PartialAnswerTest(ans string, phrasing *Phrasing) bool {
+	words := split_words(ans, (*phrasing).Lengths)
+	return len(ans) <= Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_initial_words(words)
 }
 
-func AnswerTest(ans string, phrasing Phrasing) bool {
-	words := split_words(ans, phrasing.Lengths)
-	return len(ans) == sum(phrasing.Lengths) && matches_pattern(ans, phrasing.Pattern) && valid_words(words) && original_words(words, phrasing)
+func AnswerTest(ans string, phrasing *Phrasing) bool {
+	words := split_words(ans, (*phrasing).Lengths)
+	return len(ans) == Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_words(words) && original_words(words, phrasing)
 }
 
-func sum(x []int) int {
+func Sum(x []int) int {
 	ans := 0
 	for j := 0; j < len(x); j++ {
 		ans += j
@@ -70,9 +70,9 @@ func valid_words(words []string) bool {
 	return true
 }
 
-func original_words(words []string, phrasing Phrasing) bool {
+func original_words(words []string, phrasing *Phrasing) bool {
 	for _, w := range words {
-		for _, p := range phrasing.Phrases {
+		for _, p := range (*phrasing).Phrases {
 			if w == p {
 				return false
 			}

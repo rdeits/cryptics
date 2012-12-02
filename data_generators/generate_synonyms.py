@@ -26,7 +26,7 @@ def cleanup(clue):
     clue = re.sub(r'\ +', ' ', clue)
     clue = re.sub(r'[^a-zA-Z0-9\ _]', '', clue)
     clue = clue.encode('ascii', 'ignore')
-    clue = clue.lower().strip()
+    clue = clue.lower().strip().strip('_')
     return clue
 
 all_synonyms = dict()
@@ -35,7 +35,8 @@ with open('raw_data/sowpods.txt', 'r') as f:
     WORDS = set(w.strip() for w in f.readlines())
 
 for word in WORDS:
-    syns = list(synonyms(word))
+    word = word.lower()
+    syns = map(cleanup, list(synonyms(word)))
     all_synonyms[word] = syns
 
 with open('raw_data/abbreviations.json', 'r') as f:
