@@ -1,6 +1,7 @@
 package utils
 
 import (
+	// "fmt"
 	"strings"
 )
 
@@ -32,8 +33,8 @@ func AllLegalSubstrings(words []string, length int) map[string]bool {
 			}
 		}
 	} else {
-		for l := 1; l < min(len(word)-1, length, 3)+1; l++ {
-			new_subs := legal_substrings(word, length)
+		for l := 1; l < min(len(word), length+1, 4); l++ {
+			new_subs := legal_substrings(word, l)
 			for s := range new_subs {
 				subs[s] = true
 			}

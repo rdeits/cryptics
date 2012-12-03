@@ -2,7 +2,7 @@ package solver
 
 import (
 	"cryptics/utils"
-	"fmt"
+	// "fmt"
 )
 
 type transform func(string, int) map[string]bool
@@ -53,12 +53,12 @@ var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": tr
 func SolveFactoredClue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool) map[string]bool {
 	length := utils.Sum((*phrasing).Lengths)
 	var result map[string]bool
-	fmt.Println("Trying to solve:", clue)
+	// fmt.Println("Trying to solve:", clue)
 	if ans, ok := solved_parts[string_hash(clue)]; ok {
 		result = ans
-		fmt.Println("Cache hit")
+		// fmt.Println("Cache hit")
 	} else {
-		fmt.Println("Cache miss")
+		// fmt.Println("Cache miss")
 		trans, trans_ok := TRANSFORMS[clue[0].(string)]
 		clue_func, func_ok := FUNCTIONS[clue[0].(string)]
 		if trans_ok {
@@ -98,11 +98,11 @@ func SolveFactoredClue(clue []interface{}, phrasing *utils.Phrasing, solved_part
 			}
 			result = utils.StringTreeSearch(sub_answers, member_test)
 		} else {
-			fmt.Println("Got this clue type: ", clue[0])
+			// fmt.Println("Got this clue type: ", clue[0])
 			panic("Unrecognized clue type")
 		}
 	}
-	fmt.Println("Returning: ", result, " for clue: ", clue)
+	// fmt.Println("Returning: ", result, " for clue: ", clue)
 	(solved_parts)[string_hash(clue)] = result
 	return result
 }
