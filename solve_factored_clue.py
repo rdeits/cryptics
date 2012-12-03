@@ -1,12 +1,13 @@
 from __future__ import division
 from utils.language import all_legal_substrings, semantic_similarity, all_insertions, string_reverse
-from utils.ngrams import INITIAL_NGRAMS
-from utils.anagrams import cached_anagrams
-from utils.synonyms import cached_synonyms, WORDS
+# from utils.ngrams import INITIAL_NGRAMS
+# from utils.anagrams import cached_anagrams
+# from utils.synonyms import cached_synonyms, WORDS
 from utils.cached_cfg import generate_cached_clues as generate_clues
-from utils.search import tree_search
+# from utils.search import tree_search
 from utils.phrasings import phrasings
 from utils.crossword import answer_test, partial_answer_test, split_words
+import subprocess
 import time
 import re
 
@@ -18,16 +19,16 @@ class ClueUnsolvableError(Exception):
     def __str__(self):
         print self.clue
 
-FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
+# FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
 
-TRANSFORMS = {'lit': lambda x, l: [x.lower()],
-              'null': lambda x, l: [''],
-              'd': lambda x, l: [''],
-              'first': lambda x, l: [x[0].lower()],
-              'syn': cached_synonyms}
+# TRANSFORMS = {'lit': lambda x, l: [x.lower()],
+#               'null': lambda x, l: [''],
+#               'd': lambda x, l: [''],
+#               'first': lambda x, l: [x[0].lower()],
+#               'syn': cached_synonyms}
 
 
-HEADS = ['ana_', 'sub_', 'ins_', 'rev_']
+# HEADS = ['ana_', 'sub_', 'ins_', 'rev_']
 
 
 def solve_clue_text(clue_text):
@@ -35,16 +36,23 @@ def solve_clue_text(clue_text):
     Solve a raw clue, like
     Initially babies are naked (4) b... | BARE
     """
-    solved_parts = dict()
+    # solved_parts = dict()
     all_phrasings, answer = parse_clue_text(clue_text)
     answers = set([])
     answers_with_clues = []
+    go_proc = subprocess.Popen(['cryptics'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    go_proc.stdin.write("# %s %s\n" % (all_phrasings[0][-2], all_phrasings[0][-1]))
+    print go_proc.stdout.readline()
+    print go_proc.stdout.readline()
     for p in all_phrasings:
         print p
-        for ans, clue in solve_phrasing(p, solved_parts):
+        for ans, clue in solve_phrasing(p, go_proc):
             if ans not in answers:
                 answers.add(ans)
                 answers_with_clues.append((ans, clue))
+    go_proc.stdin.write(".\n")
+    print "killing go_proc"
+    go_proc.wait()
     return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
 
 
@@ -70,7 +78,7 @@ def parse_clue_text(clue_text):
     return all_phrasings, answer
 
 
-def solve_phrasing(phrasing, solved_parts=dict()):
+def solve_phrasing(phrasing, go_proc):
     """
     Solve a clue which has been broken down into phrases, like:
     ['initially', 'babies', 'are', 'naked', 4, 'b...']
@@ -79,20 +87,23 @@ def solve_phrasing(phrasing, solved_parts=dict()):
     lengths = phrasing.pop()
     answers = set([])
     answers_with_clues = []
-    now = time.time()
+    # now = time.time()
     possible_clues = generate_clues(phrasing)
-    print time.time() - now
+    # print time.time() - now
 
     for i, clue in enumerate(possible_clues):
         d, definition = clue[[x[0] for x in clue].index('d')]
         # print clue
-        try:
-            new_answers = solve_factored_clue(clue[:], lengths, pattern,
-                                              solved_parts)
-        except ClueUnsolvableError:
-            # Clue was unsolvable, so skip it
-            continue
-        new_answers = filter(lambda ans: answer_test(ans, phrasing, lengths, pattern, WORDS), new_answers)
+        # try:
+        #     new_answers = solve_factored_clue(clue[:], lengths, pattern,
+        #                                       solved_parts)
+        # except ClueUnsolvableError:
+        #     # Clue was unsolvable, so skip it
+        #     continue
+        # new_answers = filter(lambda ans: answer_test(ans, phrasing, lengths, pattern, WORDS), new_answers)
+        go_proc.stdin.write(str(clue) + '\n')
+        result = go_proc.stdout.readline()
+        new_answers = eval(result)
         new_answers = ['_'.join(split_words(a, lengths)) for a in new_answers if a not in answers]
         new_answers = zip(new_answers, [semantic_similarity(a, definition) for a in new_answers])
         answers.update(new_answers)

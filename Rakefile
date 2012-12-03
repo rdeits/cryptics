@@ -25,3 +25,7 @@ end
 task :test => [:data] do
 	sh "nosetests --nocapture"
 end
+
+task :all do
+	sh "go install cryptics"
+end

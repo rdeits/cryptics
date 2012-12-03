@@ -7,7 +7,7 @@ import (
 )
 
 func LoadSynonyms() map[string][]string {
-	data, err := ioutil.ReadFile("../data/synonyms.json")
+	data, err := ioutil.ReadFile("data/synonyms.json")
 	if err != nil {
 		fmt.Println(err)
 	}

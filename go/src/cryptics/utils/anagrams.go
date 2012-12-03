@@ -22,10 +22,10 @@ func Anagrams(words []string, l int) map[string]bool {
 		panic("Word must be [1]string")
 	}
 	word := strings.ToLower(words[0])
+	word = strings.Replace(word, "_", "", -1)
 	if len(word) > l {
 		return map[string]bool{}
 	}
-	word = strings.Replace(word, "_", "", -1)
 	active_set := map[string]bool{"": true}
 	return anagrams_with_active_set(word, active_set)
 }

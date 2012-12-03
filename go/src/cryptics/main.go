@@ -24,7 +24,9 @@ func main() {
 	for {
 		clue, _ = stdin.ReadString('\n')
 		clue = strings.TrimSpace(clue)
-		if clue == "." {
+		if clue == "" {
+			continue
+		} else if clue == "." {
 			break
 		} else if string(clue[0]) == "#" {
 			parts := strings.Split(clue, "(")
@@ -33,6 +35,9 @@ func main() {
 			lengths = []int{}
 			lengths_strs := strings.Split(lengths_str, ",")
 			for _, c := range lengths_strs {
+				if strings.TrimSpace(c) == "" {
+					continue
+				}
 				fmt.Sscanf(c, "%d", &l)
 				lengths = append(lengths, int(l))
 			}
