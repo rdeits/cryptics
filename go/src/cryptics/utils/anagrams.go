@@ -17,7 +17,14 @@ func remaining_letters(letters []rune, word string) map[rune]bool {
 	return remaining
 }
 
-func Anagrams(word string) map[string]bool {
+func Anagrams(words []string) map[string]bool {
+	if len(words) > 1 {
+		panic("Word must be [1]string")
+	}
+	word := strings.ToLower(words[0])
+	if len(word) < l {
+		return map[string]bool{}
+	}
 	word = strings.Replace(word, "_", "", -1)
 	active_set := map[string]bool{"": true}
 	return anagrams_with_active_set(word, active_set)

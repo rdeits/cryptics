@@ -4,7 +4,11 @@ import (
 	"strings"
 )
 
-func Reverse(word string, length int) map[string]bool {
+func Reverse(words []string, length int) map[string]bool {
+	if len(words) > 1 {
+		panic("Word must be [1]string")
+	}
+	word := strings.ToLower(words[0])
 	ans := []rune(word)
 	l := len(word)
 	for i, c := range word {
@@ -13,9 +17,12 @@ func Reverse(word string, length int) map[string]bool {
 	return map[string]bool{string(ans): true}
 }
 
-func AllLegalSubstrings(word string, length int) map[string]bool {
+func AllLegalSubstrings(words string, length int) map[string]bool {
+	if len(words) > 1 {
+		panic("Word must be [1]string")
+	}
 	subs := map[string]bool{}
-	word = strings.ToLower(word)
+	word := strings.ToLower(words[0])
 	if strings.Contains(word, "_") {
 		word = strings.Replace(word, "_", "", -1)
 		for i := 0; i < len(word)-length+1; i++ {
@@ -59,10 +66,13 @@ func min(x ...int) int {
 	return result
 }
 
-func AllInsertions(word1, word2 string, length int) map[string]bool {
+func AllInsertions(words []string, length int) map[string]bool {
+	if len(words) > 2 {
+		panic("Word must be [1]string")
+	}
+	word1 = strings.Replace(words[0], "_", "", -1)
+	word2 = strings.Replace(words[1], "_", "", -1)
 	result := map[string]bool{}
-	word1 = strings.Replace(word1, "_", "", -1)
-	word2 = strings.Replace(word2, "_", "", -1)
 	if word1 == "" || word2 == "" {
 		result[word1+word2] = true
 	}
