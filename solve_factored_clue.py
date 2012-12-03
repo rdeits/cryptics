@@ -1,34 +1,20 @@
 from __future__ import division
-from utils.language import all_legal_substrings, semantic_similarity, all_insertions, string_reverse
-# from utils.ngrams import INITIAL_NGRAMS
-# from utils.anagrams import cached_anagrams
-# from utils.synonyms import cached_synonyms, WORDS
+from utils.language import semantic_similarity
 from utils.cached_cfg import generate_cached_clues as generate_clues
-# from utils.search import tree_search
 from utils.phrasings import phrasings
-from utils.crossword import answer_test, partial_answer_test, split_words
+from utils.crossword import split_words
 import subprocess
 import time
 import re
 
-
-class ClueUnsolvableError(Exception):
-    def __init__(self, clue):
-        self.clue = clue
-
-    def __str__(self):
-        print self.clue
-
-# FUNCTIONS = {'ana': cached_anagrams, 'sub': all_legal_substrings, 'ins': all_insertions, 'rev': string_reverse}
-
-# TRANSFORMS = {'lit': lambda x, l: [x.lower()],
-#               'null': lambda x, l: [''],
-#               'd': lambda x, l: [''],
-#               'first': lambda x, l: [x[0].lower()],
-#               'syn': cached_synonyms}
+global go_proc
+go_proc = subprocess.Popen(['cryptics'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
 
-# HEADS = ['ana_', 'sub_', 'ins_', 'rev_']
+def stop_go_server():
+    global go_proc
+    go_proc.stdin.write('.\n')
+    go_proc.wait()
 
 
 def solve_clue_text(clue_text):
@@ -40,9 +26,8 @@ def solve_clue_text(clue_text):
     all_phrasings, answer = parse_clue_text(clue_text)
     answers = set([])
     answers_with_clues = []
-    go_proc = subprocess.Popen(['cryptics'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+
     go_proc.stdin.write("# %s %s\n" % (all_phrasings[0][-2], all_phrasings[0][-1]))
-    print go_proc.stdout.readline()
     print go_proc.stdout.readline()
     for p in all_phrasings:
         print p
@@ -50,9 +35,6 @@ def solve_clue_text(clue_text):
             if ans not in answers:
                 answers.add(ans)
                 answers_with_clues.append((ans, clue))
-    go_proc.stdin.write(".\n")
-    print "killing go_proc"
-    go_proc.wait()
     return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
 
 
@@ -93,14 +75,6 @@ def solve_phrasing(phrasing, go_proc):
 
     for i, clue in enumerate(possible_clues):
         d, definition = clue[[x[0] for x in clue].index('d')]
-        # print clue
-        # try:
-        #     new_answers = solve_factored_clue(clue[:], lengths, pattern,
-        #                                       solved_parts)
-        # except ClueUnsolvableError:
-        #     # Clue was unsolvable, so skip it
-        #     continue
-        # new_answers = filter(lambda ans: answer_test(ans, phrasing, lengths, pattern, WORDS), new_answers)
         go_proc.stdin.write(str(clue) + '\n')
         result = go_proc.stdout.readline()
         new_answers = eval(result)
@@ -109,36 +83,6 @@ def solve_phrasing(phrasing, go_proc):
         answers.update(new_answers)
         answers_with_clues.extend(zip(new_answers, [clue] * len(new_answers)))
     return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
-
-
-def solve_factored_clue(clue, lengths, pattern, solved_parts=dict()):
-    length = sum(lengths)
-    if clue in solved_parts:
-        result = solved_parts[clue]
-    else:
-        if clue[0] in TRANSFORMS:
-            result = set(TRANSFORMS[clue[0]](clue[1], length))
-        elif clue[0] in FUNCTIONS:
-            result = set([])
-            arg_sets = tree_search([solve_factored_clue(c, lengths, pattern, solved_parts) for c in clue[1:] if c[0] not in HEADS])
-            for arg_set in arg_sets:
-                arg_set += [length]
-                result.update(FUNCTIONS[clue[0]](*arg_set))
-        elif clue[0] == 'd':
-            result = ['']
-        elif clue[0] == 'clue':
-            def member_test(x):
-                return partial_answer_test(x, lengths, pattern, INITIAL_NGRAMS)
-            result = tree_search([map(lambda x: x.replace('_', ''),
-                                      solve_factored_clue(c, lengths, pattern, solved_parts)) for c in clue[1:]],
-                                 start=[''], member_test=member_test)
-        else:
-            raise ValueError('Unrecognized clue: %s' % clue)
-    solved_parts[clue] = result
-    # print clue, result
-    if len(result) == 0:
-        raise ClueUnsolvableError(clue)
-    return result
 
 
 if __name__ == '__main__':

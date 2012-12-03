@@ -18,7 +18,6 @@ func main() {
 	var lengths []int
 	var l int
 	var solved_parts map[string]map[string]bool
-	fmt.Println("running")
 	stdin := bufio.NewReader(os.Stdin)
 	var clue string
 	for {

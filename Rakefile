@@ -18,14 +18,14 @@ file "data/clue_structures.pck" do
 	sh "python data_generators/generate_clues.py"
 end
 
-task :server => [:data] do
+task :server => [:data, :go] do
 	sh "python crypticweb/server.py"
 end
 
-task :test => [:data] do
+task :test => [:data, :go] do
 	sh "nosetests --nocapture"
 end
 
-task :all do
+task :go do
 	sh "go install cryptics"
 end
