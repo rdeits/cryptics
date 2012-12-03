@@ -51,7 +51,7 @@ var TRANSFORMS map[string]transform = map[string]transform{"lit": func(x string,
 var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": true}
 
 func SolveFactoredClue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool) map[string]bool {
-	candidates := solve_partial_clue(clue, phrasing, solved_parts)
+	candidates, _ := solve_partial_clue(clue, phrasing, solved_parts)
 	// fmt.Println(candidates)
 	results := map[string]bool{}
 	for a := range candidates {
@@ -62,9 +62,12 @@ func SolveFactoredClue(clue []interface{}, phrasing *utils.Phrasing, solved_part
 	return results
 }
 
-func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool) map[string]bool {
+func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool) (map[string]bool, bool) {
 	length := utils.Sum((*phrasing).Lengths)
 	var result map[string]bool
+	var sub_answers map[string]bool
+	var err bool
+	var sub_ans string
 	// fmt.Println("Trying to solve:", clue)
 	if ans, ok := solved_parts[string_hash(clue)]; ok {
 		result = ans
@@ -87,7 +90,12 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 				}
 				new_active_set = [][]string{}
 				for _, s := range active_set {
-					for sub_ans := range solve_partial_clue(sub_clue, phrasing, solved_parts) {
+					sub_answers, err = solve_partial_clue(sub_clue, phrasing, solved_parts)
+					if err {
+						(solved_parts)[string_hash(clue)] = result
+						return result, true
+					}
+					for sub_ans = range sub_answers {
 						new_active_set = append(new_active_set, append(s, sub_ans))
 					}
 				}
@@ -102,19 +110,29 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 			member_test := func(x string) bool {
 				return utils.PartialAnswerTest(x, phrasing)
 			}
-			sub_answers := []map[string]bool{}
+			all_sub_answers := []map[string]bool{}
 			var sub_clue []interface{}
 			for _, sub_part := range clue[1:len(clue)] {
 				sub_clue = sub_part.([]interface{})
-				sub_answers = append(sub_answers, solve_partial_clue(sub_clue, phrasing, solved_parts))
+				sub_answers, err = solve_partial_clue(sub_clue, phrasing, solved_parts)
+				all_sub_answers = append(all_sub_answers, sub_answers)
+				if err {
+					(solved_parts)[string_hash(clue)] = result
+					return result, true
+				}
 			}
-			result = utils.StringTreeSearch(sub_answers, member_test)
+			result = utils.StringTreeSearch(all_sub_answers, member_test)
 		} else {
 			// fmt.Println("Got this clue type: ", clue[0])
 			panic("Unrecognized clue type")
 		}
 	}
-	// fmt.Println("Returning: ", result, " for clue: ", clue)
 	(solved_parts)[string_hash(clue)] = result
-	return result
+	if len(result) == 1 && result[""] == true && (clue[0].(string) != "null" && clue[0].(string) != "d") {
+		return result, true
+	} else {
+		return result, false
+	}
+	// fmt.Println("Returning: ", result, " for clue: ", clue)
+	return result, false
 }
