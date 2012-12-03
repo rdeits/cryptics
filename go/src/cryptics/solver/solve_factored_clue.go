@@ -51,6 +51,18 @@ var TRANSFORMS map[string]transform = map[string]transform{"lit": func(x string,
 var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": true}
 
 func SolveFactoredClue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool) map[string]bool {
+	candidates := solve_partial_clue(clue, phrasing, solved_parts)
+	// fmt.Println(candidates)
+	results := map[string]bool{}
+	for a := range candidates {
+		if utils.AnswerTest(a, phrasing) {
+			results[a] = true
+		}
+	}
+	return results
+}
+
+func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool) map[string]bool {
 	length := utils.Sum((*phrasing).Lengths)
 	var result map[string]bool
 	// fmt.Println("Trying to solve:", clue)
@@ -75,7 +87,7 @@ func SolveFactoredClue(clue []interface{}, phrasing *utils.Phrasing, solved_part
 				}
 				new_active_set = [][]string{}
 				for _, s := range active_set {
-					for sub_ans := range SolveFactoredClue(sub_clue, phrasing, solved_parts) {
+					for sub_ans := range solve_partial_clue(sub_clue, phrasing, solved_parts) {
 						new_active_set = append(new_active_set, append(s, sub_ans))
 					}
 				}
@@ -94,7 +106,7 @@ func SolveFactoredClue(clue []interface{}, phrasing *utils.Phrasing, solved_part
 			var sub_clue []interface{}
 			for _, sub_part := range clue[1:len(clue)] {
 				sub_clue = sub_part.([]interface{})
-				sub_answers = append(sub_answers, SolveFactoredClue(sub_clue, phrasing, solved_parts))
+				sub_answers = append(sub_answers, solve_partial_clue(sub_clue, phrasing, solved_parts))
 			}
 			result = utils.StringTreeSearch(sub_answers, member_test)
 		} else {

@@ -37,9 +37,10 @@ func ParseClue(raw_clue string) []interface{} {
 }
 
 func FormatAnswers(answers map[string]bool) string {
-	result := []byte{}
+	result := []byte{'['}
 	for s := range answers {
 		result = append(result, []byte("'"+s+"', ")...)
 	}
+	result = append(result, byte(']'))
 	return string(result)
 }

@@ -49,8 +49,9 @@ func legal_substrings(word string, length int) map[string]bool {
 	result[word[len(word)-length:len(word)]] = true
 	if (len(word)%2 == 0) && (length == 2) {
 		result[word[len(word)/2-1:len(word)/2+1]] = true
-	} else if length == 2 {
-		result[word[0:length/2]+word[len(word)-length/2:len(word)]] = true
+	}
+	if length == 2 {
+		result[string(word[0])+string(word[len(word)-1])] = true
 	} else if (len(word)%2 == 1) && (length == 1 || length == 3) {
 		result[word[len(word)/2-length/2:len(word)/2+length/2+1]] = true
 	}

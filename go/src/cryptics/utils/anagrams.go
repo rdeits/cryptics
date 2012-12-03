@@ -22,7 +22,7 @@ func Anagrams(words []string, l int) map[string]bool {
 		panic("Word must be [1]string")
 	}
 	word := strings.ToLower(words[0])
-	if len(word) < l {
+	if len(word) > l {
 		return map[string]bool{}
 	}
 	word = strings.Replace(word, "_", "", -1)
