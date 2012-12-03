@@ -68,6 +68,7 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 	var sub_answers map[string]bool
 	var err bool
 	var sub_ans string
+	var s []string
 	// fmt.Println("Trying to solve:", clue)
 	if ans, ok := solved_parts[string_hash(clue)]; ok {
 		result = ans
@@ -89,7 +90,7 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 					continue
 				}
 				new_active_set = [][]string{}
-				for _, s := range active_set {
+				for _, s = range active_set {
 					sub_answers, err = solve_partial_clue(sub_clue, phrasing, solved_parts)
 					if err {
 						(solved_parts)[string_hash(clue)] = result
@@ -102,7 +103,7 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 				active_set = new_active_set
 			}
 			for _, arg_set := range active_set {
-				for sub_ans := range clue_func(arg_set, length) {
+				for sub_ans = range clue_func(arg_set, length) {
 					result[sub_ans] = true
 				}
 			}
