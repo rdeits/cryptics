@@ -1,0 +1,2 @@
+('clue', ('sub', ('lit', 'significant_ataxia'), ('sub_', 'overshadows')), ('d', 'choral_piece'))
+('clue', ('d', 'spin'), ('ana', ('ana_', 'broken'), ('lit', 'shingle')))

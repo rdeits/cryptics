@@ -2,7 +2,9 @@ package utils
 
 import (
 	"cryptics/load_utils"
+	// "fmt"
 	"regexp"
+	"strings"
 )
 
 var SYNONYMS map[string][]string = load_utils.SYNONYMS
@@ -25,11 +27,14 @@ func matches_pattern(word, pattern string) bool {
 }
 
 func split_words(ans string, lengths []int) []string {
+	if strings.TrimSpace(ans) == "" {
+		return []string{}
+	}
 	j := 0
 	words := []string{}
 	for _, l := range lengths {
 		words = append(words, ans[j:j+l])
-		j += 1
+		j += l
 	}
 	return words
 }
