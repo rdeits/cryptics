@@ -23,7 +23,6 @@ class index:
         else:
             # phrases, answer = parse_clue_text(form.d.Clue)
             # answers = solve_phrases(phrases)[:50]
-            print "data:", form.d.Clue
             answers = solve_clue_text(form.d.Clue)
             if answers == []:
                 answers = ["Sorry, I couldn't find any answers"]

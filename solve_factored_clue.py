@@ -23,8 +23,6 @@ def solve_clue_text(clue_text):
     Initially babies are naked (4) b... | BARE
     """
     clue_text = clue_text.encode('ascii', 'ignore')
-    print "solving clue text"
-    print clue_text
     # solved_parts = dict()
     all_phrasings, answer = parse_clue_text(clue_text)
     answers = set([])
