@@ -22,6 +22,9 @@ def solve_clue_text(clue_text):
     Solve a raw clue, like
     Initially babies are naked (4) b... | BARE
     """
+    clue_text = clue_text.encode('ascii', 'ignore')
+    print "solving clue text"
+    print clue_text
     # solved_parts = dict()
     all_phrasings, answer = parse_clue_text(clue_text)
     answers = set([])
@@ -88,8 +91,9 @@ def solve_phrasing(phrasing, go_proc):
 if __name__ == '__main__':
     # print solve_phrasing(['small_bricks', 'included_among', 'durable_goods', 4, 'l...'])
     # print solve_factored_clue(('clue', ('sub', ('lit', 'significant_ataxia'), ('sub_', 'overshadows')), ('d', 'choral_piece')), (7,), '')
-    # print solve_clue_text('small_bricks small_bricks (5, 6)')
-    for clue in open('clues/clues.txt', 'r').readlines():
-        print solve_clue_text(clue)[:1]
+    print solve_clue_text(u'initially babies are naked (4)')
+    # for clue in open('clues/clues.txt', 'r').readlines():
+    #     print solve_clue_text(clue)[:1]
         # break
+    stop_go_server()
 
