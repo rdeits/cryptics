@@ -1,19 +1,18 @@
 package data_gen
 
-import(
+import (
+	"cryptics/utils"
 	"fmt"
 	"os"
-	"cryptics/utils"
 )
 
 func GenerateNgrams() {
-	syns := utils.LoadSynonyms()
-	ngrams := map[string]bool {}
-	initial_ngrams := map[string]bool {}
+	ngrams := map[string]bool{}
+	initial_ngrams := map[string]bool{}
 	var skip bool
-	for word, _ := range(syns) {
+	for word, _ := range utils.SYNONYMS {
 		skip = false
-		for _, c := range(word) {
+		for _, c := range word {
 			if string(c) == "_" {
 				skip = true
 				break
@@ -24,12 +23,12 @@ func GenerateNgrams() {
 		}
 		for i := 1; i <= len(word); i++ {
 			initial_ngrams[word[0:i]] = true
-			for j := 0; j <= len(word) - i; j ++ {
+			for j := 0; j <= len(word)-i; j++ {
 				ngrams[word[j:j+i]] = true
 			}
 		}
 	}
-	ngrams_file, err := os.Create("data/ngrams.txt")
+	ngrams_file, err := os.Create("../data/ngrams.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -38,7 +37,7 @@ func GenerateNgrams() {
 		ngrams_file.WriteString(s + "\n")
 	}
 
-	initial_ngrams_file, err := os.Create("data/initial_ngrams.txt")
+	initial_ngrams_file, err := os.Create("../data/initial_ngrams.txt")
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -17,7 +17,7 @@ func remaining_letters(letters []rune, word string) map[rune]bool {
 	return remaining
 }
 
-func Anagrams(words []string) map[string]bool {
+func Anagrams(words []string, l int) map[string]bool {
 	if len(words) > 1 {
 		panic("Word must be [1]string")
 	}

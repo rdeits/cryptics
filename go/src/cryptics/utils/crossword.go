@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-var SYNONYMS *map[string][]string = load_utils.SYNONYMS
+var SYNONYMS map[string][]string = load_utils.SYNONYMS
 
 type Phrasing struct {
 	Phrases []string
@@ -47,7 +47,7 @@ func AnswerTest(ans string, phrasing *Phrasing) bool {
 func Sum(x []int) int {
 	ans := 0
 	for j := 0; j < len(x); j++ {
-		ans += j
+		ans += x[j]
 	}
 	return ans
 }
@@ -63,7 +63,7 @@ func valid_initial_words(words []string) bool {
 
 func valid_words(words []string) bool {
 	for _, w := range words {
-		if _, ok := (*SYNONYMS)[w]; !ok {
+		if _, ok := (SYNONYMS)[w]; !ok {
 			return false
 		}
 	}

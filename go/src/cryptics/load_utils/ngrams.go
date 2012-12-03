@@ -14,7 +14,7 @@ type Ngrams struct {
 func LoadNgrams() *Ngrams {
 	all_ngrams := map[string]bool{}
 	initial_ngrams := map[string]bool{}
-	raw_ngrams, err := ioutil.ReadFile("data/ngrams.txt")
+	raw_ngrams, err := ioutil.ReadFile("../data/ngrams.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -22,7 +22,7 @@ func LoadNgrams() *Ngrams {
 	for _, n := range ngrams_list {
 		all_ngrams[n] = true
 	}
-	raw_init, err := ioutil.ReadFile("data/initial_ngrams.txt")
+	raw_init, err := ioutil.ReadFile("../data/initial_ngrams.txt")
 	if err != nil {
 		fmt.Println(err)
 	}

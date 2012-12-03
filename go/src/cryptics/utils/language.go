@@ -17,7 +17,7 @@ func Reverse(words []string, length int) map[string]bool {
 	return map[string]bool{string(ans): true}
 }
 
-func AllLegalSubstrings(words string, length int) map[string]bool {
+func AllLegalSubstrings(words []string, length int) map[string]bool {
 	if len(words) > 1 {
 		panic("Word must be [1]string")
 	}
@@ -27,7 +27,7 @@ func AllLegalSubstrings(words string, length int) map[string]bool {
 		word = strings.Replace(word, "_", "", -1)
 		for i := 0; i < len(word)-length+1; i++ {
 			s := word[i : i+length]
-			if _, ok := (*SYNONYMS)[s]; ok {
+			if _, ok := (SYNONYMS)[s]; ok {
 				subs[s] = true
 			}
 		}
@@ -70,8 +70,8 @@ func AllInsertions(words []string, length int) map[string]bool {
 	if len(words) > 2 {
 		panic("Word must be [1]string")
 	}
-	word1 = strings.Replace(words[0], "_", "", -1)
-	word2 = strings.Replace(words[1], "_", "", -1)
+	word1 := strings.Replace(words[0], "_", "", -1)
+	word2 := strings.Replace(words[1], "_", "", -1)
 	result := map[string]bool{}
 	if word1 == "" || word2 == "" {
 		result[word1+word2] = true
