@@ -1,3 +1,6 @@
+# Introduction
+This is a general cryptic crossword clue solver, written in a mix of Python and Golang. 
+
 # Required python packages:
 
 	nose
@@ -9,10 +12,17 @@
 	python (tested with 2.7)
 	rake
 	git
+	go (tested with v.1.0.2)
 
 # Installation:
 
-Add the cryptics folder to your PYTHONPATH. Then generate the n-grams and synonyms datasets by running
+Add the appropriate folders to your various PATH variables:
+
+	export GOPATH="<your-local-path>/cryptics/go:${GOPATH}"
+	export PATH="<your-local-path>/cryptics/go/bin:${PATH}"
+	export PYTHONPATH="<your-local-path>/cryptics:${PYTHONPATH}"
+	
+. Then generate the n-grams and synonyms datasets by running
 
 	rake data
 
