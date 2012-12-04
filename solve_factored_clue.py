@@ -13,7 +13,7 @@ go_proc = subprocess.Popen(['cryptics'], stdin=subprocess.PIPE, stdout=subproces
 
 def stop_go_server():
     global go_proc
-    go_proc.stdin.write('.\n')
+    go_proc.stdin.write('..\n')
     go_proc.wait()
 
 
@@ -71,14 +71,18 @@ def solve_phrasing(phrasing, go_proc):
     answers = set([])
     answers_with_clues = []
     # now = time.time()
-    possible_clues = generate_clues(phrasing)
+    possible_clues = list(generate_clues(phrasing))
     # print time.time() - now
 
     for i, clue in enumerate(possible_clues):
-        d, definition = clue[[x[0] for x in clue].index('d')]
         go_proc.stdin.write(str(clue) + '\n')
+    go_proc.stdin.write('.\n')
+    for i, x in enumerate(possible_clues):
+        #TODO: pull clue from go output (since we can't assume go will return answers in the same order as clues
         result = go_proc.stdout.readline()
-        new_answers = eval(result)
+        new_answers, clue = eval(result)
+        d, definition = clue[[x[0] for x in clue].index('d')]
+        new_answers = filter(lambda w: w not in phrasing, new_answers)
         new_answers = ['_'.join(split_words(a, lengths)) for a in new_answers if a not in answers]
         new_answers = zip(new_answers, [semantic_similarity(a, definition) for a in new_answers])
         answers.update(new_answers)

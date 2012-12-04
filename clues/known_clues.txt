@@ -1,10 +1,3 @@
-Dotty, Sue,_Pearl, Joy (8) | PLEASURE
-Improve meal_-_or_I_eat nuts (10) | AMELIORATE
-Form_of licit_sea salt (8) .i...... | SILICATE
-Fluttering heart and thundering head is a_danger (6) t....t | THREAT
-Singers in_a special_Tosca production (5) a.... | ALTOS
-Setting for a_cello composition (6) l..... | LOCALE
-St._Michael transforms metal_transformer (9) a........ | ALCHEMIST
 Signore redefined districts (7) | REGIONS
 Returning regal drink (5) | LAGER
 Anagram_marvellously conceals structure_of_language (7) g...... | GRAMMAR
@@ -45,3 +38,10 @@ Bottomless sea, stormy sea - waters' surface rises_and_falls (7) s.es... | SEESA
 orchestra_im reorganizing conductor (11) | CHOIRMASTER
 in_the_first_place shouldnt be a bigot (6) | SEXIST
 Bring_up sentry as protection_for_tailender (9) | REARGUARD
+Dotty, Sue,_Pearl, Joy (8) .l...... | PLEASURE
+Improve meal_-_or_I_eat nuts (10) | AMELIORATE
+Form_of licit_sea salt (8) .i...... | SILICATE
+Fluttering heart and thundering head is a_danger (6) t....t | THREAT
+Singers in_a special_Tosca production (5) a.... | ALTOS
+Setting for a_cello composition (6) l..... | LOCALE
+St._Michael transforms metal_transformer (9) a........ | ALCHEMIST

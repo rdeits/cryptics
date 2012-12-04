@@ -10,7 +10,6 @@ import (
 var SYNONYMS map[string][]string = load_utils.SYNONYMS
 
 type Phrasing struct {
-	Phrases []string
 	Lengths []int
 	Pattern string
 }
@@ -53,7 +52,7 @@ func PartialAnswerTest(ans string, phrasing *Phrasing) bool {
 
 func AnswerTest(ans string, phrasing *Phrasing) bool {
 	words := split_words(ans, (*phrasing).Lengths)
-	return len(ans) == Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_words(words) && original_words(words, phrasing)
+	return len(ans) == Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_words(words)
 }
 
 func Sum(x []int) int {
@@ -77,17 +76,6 @@ func valid_words(words []string) bool {
 	for _, w := range words {
 		if _, ok := (SYNONYMS)[w]; !ok {
 			return false
-		}
-	}
-	return true
-}
-
-func original_words(words []string, phrasing *Phrasing) bool {
-	for _, w := range words {
-		for _, p := range (*phrasing).Phrases {
-			if w == p {
-				return false
-			}
 		}
 	}
 	return true

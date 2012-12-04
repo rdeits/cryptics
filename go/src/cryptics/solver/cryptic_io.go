@@ -36,11 +36,13 @@ func ParseClue(raw_clue string) []interface{} {
 	return *stack[0]
 }
 
-func FormatAnswers(answers map[string]bool) string {
-	result := []byte{'['}
-	for s := range answers {
+func FormatAnswers(answer SolvedClue) string {
+	result := []byte("[[")
+	for s := range answer.Answers {
 		result = append(result, []byte("'"+s+"', ")...)
 	}
+	result = append(result, []byte("],")...)
+	result = append(result, []byte(answer.Clue)...)
 	result = append(result, byte(']'))
 	return string(result)
 }

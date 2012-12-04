@@ -8,6 +8,11 @@ import (
 type transform func(string, int) map[string]bool
 type clue_function func([]string, int) map[string]bool
 
+type SolvedClue struct {
+	Clue    string
+	Answers map[string]bool
+}
+
 func string_hash(clue []interface{}) string {
 	result := "("
 	for _, c := range clue {
@@ -50,8 +55,9 @@ var TRANSFORMS map[string]transform = map[string]transform{"lit": func(x string,
 
 var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": true}
 
-func SolveFactoredClue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool) map[string]bool {
-	candidates, _ := solve_partial_clue(clue, phrasing, solved_parts)
+func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool, ans_c chan SolvedClue, map_c chan SolvedClue) {
+	clue := ParseClue(clue_str)
+	candidates, _ := solve_partial_clue(clue, phrasing, solved_parts, map_c)
 	// fmt.Println(candidates)
 	results := map[string]bool{}
 	for a := range candidates {
@@ -59,10 +65,10 @@ func SolveFactoredClue(clue []interface{}, phrasing *utils.Phrasing, solved_part
 			results[a] = true
 		}
 	}
-	return results
+	ans_c <- SolvedClue{Clue: clue_str, Answers: results}
 }
 
-func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool) (map[string]bool, bool) {
+func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool, map_c chan SolvedClue) (map[string]bool, bool) {
 	length := utils.Sum((*phrasing).Lengths)
 	var result map[string]bool
 	var sub_answers map[string]bool
@@ -91,7 +97,7 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 				}
 				new_active_set = [][]string{}
 				for _, s = range active_set {
-					sub_answers, err = solve_partial_clue(sub_clue, phrasing, solved_parts)
+					sub_answers, err = solve_partial_clue(sub_clue, phrasing, solved_parts, map_c)
 					if err {
 						(solved_parts)[string_hash(clue)] = result
 						return result, true
@@ -115,7 +121,7 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 			var sub_clue []interface{}
 			for _, sub_part := range clue[1:len(clue)] {
 				sub_clue = sub_part.([]interface{})
-				sub_answers, err = solve_partial_clue(sub_clue, phrasing, solved_parts)
+				sub_answers, err = solve_partial_clue(sub_clue, phrasing, solved_parts, map_c)
 				all_sub_answers = append(all_sub_answers, sub_answers)
 				if err {
 					(solved_parts)[string_hash(clue)] = result
@@ -128,7 +134,8 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 			panic("Unrecognized clue type")
 		}
 	}
-	(solved_parts)[string_hash(clue)] = result
+	// solved_parts[string_hash(clue)] = result
+	map_c <- SolvedClue{Clue: string_hash(clue), Answers: result}
 	if len(result) == 1 && result[""] == true && (clue[0].(string) != "null" && clue[0].(string) != "d") {
 		return result, true
 	} else {
