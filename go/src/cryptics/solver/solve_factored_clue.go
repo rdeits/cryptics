@@ -55,7 +55,7 @@ var TRANSFORMS map[string]transform = map[string]transform{"lit": func(x string,
 
 var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": true}
 
-func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool, ans_c chan SolvedClue, map_c chan SolvedClue) {
+func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool, ans_c chan SolvedClue, map_c chan bool) {
 	clue := ParseClue(clue_str)
 	candidates, _ := solve_partial_clue(clue, phrasing, solved_parts, map_c)
 	// fmt.Println(candidates)
@@ -68,7 +68,7 @@ func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts m
 	ans_c <- SolvedClue{Clue: clue_str, Answers: results}
 }
 
-func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool, map_c chan SolvedClue) (map[string]bool, bool) {
+func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_parts map[string]map[string]bool, map_c chan bool) (map[string]bool, bool) {
 	length := utils.Sum((*phrasing).Lengths)
 	var result map[string]bool
 	var sub_answers map[string]bool
@@ -76,7 +76,10 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 	var sub_ans string
 	var s []string
 	// fmt.Println("Trying to solve:", clue)
-	if ans, ok := solved_parts[string_hash(clue)]; ok {
+	// <-map_c
+	ans, ok := solved_parts[string_hash(clue)]
+	// map_c <- true
+	if ok {
 		result = ans
 		// fmt.Println("Cache hit")
 	} else {
@@ -99,7 +102,9 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 				for _, s = range active_set {
 					sub_answers, err = solve_partial_clue(sub_clue, phrasing, solved_parts, map_c)
 					if err {
+						<-map_c
 						(solved_parts)[string_hash(clue)] = result
+						map_c <- true
 						return result, true
 					}
 					for sub_ans = range sub_answers {
@@ -124,7 +129,9 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 				sub_answers, err = solve_partial_clue(sub_clue, phrasing, solved_parts, map_c)
 				all_sub_answers = append(all_sub_answers, sub_answers)
 				if err {
+					<-map_c
 					(solved_parts)[string_hash(clue)] = result
+					map_c <- true
 					return result, true
 				}
 			}
@@ -135,7 +142,10 @@ func solve_partial_clue(clue []interface{}, phrasing *utils.Phrasing, solved_par
 		}
 	}
 	// solved_parts[string_hash(clue)] = result
-	map_c <- SolvedClue{Clue: string_hash(clue), Answers: result}
+	<-map_c
+	solved_parts[string_hash(clue)] = result
+	map_c <- true
+	// map_c <- SolvedClue{Clue: string_hash(clue), Answers: result}
 	if len(result) == 1 && result[""] == true && (clue[0].(string) != "null" && clue[0].(string) != "d") {
 		return result, true
 	} else {

@@ -25,8 +25,10 @@ func main() {
 	stdin := bufio.NewReader(os.Stdin)
 	var clue string
 	ans_c := make(chan solver.SolvedClue)
-	map_c := make(chan solver.SolvedClue)
-	go UpdateMap(solved_parts, map_c)
+	map_c := make(chan bool, 1)
+	map_c <- true
+	// map_c := make(chan solver.SolvedClue)
+	// go UpdateMap(solved_parts, map_c)
 	for {
 		clue, _ = stdin.ReadString('\n')
 		clue = strings.TrimSpace(clue)
@@ -66,10 +68,10 @@ func main() {
 	}
 }
 
-func UpdateMap(solved_parts map[string]map[string]bool, c chan solver.SolvedClue) {
-	var solved_clue solver.SolvedClue
-	for {
-		solved_clue = <-c
-		solved_parts[solved_clue.Clue] = solved_clue.Answers
-	}
-}
+// func UpdateMap(solved_parts map[string]map[string]bool, c chan solver.SolvedClue) {
+// 	var solved_clue solver.SolvedClue
+// 	for {
+// 		solved_clue = <-c
+// 		solved_parts[solved_clue.Clue] = solved_clue.Answers
+// 	}
+// }
