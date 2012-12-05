@@ -46,7 +46,7 @@ func AllLegalSubstrings(words []string, length int) map[string]bool {
 func legal_substrings(word string, length int) map[string]bool {
 	result := map[string]bool{}
 	result[word[0:length]] = true
-	result[word[len(word)-length:len(word)]] = true
+	result[word[len(word)-length:]] = true
 	if (len(word)%2 == 0) && (length == 2) {
 		result[word[len(word)/2-1:len(word)/2+1]] = true
 	}
@@ -60,7 +60,7 @@ func legal_substrings(word string, length int) map[string]bool {
 
 func min(x ...int) int {
 	result := x[0]
-	for _, y := range x[1:len(x)] {
+	for _, y := range x[1:] {
 		if y < result {
 			result = y
 		}
@@ -80,11 +80,11 @@ func AllInsertions(words []string, length int) map[string]bool {
 	}
 	w0, w1 := word1, word2
 	for j := 0; j < len(w1); j++ {
-		result[w1[0:j]+w0+w1[j:len(w1)]] = true
+		result[w1[0:j]+w0+w1[j:]] = true
 	}
 	w1, w0 = word1, word2
 	for j := 0; j < len(w1); j++ {
-		result[w1[0:j]+w0+w1[j:len(w1)]] = true
+		result[w1[0:j]+w0+w1[j:]] = true
 	}
 	return result
 }
