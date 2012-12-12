@@ -1,5 +1,5 @@
 # Introduction
-This is a general cryptic crossword clue solver, written in a mix of Python and Golang. 
+This is a general cryptic crossword clue solver, written in a mix of Python and Go. 
 
 # Required python packages:
 
@@ -57,4 +57,10 @@ Answer:
 	LEE_SHORES
 
 You can give the solver a hint that a set of words form a phrase (and need not be treated separately) by combining them with an underscore (as in 'dangerous_coasts' above). 
+
+
+# Acknowledgements
+
+This program uses the English bigrams corpus from [After the Deadline](http://blog.afterthedeadline.com/2010/07/20/after-the-deadline-bigram-corpus-our-gift-to-you/) licensed under the [Creative Commons Attribution 3.0 Unported License](http://creativecommons.org/licenses/by/3.0/). 
+
 
