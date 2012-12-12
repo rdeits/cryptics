@@ -7,7 +7,7 @@ import (
 )
 
 type transform func(string, int) map[string][]string
-type clue_function func([]string, int) map[string]bool
+type clue_function func([]string, []int) map[string]bool
 
 // type SolvedClue struct {
 // 	Clue    string
@@ -64,7 +64,6 @@ func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts m
 	if err {
 		clue = StructuredClue{}
 	} else {
-		// fmt.Println("solution candidates:", clue.Ans)
 		results := map[string][]string{}
 		for a, parents := range clue.Ans {
 			if utils.AnswerTest(a, phrasing) {
@@ -72,25 +71,15 @@ func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts m
 			}
 		}
 		clue.Ans = results
-		// fmt.Println(clue.Args[0].Ans)
 	}
 	ans_c <- clue
-	// candidates, _ := solve_partial_clue(clue, phrasing, solved_parts, map_c)
-	// // fmt.Println(candidates)
-	// results := map[string]bool{}
-	// for a := range candidates {
-	// 	if utils.AnswerTest(a, phrasing) {
-	// 		results[a] = true
-	// 	}
-	// }
-	// ans_c <- SolvedClue{Clue: clue_str, Answers: results}
 }
 
 type StructuredClue struct {
 	Type string
 	Head string
 	Args []*StructuredClue
-	Ans  map[string][]string // each answer to this clue is a key in the map and each value is the slice of sub-answers to each clue in Args
+	Ans  map[string][]string // each answer to this clue is a key in the map and each value is the slice of sub-answers to each clue in Args that gave that particular answer
 }
 
 func filter_empty_strings(input []string) []string {
@@ -107,7 +96,9 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	length := utils.Sum((*phrasing).Lengths)
 	var sub_answers map[string][]string
 	// fmt.Println("Trying to solve:", clue.HashString())
+	<-map_c
 	ans, ok := solved_parts[clue.HashString()]
+	map_c <- true
 	clue.Ans = map[string][]string{}
 	var sub_clue *StructuredClue
 	var new_args []string
@@ -145,7 +136,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 			}
 			for _, args := range args_set {
 				// fmt.Println("function args:", filter_empty_strings(args))
-				for sub_ans := range clue_func(filter_empty_strings(args), length) {
+				for sub_ans := range clue_func(filter_empty_strings(args), (*phrasing).Lengths) {
 					clue.Ans[sub_ans] = args
 				}
 			}
@@ -175,7 +166,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	map_c <- true
 	_, blank_ans := clue.Ans[""]
 	// fmt.Println("returning", clue.Ans, "for clue", clue.HashString())
-	if len(clue.Ans) == 1 && blank_ans && (clue.Type != "null" && clue.Type != "d" && !HEADS[clue.Type]) {
+	if len(clue.Ans) <= 1 && blank_ans && (clue.Type != "null" && clue.Type != "d" && !HEADS[clue.Type]) {
 		// fmt.Println("err true")
 		return true
 	} else {

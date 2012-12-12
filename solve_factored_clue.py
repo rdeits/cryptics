@@ -99,7 +99,9 @@ def solve_phrasing(phrasing, go_proc):
 
 if __name__ == '__main__':
     # print solve_clue_text(u'spin broken shingle (7)')
-    print solve_clue_text(u'canoe wrecked in large sea (5)')
+    print solve_clue_text(u'youth climbing with ultimately good cheer (10) .d.......t')
+    print solve_clue_text(u'youth climbing with ultimately good cheer (10) .d.......t')
+    print solve_clue_text(u'youth climbing with ultimately good cheer (10) .d.......t')
     # for clue in open('clues/clues.txt', 'r').readlines():
     #     print solve_clue_text(clue)[:1]
         # break

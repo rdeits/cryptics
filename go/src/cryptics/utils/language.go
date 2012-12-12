@@ -1,13 +1,13 @@
 package utils
 
 import (
-	// "fmt"
+	"fmt"
 	"strings"
 )
 
-func Reverse(words []string, length int) map[string]bool {
+func Reverse(words []string, lengths []int) map[string]bool {
 	if len(words) > 1 {
-		panic("Word must be [1]string")
+		panic("Word must be [1]string: " + fmt.Sprint(words))
 	}
 	word := strings.ToLower(words[0])
 	ans := []rune(word)
@@ -18,10 +18,11 @@ func Reverse(words []string, length int) map[string]bool {
 	return map[string]bool{string(ans): true}
 }
 
-func AllLegalSubstrings(words []string, length int) map[string]bool {
+func AllLegalSubstrings(words []string, lengths []int) map[string]bool {
 	if len(words) > 1 {
 		panic("Word must be [1]string")
 	}
+	length := Sum(lengths)
 	subs := map[string]bool{}
 	word := strings.ToLower(words[0])
 	if strings.Contains(word, "_") {
@@ -68,7 +69,7 @@ func min(x ...int) int {
 	return result
 }
 
-func AllInsertions(words []string, length int) map[string]bool {
+func AllInsertions(words []string, lengths []int) map[string]bool {
 	if len(words) > 2 {
 		panic("Word must be [1]string")
 	}
