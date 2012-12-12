@@ -38,6 +38,18 @@ for word in WORDS:
     word = word.lower()
     syns = map(cleanup, list(synonyms(word)))
     all_synonyms[word] = syns
+print "loaded sowpods"
+
+with open('raw_data/bigrams.txt', 'r') as f:
+    for line in f.readlines():
+        words, count = line.split('\t')
+        if int(count) < 5:
+            continue
+        if re.search(r'[^a-zA-Z0-9 -_]', words) or re.search(r'0[A-Z]+\.0', words):
+            continue
+        words = cleanup(words)
+        all_synonyms.setdefault(words, []).extend(map(cleanup, list(synonyms(words))))
+print "loaded bigrams"
 
 with open('raw_data/abbreviations.json', 'r') as f:
     abbrevs = json.load(f)
@@ -46,6 +58,7 @@ for s, vals in abbrevs.items():
     all_synonyms.setdefault(s, []).extend(vals)
     for v in vals:
         all_synonyms.setdefault(cleanup(v), []).append(cleanup(s))
+print "loaded abbreviations"
 
 with open('raw_data/American.csv', 'rb') as f:
     american = csv.reader(f)
@@ -55,16 +68,11 @@ with open('raw_data/American.csv', 'rb') as f:
             continue
         all_synonyms.setdefault(a, []).append(c)
         all_synonyms.setdefault(c, []).append(a)
+print "loaded American.csv"
 
-# with open('raw_data/clues.txt', 'rb') as f:
-#     clues = csv.reader(f)
-#     for answer, clue in clues:
-#         a, c = cleanup(answer), cleanup(clue)
-#         if a == "" or c == "":
-#             continue
-#         all_synonyms.setdefault(a, []).append(c)
-#         all_synonyms.setdefault(c, []).append(a)
-
+for k, v in all_synonyms.items():
+    all_synonyms[k] = list(set(v))
+print 'removed duplicates'
 
 with open('data/synonyms.pck', 'wb') as f:
     pickle.dump(dict(all_synonyms), f)
