@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"fmt"
+	// "fmt"
 	"strings"
 )
 
@@ -13,7 +13,7 @@ func StringTreeSearch(branching_list []map[string][]string, member_test func(str
 	// new_active_set := map[string][]string{}
 	// var new_active_set map[string]bool
 	var candidate []string
-	fmt.Println("branching list", branching_list)
+	// fmt.Println("branching list", branching_list)
 	for _, part := range branching_list {
 		new_active_set = [][]string{}
 		for _, s := range active_set {

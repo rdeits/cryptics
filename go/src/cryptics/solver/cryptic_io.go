@@ -76,14 +76,3 @@ func (c *StructuredClue) print_with_answer(answer string) string {
 	result += ", '" + strings.ToUpper(answer) + "')"
 	return result
 }
-
-// func FormatAnswers(answer SolvedClue) string {
-// 	result := []byte("[[")
-// 	for s := range answer.Answers {
-// 		result = append(result, []byte("'"+s+"', ")...)
-// 	}
-// 	result = append(result, []byte("],")...)
-// 	result = append(result, []byte(answer.Clue)...)
-// 	result = append(result, byte(']'))
-// 	return string(result)
-// }
