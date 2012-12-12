@@ -18,7 +18,7 @@ file "data/clue_structures.pck" do
 	sh "python data_generators/generate_clues.py"
 end
 
-task :server => [:data, :go] do
+task :server => [:go] do
 	sh "python crypticweb/server.py"
 end
 
