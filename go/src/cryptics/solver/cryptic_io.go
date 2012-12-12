@@ -72,9 +72,19 @@ func (c *StructuredClue) print_with_answer(answer string) string {
 		result += "'" + c.Head + "', "
 	}
 	parents := c.Ans[answer]
+	if len(parents) > 0 {
+		// if len(parents) != len(c.Args) {
+		// 	fmt.Println("parents and args don't match")
+		// 	fmt.Println("parents", parents)
+		// 	fmt.Println("args", c.Args)
+		// 	fmt.Println("answer", answer)
+		// 	fmt.Println("answers", c.Ans)
+		// 	fmt.Println("clue", c.HashString())
+		// }
 
-	for i, sub_clue := range c.Args {
-		result += sub_clue.print_with_answer(parents[i]) + ", "
+		for i, sub_clue := range c.Args {
+			result += sub_clue.print_with_answer(parents[i]) + ", "
+		}
 	}
 	result += "'" + strings.ToUpper(answer) + "')"
 	return result

@@ -25,7 +25,7 @@ func matches_pattern(word, pattern string) bool {
 	return result
 }
 
-func split_words(ans string, lengths []int) []string {
+func SplitWords(ans string, lengths []int) []string {
 	// if strings.TrimSpace(ans) == "" {
 	// 	return []string{}
 	// }
@@ -46,12 +46,12 @@ func split_words(ans string, lengths []int) []string {
 }
 
 func PartialAnswerTest(ans string, phrasing *Phrasing) bool {
-	words := split_words(ans, (*phrasing).Lengths)
+	words := SplitWords(ans, (*phrasing).Lengths)
 	return len(ans) <= Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_initial_words(words)
 }
 
 func AnswerTest(ans string, phrasing *Phrasing) bool {
-	words := split_words(ans, (*phrasing).Lengths)
+	words := SplitWords(ans, (*phrasing).Lengths)
 	return len(ans) == Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_words(words)
 }
 

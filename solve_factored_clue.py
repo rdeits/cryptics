@@ -75,6 +75,7 @@ def solve_phrasing(phrasing, go_proc):
     # print time.time() - now
 
     for i, clue in enumerate(possible_clues):
+        # print clue
         go_proc.stdin.write(str(clue) + '\n')
     go_proc.stdin.write('.\n')
     for i, x in enumerate(possible_clues):
@@ -97,8 +98,8 @@ def solve_phrasing(phrasing, go_proc):
 
 
 if __name__ == '__main__':
-    print solve_clue_text(u'spin broken shingle (7)')
-    print solve_clue_text(u'spin broken shingle (7)')
+    # print solve_clue_text(u'spin broken shingle (7)')
+    print solve_clue_text(u'canoe wrecked in large sea (5)')
     # for clue in open('clues/clues.txt', 'r').readlines():
     #     print solve_clue_text(clue)[:1]
         # break

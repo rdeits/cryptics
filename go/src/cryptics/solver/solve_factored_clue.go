@@ -2,6 +2,7 @@ package solver
 
 import (
 	"cryptics/utils"
+	"strings"
 	// "fmt"
 )
 
@@ -57,16 +58,22 @@ var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": tr
 
 func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts map[string]map[string][]string, ans_c chan StructuredClue, map_c chan bool) {
 	clue := ParseClue(clue_str)
-	clue.Solve(phrasing, solved_parts, map_c)
-	// fmt.Println("solution candidates:", clue.Ans)
-	results := map[string][]string{}
-	for a, parents := range clue.Ans {
-		if utils.AnswerTest(a, phrasing) {
-			results[a] = parents
+	err := clue.Solve(phrasing, solved_parts, map_c)
+	// fmt.Println("top error", err)
+	// fmt.Println(clue.Ans)
+	if err {
+		clue = StructuredClue{}
+	} else {
+		// fmt.Println("solution candidates:", clue.Ans)
+		results := map[string][]string{}
+		for a, parents := range clue.Ans {
+			if utils.AnswerTest(a, phrasing) {
+				results[strings.Join(utils.SplitWords(a, (*phrasing).Lengths), "_")] = parents
+			}
 		}
+		clue.Ans = results
+		// fmt.Println(clue.Args[0].Ans)
 	}
-	clue.Ans = results
-	// fmt.Println(clue.Args[0].Ans)
 	ans_c <- clue
 	// candidates, _ := solve_partial_clue(clue, phrasing, solved_parts, map_c)
 	// // fmt.Println(candidates)
@@ -169,8 +176,10 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	_, blank_ans := clue.Ans[""]
 	// fmt.Println("returning", clue.Ans, "for clue", clue.HashString())
 	if len(clue.Ans) == 1 && blank_ans && (clue.Type != "null" && clue.Type != "d" && !HEADS[clue.Type]) {
+		// fmt.Println("err true")
 		return true
 	} else {
+		// fmt.Println("err false")
 		return false
 	}
 	return false
