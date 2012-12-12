@@ -79,22 +79,26 @@ def solve_phrasing(phrasing, go_proc):
     go_proc.stdin.write('.\n')
     for i, x in enumerate(possible_clues):
         result = go_proc.stdout.readline()
-        clue = eval(result)
-        if clue == []:
-            continue
-        answer = clue[-1].lower()
-        d, definition, null = clue[[x[0] for x in clue].index('d')]
-        if answer in phrasing or answer in answers:
-            continue
-        answer = '_'.join(split_words(answer, lengths))
-        similarity = semantic_similarity(answer, definition)
-        answers.add((answer, similarity))
-        answers_with_clues.append((clue, similarity))
+        while result.strip() != ".":
+            # print "got:", result
+            clue = eval(result)
+            result = go_proc.stdout.readline()
+            if clue == []:
+                continue
+            answer = clue[-1].lower()
+            d, definition, null = clue[[x[0] for x in clue].index('d')]
+            if answer in phrasing or answer in answers:
+                continue
+            answer = '_'.join(split_words(answer, lengths))
+            similarity = semantic_similarity(answer, definition)
+            answers.add((answer, similarity))
+            answers_with_clues.append((clue, similarity))
     return sorted(answers_with_clues, key=lambda x: x[-1], reverse=True)
 
 
 if __name__ == '__main__':
-    print solve_clue_text(u'initially babies are naked (4)')
+    print solve_clue_text(u'spin broken shingle (7)')
+    print solve_clue_text(u'spin broken shingle (7)')
     # for clue in open('clues/clues.txt', 'r').readlines():
     #     print solve_clue_text(clue)[:1]
         # break
