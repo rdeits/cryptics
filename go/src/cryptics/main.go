@@ -13,6 +13,16 @@ import (
 	"strings"
 )
 
+// func main() {
+// 	c := solver.StructuredClue{Type: "syn", Head: "cat"}
+// 	p := utils.Phrasing{Lengths: []int{4}}
+// 	solved_parts := map[string]map[string][]string{}
+// 	map_c := make(chan bool, 1)
+// 	map_c <- true
+// 	err := c.Solve(&p, solved_parts, map_c)
+// 	fmt.Println(c.Ans, err)
+// }
+
 func main() {
 	runtime.GOMAXPROCS(8)
 	var phrasing utils.Phrasing
@@ -20,15 +30,13 @@ func main() {
 	var lengths []int
 	var l int
 	var num_clues int
-	solved_parts := map[string]map[string]bool{}
-	var solved_clue solver.SolvedClue
+	solved_parts := map[string]map[string][]string{}
 	stdin := bufio.NewReader(os.Stdin)
 	var clue string
-	ans_c := make(chan solver.SolvedClue)
+	var solved_clue solver.StructuredClue
+	ans_c := make(chan solver.StructuredClue)
 	map_c := make(chan bool, 1)
 	map_c <- true
-	// map_c := make(chan solver.SolvedClue)
-	// go UpdateMap(solved_parts, map_c)
 	for {
 		clue, _ = stdin.ReadString('\n')
 		clue = strings.TrimSpace(clue)
@@ -39,7 +47,10 @@ func main() {
 		} else if clue == "." {
 			for i := 0; i < num_clues; i++ {
 				solved_clue = <-ans_c
-				fmt.Println(solver.FormatAnswers(solved_clue))
+				for _, a := range solved_clue.FormatAnswers() {
+					fmt.Println("formatted answer:", a)
+				}
+				// fmt.Println(solved_clue.FormatAnswers)
 			}
 			num_clues = 0
 		} else if string(clue[0]) == "#" {
@@ -57,7 +68,7 @@ func main() {
 				lengths = append(lengths, int(l))
 			}
 			pattern = strings.TrimSpace(parts[1])
-			solved_parts = map[string]map[string]bool{}
+			solved_parts = map[string]map[string][]string{}
 			phrasing = utils.Phrasing{Lengths: lengths, Pattern: pattern}
 			fmt.Println(phrasing)
 		} else {
