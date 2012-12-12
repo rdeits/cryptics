@@ -5,8 +5,6 @@ import (
 	"strings"
 )
 
-var NGRAMS *load_utils.Ngrams = load_utils.NGRAMS
-
 func remaining_letters(letters []rune, word string) map[rune]bool {
 	remaining := map[rune]bool{}
 	for _, x := range letters {
@@ -33,7 +31,7 @@ func Anagrams(words []string, lengths []int) map[string]bool {
 
 func anagrams_with_active_set(word string, lengths []int, active_set map[string]bool) map[string]bool {
 	letters := []rune(word)
-	var valid bool
+	// var valid bool
 	var candidate string
 	for w := range active_set {
 		if len(w) == len(letters) {
@@ -52,16 +50,19 @@ func anagrams_with_active_set(word string, lengths []int, active_set map[string]
 	for w := range active_set {
 		for l := range remaining_letters(letters, w) {
 			candidate = w + string(l)
-			valid = true
-			for _, w := range SplitWords(candidate, lengths) {
-				if !NGRAMS.All[w] {
-					valid = false
-					break
-				}
-			}
-			if valid {
+			// valid = true
+			if load_utils.NGRAMS[HashLengths(lengths)][candidate] {
 				new_active_set[candidate] = true
 			}
+			// for _, w := range SplitWords(candidate, lengths) {
+			// 	if !NGRAMS.All[w] {
+			// 		valid = false
+			// 		break
+			// 	}
+			// }
+			// if valid {
+			// 	new_active_set[candidate] = true
+			// }
 		}
 	}
 	if len(new_active_set) == 0 {

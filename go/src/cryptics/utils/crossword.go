@@ -46,13 +46,13 @@ func SplitWords(ans string, lengths []int) []string {
 }
 
 func PartialAnswerTest(ans string, phrasing *Phrasing) bool {
-	words := SplitWords(ans, (*phrasing).Lengths)
-	return len(ans) <= Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_initial_words(words)
+	// words := SplitWords(ans, (*phrasing).Lengths)
+	return len(ans) <= Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_initial_words(ans, (*phrasing).Lengths)
 }
 
 func AnswerTest(ans string, phrasing *Phrasing) bool {
-	words := SplitWords(ans, (*phrasing).Lengths)
-	return len(ans) == Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_words(words)
+	// words := SplitWords(ans, (*phrasing).Lengths)
+	return len(ans) == Sum((*phrasing).Lengths) && matches_pattern(ans, (*phrasing).Pattern) && valid_words(ans, (*phrasing).Lengths)
 }
 
 func Sum(x []int) int {
@@ -63,20 +63,22 @@ func Sum(x []int) int {
 	return ans
 }
 
-func valid_initial_words(words []string) bool {
-	for _, w := range words {
-		if x := NGRAMS.Initial[w]; !x {
-			return false
-		}
-	}
-	return true
+func valid_initial_words(ans string, lengths []int) bool {
+	return load_utils.INITIAL_NGRAMS[HashLengths(lengths)][ans]
+	// for _, w := range words {
+	// 	if x := NGRAMS.Initial[w]; !x {
+	// 		return false
+	// 	}
+	// }
+	// return true
 }
 
-func valid_words(words []string) bool {
-	for _, w := range words {
-		if _, ok := (SYNONYMS)[w]; !ok {
-			return false
-		}
-	}
-	return true
+func valid_words(ans string, lengths []int) bool {
+	return load_utils.NGRAMS[HashLengths(lengths)][ans]
+	// for _, w := range words {
+	// 	if _, ok := (SYNONYMS)[w]; !ok {
+	// 		return false
+	// 	}
+	// }
+	// return true
 }

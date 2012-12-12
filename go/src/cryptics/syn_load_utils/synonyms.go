@@ -1,4 +1,4 @@
-package load_utils
+package syn_load_utils
 
 import (
 	"encoding/json"
