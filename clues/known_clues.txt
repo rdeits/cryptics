@@ -19,7 +19,7 @@ Lees horse galloping to dangerous_coasts (3,6) l.....r.. | LEE_SHORES
 Brass Age ship (7) g...... | GALLEON
 Fish or insect for captain (7) sk..... | SKIPPER
 face_it_nurse is_holding back release (5) | UNTIE
-figure_out price_hed restructured (8) | DECIPHER
+figure_out price_hed restructured (8) .......r | DECIPHER
 trim waist in figure (9) ....s.... | SHIPSHAPE
 be a fool and signal_fire (6) | BEACON
 waste pores_vent exhausted_resources (9) ..e...... | OVERSPENT

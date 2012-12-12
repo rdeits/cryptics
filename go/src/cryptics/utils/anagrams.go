@@ -1,9 +1,12 @@
 package utils
 
 import (
-	"cryptics/load_utils"
+	"cryptics/ngram_load_utils"
+	// "fmt"
 	"strings"
 )
+
+var NGRAMS map[int]map[string]bool = ngram_load_utils.NGRAMS
 
 func remaining_letters(letters []rune, word string) map[rune]bool {
 	remaining := map[rune]bool{}
@@ -31,7 +34,7 @@ func Anagrams(words []string, lengths []int) map[string]bool {
 
 func anagrams_with_active_set(word string, lengths []int, active_set map[string]bool) map[string]bool {
 	letters := []rune(word)
-	// var valid bool
+	var valid bool
 	var candidate string
 	for w := range active_set {
 		if len(w) == len(letters) {
@@ -50,19 +53,17 @@ func anagrams_with_active_set(word string, lengths []int, active_set map[string]
 	for w := range active_set {
 		for l := range remaining_letters(letters, w) {
 			candidate = w + string(l)
-			// valid = true
-			if load_utils.NGRAMS[HashLengths(lengths)][candidate] {
+			valid = true
+			for i, w := range SplitWords(candidate, lengths) {
+				if !NGRAMS[lengths[i]][w] {
+					// fmt.Println("invalid ngrams", w, "for word length", lengths[i])
+					valid = false
+					break
+				}
+			}
+			if valid {
 				new_active_set[candidate] = true
 			}
-			// for _, w := range SplitWords(candidate, lengths) {
-			// 	if !NGRAMS.All[w] {
-			// 		valid = false
-			// 		break
-			// 	}
-			// }
-			// if valid {
-			// 	new_active_set[candidate] = true
-			// }
 		}
 	}
 	if len(new_active_set) == 0 {

@@ -9,25 +9,6 @@ import (
 type transform func(string, int) map[string][]string
 type clue_function func([]string, []int) map[string]bool
 
-// type SolvedClue struct {
-// 	Clue    string
-// 	Answers map[string]bool
-// }
-
-// func string_hash(clue []interface{}) string {
-// 	result := "("
-// 	for _, c := range clue {
-// 		switch v := c.(type) {
-// 		case string:
-// 			result += v + ", "
-// 		default:
-// 			result += string_hash(c.([]interface{})) + ", "
-// 		}
-// 	}
-// 	result += ")"
-// 	return result
-// }
-
 var FUNCTIONS map[string]clue_function = map[string]clue_function{"ana": utils.Anagrams, "sub": utils.AllLegalSubstrings, "rev": utils.Reverse, "ins": utils.AllInsertions}
 
 var TRANSFORMS map[string]transform = map[string]transform{"lit": func(x string, l int) map[string][]string {
@@ -59,8 +40,6 @@ var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": tr
 func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts map[string]map[string][]string, ans_c chan StructuredClue, map_c chan bool) {
 	clue := ParseClue(clue_str)
 	err := clue.Solve(phrasing, solved_parts, map_c)
-	// fmt.Println("top error", err)
-	// fmt.Println(clue.Ans)
 	if err {
 		clue = StructuredClue{}
 	} else {

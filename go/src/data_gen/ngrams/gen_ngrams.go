@@ -2,7 +2,6 @@ package ngrams
 
 import (
 	"cryptics/syn_load_utils"
-	"cryptics/types"
 	"encoding/gob"
 	"fmt"
 	"os"
@@ -10,31 +9,32 @@ import (
 )
 
 func GenerateNgrams() {
-	ngrams := map[types.PhraseKey]map[string]bool{}
-	initial_ngrams := map[types.PhraseKey]map[string]bool{}
+	ngrams := map[int]map[string]bool{}
+	initial_ngrams := map[int]map[string]bool{}
 	// var skip bool
-	var w string
-	var lengths []int
-	var words []string
-	var key types.PhraseKey
+	var key int
 	for word, _ := range syn_load_utils.SYNONYMS {
-		words = strings.Split(word, "_")
-		lengths = []int{}
-		for _, w = range words {
-			lengths = append(lengths, len(w))
+		if strings.Contains(word, "_") {
+			continue
 		}
-		word = strings.Replace(word, "_", "", -1)
-		key = types.HashLengths(lengths)
-		// skip = false
-		// for _, c := range word {
-		// 	if string(c) == "_" {
-		// 		skip = true
-		// 		break
-		// 	}
+		key = len(word)
+		// words = strings.Split(word, "_")
+		// lengths = []int{}
+		// for _, w = range words {
+		// 	lengths = append(lengths, len(w))
 		// }
-		// if skip {
-		// 	continue
-		// }
+		// // word = strings.Replace(word, "_", "", -1)
+		// key = types.HashLengths(lengths)
+		// // skip = false
+		// // for _, c := range word {
+		// // 	if string(c) == "_" {
+		// // 		skip = true
+		// // 		break
+		// // 	}
+		// // }
+		// // if skip {
+		// // 	continue
+		// // }
 		if initial_ngrams[key] == nil {
 			initial_ngrams[key] = map[string]bool{}
 		}
@@ -47,7 +47,7 @@ func GenerateNgrams() {
 				ngrams[key][word[j:j+i]] = true
 			}
 		}
-		fmt.Println(word, key, initial_ngrams[key], ngrams[key])
+		// fmt.Println(word, key, initial_ngrams[key], ngrams[key])
 	}
 	ngrams_file, err := os.Create("data/ngrams.gob")
 	// ngrams_file, err := os.Create("../data/ngrams.txt")

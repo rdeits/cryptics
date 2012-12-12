@@ -1,7 +1,6 @@
 package ngram_load_utils
 
 import (
-	"cryptics/types"
 	"encoding/gob"
 	"fmt"
 	"os"
@@ -12,8 +11,8 @@ import (
 // 	All     map[string]bool
 // }
 
-func LoadNgrams() map[types.PhraseKey]map[string]bool {
-	var ngrams map[types.PhraseKey]map[string]bool
+func LoadNgrams() map[int]map[string]bool {
+	var ngrams map[int]map[string]bool
 	raw_ngrams, err := os.Open("data/ngrams.gob")
 	if err != nil {
 		fmt.Println(err)
@@ -22,8 +21,8 @@ func LoadNgrams() map[types.PhraseKey]map[string]bool {
 	return ngrams
 }
 
-func LoadInitialNgrams() map[types.PhraseKey]map[string]bool {
-	var initial_ngrams map[types.PhraseKey]map[string]bool
+func LoadInitialNgrams() map[int]map[string]bool {
+	var initial_ngrams map[int]map[string]bool
 	init_ngrams_file, err := os.Open("data/initial_ngrams.gob")
 	if err != nil {
 		fmt.Println(err)
