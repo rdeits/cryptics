@@ -37,10 +37,14 @@ func main() {
 		} else if clue == "." {
 			for i := 0; i < num_clues; i++ {
 				solved_clue = <-ans_c
-				for _, a := range solved_clue.FormatAnswers() {
-					fmt.Println(a)
+				answers := solved_clue.FormatAnswers()
+				if len(answers) > 0 {
+					for _, a := range solved_clue.FormatAnswers() {
+						fmt.Println(a)
+					}
+				} else {
+					fmt.Println("[]")
 				}
-				// fmt.Println(solved_clue.FormatAnswers)
 			}
 			num_clues = 0
 		} else if string(clue[0]) == "#" {

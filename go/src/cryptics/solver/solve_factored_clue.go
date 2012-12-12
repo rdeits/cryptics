@@ -103,6 +103,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	ans, ok := solved_parts[clue.HashString()]
 	clue.Ans = map[string][]string{}
 	var sub_clue *StructuredClue
+	var new_args []string
 	if ok {
 		clue.Ans = ans
 	} else {
@@ -128,14 +129,15 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 				new_args_set = [][]string{}
 				for _, args := range args_set {
 					sub_answers = sub_clue.Ans
-					for sub_ans, _ := range sub_answers {
-						args = append(args, sub_ans)
-						new_args_set = append(new_args_set, args)
+					for sub_ans := range sub_answers {
+						new_args = append(args, sub_ans)
+						new_args_set = append(new_args_set, new_args)
 					}
 				}
 				args_set = new_args_set
 			}
 			for _, args := range args_set {
+				// fmt.Println("function args:", filter_empty_strings(args))
 				for sub_ans := range clue_func(filter_empty_strings(args), length) {
 					clue.Ans[sub_ans] = args
 				}
@@ -165,6 +167,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	solved_parts[clue.HashString()] = clue.Ans
 	map_c <- true
 	_, blank_ans := clue.Ans[""]
+	// fmt.Println("returning", clue.Ans, "for clue", clue.HashString())
 	if len(clue.Ans) == 1 && blank_ans && (clue.Type != "null" && clue.Type != "d" && !HEADS[clue.Type]) {
 		return true
 	} else {

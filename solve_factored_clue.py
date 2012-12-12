@@ -36,7 +36,7 @@ def solve_clue_text(clue_text):
             if ans not in answers:
                 answers.add(ans)
                 answers_with_clues.append((ans, clue))
-    return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
+    return sorted(answers_with_clues, key=lambda x: x[-1], reverse=True)
 
 
 def parse_clue_text(clue_text):
@@ -78,21 +78,22 @@ def solve_phrasing(phrasing, go_proc):
         go_proc.stdin.write(str(clue) + '\n')
     go_proc.stdin.write('.\n')
     for i, x in enumerate(possible_clues):
-        #TODO: pull clue from go output (since we can't assume go will return answers in the same order as clues
         result = go_proc.stdout.readline()
-        new_answers, clue = eval(result)
-        d, definition = clue[[x[0] for x in clue].index('d')]
-        new_answers = filter(lambda w: w not in phrasing, new_answers)
-        new_answers = ['_'.join(split_words(a, lengths)) for a in new_answers if a not in answers]
-        new_answers = zip(new_answers, [semantic_similarity(a, definition) for a in new_answers])
-        answers.update(new_answers)
-        answers_with_clues.extend(zip(new_answers, [clue] * len(new_answers)))
-    return sorted(answers_with_clues, key=lambda x: x[0][1], reverse=True)
+        clue = eval(result)
+        if clue == []:
+            continue
+        answer = clue[-1].lower()
+        d, definition, null = clue[[x[0] for x in clue].index('d')]
+        if answer in phrasing or answer in answers:
+            continue
+        answer = '_'.join(split_words(answer, lengths))
+        similarity = semantic_similarity(answer, definition)
+        answers.add((answer, similarity))
+        answers_with_clues.append((clue, similarity))
+    return sorted(answers_with_clues, key=lambda x: x[-1], reverse=True)
 
 
 if __name__ == '__main__':
-    # print solve_phrasing(['small_bricks', 'included_among', 'durable_goods', 4, 'l...'])
-    # print solve_factored_clue(('clue', ('sub', ('lit', 'significant_ataxia'), ('sub_', 'overshadows')), ('d', 'choral_piece')), (7,), '')
     print solve_clue_text(u'initially babies are naked (4)')
     # for clue in open('clues/clues.txt', 'r').readlines():
     #     print solve_clue_text(clue)[:1]

@@ -67,12 +67,15 @@ func (c *StructuredClue) FormatAnswers() []string {
 
 func (c *StructuredClue) print_with_answer(answer string) string {
 	var result string
-	result = "('" + c.Type + "', '" + c.Head
+	result = "('" + c.Type + "', "
+	if c.Head != "" {
+		result += "'" + c.Head + "', "
+	}
 	parents := c.Ans[answer]
 
 	for i, sub_clue := range c.Args {
 		result += sub_clue.print_with_answer(parents[i]) + ", "
 	}
-	result += ", '" + strings.ToUpper(answer) + "')"
+	result += "'" + strings.ToUpper(answer) + "')"
 	return result
 }
