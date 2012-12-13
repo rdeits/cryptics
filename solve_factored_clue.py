@@ -32,11 +32,11 @@ def solve_clue_text(clue_text):
     print go_proc.stdout.readline()
     for p in all_phrasings:
         print p
-        for ans, clue in solve_phrasing(p, go_proc):
-            if ans not in answers:
-                answers.add(ans)
-                answers_with_clues.append((ans, clue))
-    return sorted(answers_with_clues, key=lambda x: x[-1], reverse=True)
+        for ans, similarity, clue in solve_phrasing(p, go_proc):
+            if (ans, similarity) not in answers:
+                answers.add((ans, similarity))
+                answers_with_clues.append((ans, similarity, clue))
+    return sorted(answers_with_clues, key=lambda x: x[1], reverse=True)
 
 
 def parse_clue_text(clue_text):
@@ -50,7 +50,7 @@ def parse_clue_text(clue_text):
     pattern = pattern.strip()
     assert len(pattern) == 0 or len(pattern) == sum(lengths), "Answer lengths and length of pattern string must match: sum(%s) != %d" % (lengths, len(pattern))
     clue = re.sub('-', '_', clue)
-    clue = re.sub(r'[^a-zA-Z\ _]', '', clue)
+    clue = re.sub(r'[^a-zA-Z\ _0-9]', '', clue)
     clue = re.sub(r'\ +', ' ', clue)
     phrases = clue.split(' ')
     phrases = [p for p in phrases if p.strip() != '' and p.strip() != '_']
@@ -68,7 +68,6 @@ def solve_phrasing(phrasing, go_proc):
     """
     pattern = phrasing.pop()
     lengths = phrasing.pop()
-    answers = set([])
     answers_with_clues = []
     # now = time.time()
     possible_clues = list(generate_clues(phrasing))
@@ -88,13 +87,11 @@ def solve_phrasing(phrasing, go_proc):
                 continue
             answer = clue[-1].lower()
             d, definition, null = clue[[x[0] for x in clue].index('d')]
-            if answer in phrasing or answer in answers:
+            if answer in phrasing:
                 continue
-            answer = '_'.join(split_words(answer, lengths))
             similarity = semantic_similarity(answer, definition)
-            answers.add((answer, similarity))
-            answers_with_clues.append((clue, similarity))
-    return sorted(answers_with_clues, key=lambda x: x[-1], reverse=True)
+            answers_with_clues.append((answer, similarity, clue))
+    return sorted(answers_with_clues, key=lambda x: x[1], reverse=True)
 
 
 if __name__ == '__main__':

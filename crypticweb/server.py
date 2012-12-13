@@ -26,7 +26,7 @@ class index:
             answers = solve_clue_text(form.d.Clue)
             if answers == []:
                 answers = ["Sorry, I couldn't find any answers"]
-            return render.index(answers, form)
+            return render.index(answers[:200], form)
 
 
 if __name__ == "__main__":
