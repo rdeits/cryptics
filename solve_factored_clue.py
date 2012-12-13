@@ -25,7 +25,6 @@ def solve_clue_text(clue_text):
     clue_text = clue_text.encode('ascii', 'ignore')
     # solved_parts = dict()
     all_phrasings, answer = parse_clue_text(clue_text)
-    answers = set([])
     answers_with_clues = []
 
     go_proc.stdin.write("# %s %s\n" % (all_phrasings[0][-2], all_phrasings[0][-1]))
@@ -33,10 +32,8 @@ def solve_clue_text(clue_text):
     for p in all_phrasings:
         print p
         for ans, similarity, clue in solve_phrasing(p, go_proc):
-            if (ans, similarity) not in answers:
-                answers.add((ans, similarity))
-                answers_with_clues.append((ans, similarity, clue))
-    return sorted(answers_with_clues, key=lambda x: x[1], reverse=True)
+            answers_with_clues.append((ans, similarity, clue))
+    return sorted(answers_with_clues, key=lambda x: (x[1], x[0]), reverse=True)
 
 
 def parse_clue_text(clue_text):
@@ -91,7 +88,7 @@ def solve_phrasing(phrasing, go_proc):
                 continue
             similarity = semantic_similarity(answer, definition)
             answers_with_clues.append((answer, similarity, clue))
-    return sorted(answers_with_clues, key=lambda x: x[1], reverse=True)
+    return sorted(answers_with_clues, key=lambda x: (x[1], x[0]), reverse=True)
 
 
 if __name__ == '__main__':
