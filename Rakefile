@@ -10,7 +10,8 @@ file "data/anagrams.pck" do
 	sh "python data_generators/generate_anagrams.py"
 end
 
-file "data/ngrams.gob" => [:go] do
+file "data/ngrams.gob" do
+	sh "go install data_gen"
 	sh "data_gen"
 end
 
@@ -18,7 +19,7 @@ file "data/clue_structures.pck" do
 	sh "python data_generators/generate_clues.py"
 end
 
-task :server => [:go] do
+task :server => [:data, :go] do
 	sh "python crypticweb/server.py"
 end
 
@@ -28,5 +29,4 @@ end
 
 task :go do
 	sh "go install cryptics"
-	sh "go install data_gen"
 end
