@@ -1720,6 +1720,7 @@
  "pound": [
   "lb"
  ], 
+ "pounds" : ["lbs", "l"],
  "power": [
   "p"
  ], 

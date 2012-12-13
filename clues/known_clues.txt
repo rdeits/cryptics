@@ -1,5 +1,6 @@
 surprisingly rank_height_as important (12) | EARTHSHAKING
-in_glee_over unusual color (5, 5) o..v.gr... | OLIVE_GREEN
+be a fool and signal_fire (6) | BEACON
+in_glee_over unusual color (5, 5) | OLIVE_GREEN
 Signore redefined districts (7) | REGIONS
 Returning regal drink (5) | LAGER
 Anagram_marvellously conceals structure_of_language (7) g...... | GRAMMAR
@@ -21,7 +22,6 @@ Fish or insect for captain (7) sk..... | SKIPPER
 face_it_nurse is_holding back release (5) | UNTIE
 figure_out price_hed restructured (8) .......r | DECIPHER
 trim waist in figure (9) ....s.... | SHIPSHAPE
-be a fool and signal_fire (6) | BEACON
 waste pores_vent exhausted_resources (9) ..e...... | OVERSPENT
 Aerial worker anne on_the_way_up (7) | ANTENNA
 desire tale filled_with energy (5) | YEARN
@@ -47,3 +47,6 @@ Fluttering heart and thundering head is a_danger (6) t....t | THREAT
 Singers in_a special_Tosca production (5) a.... | ALTOS
 Setting for a_cello composition (6) l..... | LOCALE
 St._Michael transforms metal_transformer (9) a........ | ALCHEMIST
+Position Ms Derek for bogus drug (7) | PLACEBO
+Mollify with fried sausage (7) | ASSUAGE
+Neato two armbones (5) r.... | RADII
