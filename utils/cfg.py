@@ -7,7 +7,7 @@ from utils.search import tree_search
 A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword clues.
 """
 
-clue = cfg.Nonterminal('clue')
+cat = cfg.Nonterminal('cat')
 lit = cfg.Nonterminal('lit')
 d = cfg.Nonterminal('d')
 syn = cfg.Nonterminal('syn')
@@ -68,7 +68,7 @@ sub: (tree_search([sub_members, [sub_]])
            + tree_search([[sub_], sub_members])),
 rev: (tree_search([rev_members, [rev_]])
     + tree_search([[rev_], rev_members])),
-clue: clue_rules
+cat: clue_rules
 }
 
 base_prods = []
@@ -94,7 +94,7 @@ def generate_grammar(phrases):
             tags = word_tags
         for t in tags:
             prods.append(cfg.Production(t, [p]))
-    return cfg.ContextFreeGrammar(clue, base_prods + prods)
+    return cfg.ContextFreeGrammar(cat, base_prods + prods)
 
 
 def generate_clues(phrases):

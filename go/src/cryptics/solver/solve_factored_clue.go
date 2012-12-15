@@ -11,29 +11,34 @@ type clue_function func([]string, []int) map[string]bool
 
 var FUNCTIONS map[string]clue_function = map[string]clue_function{"ana": utils.Anagrams, "sub": utils.AllLegalSubstrings, "rev": utils.Reverse, "ins": utils.AllInsertions}
 
-var TRANSFORMS map[string]transform = map[string]transform{"lit": func(x string, l int) map[string][]string {
-	return map[string][]string{x: []string{}}
-}, "null": func(x string, l int) map[string][]string {
-	return map[string][]string{"": []string{}}
-}, "d": func(x string, l int) map[string][]string {
-	return map[string][]string{"": []string{}}
-}, "first": func(x string, l int) map[string][]string {
-	return map[string][]string{string(x[0]): []string{}}
-}, "syn": func(x string, l int) map[string][]string {
-	if syns, ok := (utils.SYNONYMS)[x]; ok {
-		if l == 0 {
-			panic("Got zero length")
-		}
-		result := map[string][]string{}
-		for _, s := range syns {
-			if len(s) <= l {
-				result[s] = []string{}
+var TRANSFORMS map[string]transform = map[string]transform{
+	"lit": func(x string, l int) map[string][]string {
+		return map[string][]string{x: []string{}}
+	},
+	"null": func(x string, l int) map[string][]string {
+		return map[string][]string{"": []string{}}
+	},
+	"d": func(x string, l int) map[string][]string {
+		return map[string][]string{"": []string{}}
+	},
+	"first": func(x string, l int) map[string][]string {
+		return map[string][]string{string(x[0]): []string{}}
+	},
+	"syn": func(x string, l int) map[string][]string {
+		if syns, ok := (utils.SYNONYMS)[x]; ok {
+			if l == 0 {
+				panic("Got zero length")
 			}
+			result := map[string][]string{}
+			for _, s := range syns {
+				if len(s) <= l {
+					result[s] = []string{}
+				}
+			}
+			return result
 		}
-		return result
-	}
-	return map[string][]string{}
-}}
+		return map[string][]string{}
+	}}
 
 var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": true}
 
@@ -119,12 +124,16 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 					clue.Ans[sub_ans] = args
 				}
 			}
-		} else if clue.Type == "clue" {
-			member_test := func(x string) bool {
-				return utils.PartialAnswerTest(x, phrasing)
-			}
-			all_sub_answers := []map[string][]string{}
+		} else if clue.Type == "cat" {
+			// member_test := func(x string) bool {
+			// 	return utils.PartialAnswerTest(x, phrasing)
+			// }
+			var candidate []string
+			active_set := [][]string{{}}
+			new_active_set := [][]string{}
+			// all_sub_answers := []map[string][]string{}
 			for _, sub_clue = range clue.Args {
+				new_active_set = [][]string{}
 				err = sub_clue.Solve(phrasing, solved_parts, map_c)
 				if err {
 					<-map_c
@@ -132,10 +141,26 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 					map_c <- true
 					return true
 				}
-				sub_answers = sub_clue.Ans
-				all_sub_answers = append(all_sub_answers, sub_answers)
+				for _, s := range active_set {
+					for w := range sub_clue.Ans {
+						candidate = append(s, strings.Replace(w, "_", "", -1))
+						if utils.PartialAnswerTest(strings.Join(candidate, ""), phrasing) {
+							new_active_set = append(new_active_set, candidate)
+						}
+					}
+				}
+				if len(new_active_set) > 0 {
+					active_set = new_active_set
+				} else {
+					<-map_c
+					(solved_parts)[clue.HashString()] = clue.Ans
+					map_c <- true
+					return true
+				}
 			}
-			clue.Ans = utils.StringTreeSearch(all_sub_answers, member_test)
+			for _, s := range active_set {
+				clue.Ans[strings.Join(s, "")] = s
+			}
 		} else {
 			panic("Unrecognized clue type")
 		}
