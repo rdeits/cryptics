@@ -1,5 +1,5 @@
 desc "Generate all data sets"
-task :data => ["data/synonyms.pck", "data/clue_structures.pck", "data/ngrams.gob"]
+task :data => ["data/synonyms.pck", "data/ngrams.gob"]
 
 file "data/synonyms.pck" do
 	sh "mkdir -p data"
@@ -13,10 +13,6 @@ end
 file "data/ngrams.gob" do
 	sh "go install data_gen"
 	sh "data_gen"
-end
-
-file "data/clue_structures.pck" do
-	sh "python data_generators/generate_clues.py"
 end
 
 task :server => [:data, :go] do
