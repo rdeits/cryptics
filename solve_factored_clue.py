@@ -17,6 +17,10 @@ def stop_go_server():
     go_proc.wait()
 
 
+def answer_sort(ans_tuple):
+    return (ans_tuple[1], ans_tuple[0])
+
+
 def solve_clue_text(clue_text):
     """
     Solve a raw clue, like
@@ -33,7 +37,10 @@ def solve_clue_text(clue_text):
         print p
         for ans, similarity, clue in solve_phrasing(p, go_proc):
             answers_with_clues.append((ans, similarity, clue))
-    return sorted(answers_with_clues, key=lambda x: (x[1], x[0]), reverse=True)
+        answers_with_clues.sort(key=answer_sort, reverse=True)
+        if len(answers_with_clues) > 0 and answers_with_clues[0][1] > 0.85:
+            return answers_with_clues
+    return answers_with_clues
 
 
 def parse_clue_text(clue_text):

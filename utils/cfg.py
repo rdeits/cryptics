@@ -60,10 +60,6 @@ def check_clue_totals(clue):
     return True
 
 base_clue_rules = [[part] * i for i in range(4)]
-# base_clue_rules = [[]]
-# for i in range(1, 4):
-#     base_clue_rules.extend(tree_search([clue_members] * i,
-#                                        member_test=check_clue_totals))
 clue_rules = []
 for r in base_clue_rules:
     clue_rules.append(r + [d])
