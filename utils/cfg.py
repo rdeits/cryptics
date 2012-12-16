@@ -21,7 +21,7 @@ ana_ = cfg.Nonterminal('ana_')
 sub_ = cfg.Nonterminal('sub_')
 ins_ = cfg.Nonterminal('ins_')
 rev_ = cfg.Nonterminal('rev_')
-
+part = cfg.Nonterminal('part')
 
 known_functions = {
 'in': [ins_, lit, null, sub_],
@@ -30,7 +30,14 @@ known_functions = {
 'broken': [ana_, syn],
 'on_the_way_up': [rev_, syn],
 'going_up': [rev_, syn],
-'returning': [rev_, syn]}
+'returning': [rev_, syn],
+'is': [null, lit],
+'for': [null, syn],
+'large': [first, syn],
+'hides': [sub_],
+'primarily': [sub_],
+'surface': [sub_],
+'and': [null, lit]}
 
 
 clue_members = [lit, syn, first, null, ana, sub, ins, rev]
@@ -52,10 +59,11 @@ def check_clue_totals(clue):
         return False
     return True
 
-base_clue_rules = [[]]
-for i in range(1, 4):
-    base_clue_rules.extend(tree_search([clue_members] * i,
-                                       member_test=check_clue_totals))
+base_clue_rules = [[part] * i for i in range(4)]
+# base_clue_rules = [[]]
+# for i in range(1, 4):
+#     base_clue_rules.extend(tree_search([clue_members] * i,
+#                                        member_test=check_clue_totals))
 clue_rules = []
 for r in base_clue_rules:
     clue_rules.append(r + [d])
@@ -68,7 +76,8 @@ sub: (tree_search([sub_members, [sub_]])
            + tree_search([[sub_], sub_members])),
 rev: (tree_search([rev_members, [rev_]])
     + tree_search([[rev_], rev_members])),
-cat: clue_rules
+cat: clue_rules,
+part: [[i] for i in clue_members]
 }
 
 base_prods = []
@@ -81,6 +90,8 @@ for n, rules in production_rules.items():
 def clue_from_tree(tree):
     if not isinstance(tree, Tree):
         return tree
+    elif tree.node == "part":
+        return clue_from_tree(tree[0])
     else:
         return tuple([tree.node] + [clue_from_tree(t) for t in tree])
 

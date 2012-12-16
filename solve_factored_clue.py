@@ -1,6 +1,7 @@
 from __future__ import division
 from utils.language import semantic_similarity
-from utils.cached_cfg import generate_cached_clues as generate_clues
+# from utils.cached_cfg import generate_cached_clues as generate_clues
+from utils.cfg import generate_clues
 from utils.phrasings import phrasings
 from utils.crossword import split_words
 import subprocess

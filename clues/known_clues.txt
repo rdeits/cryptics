@@ -51,7 +51,7 @@ Position Ms Derek for bogus drug (7) | PLACEBO
 Mollify with fried sausage (7) | ASSUAGE
 Neato two armbones (5) r.... | RADII
 They  primarily  play Diplomacy (4) | TACT
-Whippoorwill hides river creature (5) | HIPPO
+Whippoorwill hides river creature (5) ..p.. | HIPPO
 TV genre host walks out (4,5) | TALK_SHOWS
-Liver spread covers large serving dish (5) | PLATE
+Liver spread covers large serving dish (5) .l... | PLATE
 Unsuitable paint smeared (5) | INAPT
