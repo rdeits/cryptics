@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+//TODO: check if reversed string has more than one n-gram violation
 func Reverse(words []string, lengths []int) map[string]bool {
 	if len(words) > 1 {
 		panic("Word must be [1]string: " + fmt.Sprint(words))
@@ -16,6 +17,33 @@ func Reverse(words []string, lengths []int) map[string]bool {
 		ans[l-i-1] = c
 	}
 	return map[string]bool{string(ans): true}
+}
+
+// filter out results with more than one bigram violation. We allow strings with a bigram violation since they could have letters inserted into them later
+func bigram_filter(answers map[string]bool, lengths []int, threshold int) map[string]bool {
+	var violations int
+	var pass bool
+
+	for ans := range answers {
+		violations = 0
+		for i := 0; i < len(ans)-1; i++ {
+			pass = false
+			for _, l := range lengths {
+				if NGRAMS[l][ans[i:i+2]] {
+					pass = true
+					break
+				}
+			}
+			if !pass {
+				violations++
+				if violations > threshold {
+					delete(answers, ans)
+					break
+				}
+			}
+		}
+	}
+	return answers
 }
 
 func AllLegalSubstrings(words []string, lengths []int) map[string]bool {
@@ -87,5 +115,5 @@ func AllInsertions(words []string, lengths []int) map[string]bool {
 	for j := 0; j < len(w1); j++ {
 		result[w1[0:j]+w0+w1[j:]] = true
 	}
-	return result
+	return bigram_filter(result, lengths, 0)
 }
