@@ -7,7 +7,7 @@ import (
 )
 
 type transform func(string, int) map[string][]string
-type clue_function func([]string, []int) map[string]bool
+type clue_function func([]string, utils.Phrasing) map[string]bool
 
 var FUNCTIONS map[string]clue_function = map[string]clue_function{"ana": utils.Anagrams, "sub": utils.AllLegalSubstrings, "rev": utils.Reverse, "ins": utils.AllInsertions}
 
@@ -120,7 +120,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 			}
 			for _, args := range args_set {
 				// fmt.Println("function args:", filter_empty_strings(args))
-				for sub_ans := range clue_func(filter_empty_strings(args), (*phrasing).Lengths) {
+				for sub_ans := range clue_func(filter_empty_strings(args), *phrasing) {
 					clue.Ans[sub_ans] = args
 				}
 			}
@@ -170,7 +170,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	map_c <- true
 	_, blank_ans := clue.Ans[""]
 	// fmt.Println("returning", clue.Ans, "for clue", clue.HashString())
-	if len(clue.Ans) <= 1 && blank_ans && (clue.Type != "null" && clue.Type != "d" && !HEADS[clue.Type]) {
+	if (len(clue.Ans) == 0 || (len(clue.Ans) == 1 && blank_ans)) && (clue.Type != "null" && clue.Type != "d" && !HEADS[clue.Type]) {
 		// fmt.Println("err true")
 		return true
 	} else {

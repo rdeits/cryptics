@@ -18,18 +18,18 @@ func remaining_letters(letters []rune, word string) map[rune]bool {
 	return remaining
 }
 
-func Anagrams(words []string, lengths []int) map[string]bool {
+func Anagrams(words []string, phrasing Phrasing) map[string]bool {
 	if len(words) > 1 {
 		panic("Word must be [1]string")
 	}
 	word := strings.ToLower(words[0])
 	word = strings.Replace(word, "_", "", -1)
-	l := Sum(lengths)
+	l := Sum(phrasing.Lengths)
 	if len(word) > l {
 		return map[string]bool{}
 	}
 	active_set := map[string]bool{"": true}
-	return anagrams_with_active_set(word, lengths, active_set)
+	return anagrams_with_active_set(word, phrasing.Lengths, active_set)
 }
 
 func anagrams_with_active_set(word string, lengths []int, active_set map[string]bool) map[string]bool {

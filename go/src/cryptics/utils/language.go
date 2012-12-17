@@ -5,8 +5,7 @@ import (
 	"strings"
 )
 
-//TODO: check if reversed string has more than one n-gram violation
-func Reverse(words []string, lengths []int) map[string]bool {
+func Reverse(words []string, phrasing Phrasing) map[string]bool {
 	if len(words) > 1 {
 		panic("Word must be [1]string: " + fmt.Sprint(words))
 	}
@@ -46,11 +45,11 @@ func bigram_filter(answers map[string]bool, lengths []int, threshold int) map[st
 	return answers
 }
 
-func AllLegalSubstrings(words []string, lengths []int) map[string]bool {
+func AllLegalSubstrings(words []string, phrasing Phrasing) map[string]bool {
 	if len(words) > 1 {
 		panic("Word must be [1]string")
 	}
-	length := Sum(lengths)
+	length := Sum(phrasing.Lengths)
 	subs := map[string]bool{}
 	word := strings.ToLower(words[0])
 	if strings.Contains(word, "_") {
@@ -97,9 +96,12 @@ func min(x ...int) int {
 	return result
 }
 
-func AllInsertions(words []string, lengths []int) map[string]bool {
-	if len(words) > 2 {
-		panic("Word must be [1]string")
+func AllInsertions(words []string, phrasing Phrasing) map[string]bool {
+	if len(words) != 2 {
+		panic(fmt.Sprintf("Got wrong number of words. Expected 2, got %d", len(words)))
+	}
+	if len(words[0])+len(words[1]) > Sum(phrasing.Lengths) {
+		return map[string]bool{}
 	}
 	word1 := strings.Replace(words[0], "_", "", -1)
 	word2 := strings.Replace(words[1], "_", "", -1)
@@ -115,5 +117,5 @@ func AllInsertions(words []string, lengths []int) map[string]bool {
 	for j := 0; j < len(w1); j++ {
 		result[w1[0:j]+w0+w1[j:]] = true
 	}
-	return bigram_filter(result, lengths, 0)
+	return bigram_filter(result, phrasing.Lengths, 0)
 }
