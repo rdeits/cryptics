@@ -8,7 +8,7 @@ class TestClues(unittest.TestCase):
             for clue_text in open('clues/known_clues.txt', 'r').readlines():
                 phrases, known_answer = parse_clue_text(clue_text)
                 answers = solve_clue_text(clue_text)
-                print answers[:5]
-                self.assertEqual(answers[0][0].lower(), known_answer.lower().strip())
+                for a in answers[:5]: print a
+                self.assertEqual(answers[0].answer.lower(), known_answer.lower().strip())
         finally:
             stop_go_server()

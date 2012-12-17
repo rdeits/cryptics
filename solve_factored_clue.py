@@ -17,8 +17,18 @@ def stop_go_server():
     go_proc.wait()
 
 
-def answer_sort(ans_tuple):
-    return (ans_tuple[1], ans_tuple[0])
+class AnnotatedAnswer:
+    def __init__(self, ans, clue):
+        self.answer = ans
+        self.clue = clue
+        d, self.definition, null = clue[[x[0] for x in clue].index('d')]
+        self.similarity = semantic_similarity(self.answer, self.definition)
+
+    def __cmp__(self, other):
+        return cmp((self.similarity, self.answer), (other.similarity, other.answer))
+
+    def __str__(self):
+        return str([self.answer, self.similarity, self.clue])
 
 
 def solve_clue_text(clue_text):
@@ -35,10 +45,10 @@ def solve_clue_text(clue_text):
     print go_proc.stdout.readline()
     for p in all_phrasings:
         print p
-        for ans, similarity, clue in solve_phrasing(p, go_proc):
-            answers_with_clues.append((ans, similarity, clue))
-        answers_with_clues.sort(key=answer_sort, reverse=True)
-        if len(answers_with_clues) > 0 and answers_with_clues[0][1] > 0.85:
+        for ann_ans in solve_phrasing(p, go_proc):
+            answers_with_clues.append(ann_ans)
+        answers_with_clues.sort(reverse=True)
+        if len(answers_with_clues) > 0 and answers_with_clues[0].similarity > 0.85:
             return answers_with_clues
     return answers_with_clues
 
@@ -73,9 +83,7 @@ def solve_phrasing(phrasing, go_proc):
     pattern = phrasing.pop()
     lengths = phrasing.pop()
     answers_with_clues = []
-    # now = time.time()
     possible_clues = list(generate_clues(phrasing))
-    # print time.time() - now
 
     for i, clue in enumerate(possible_clues):
         # print clue
@@ -84,18 +92,15 @@ def solve_phrasing(phrasing, go_proc):
     for i, x in enumerate(possible_clues):
         result = go_proc.stdout.readline()
         while result.strip() != ".":
-            # print "got:", result
             clue = eval(result)
             result = go_proc.stdout.readline()
             if clue == []:
                 continue
             answer = clue[-1].lower()
-            d, definition, null = clue[[x[0] for x in clue].index('d')]
             if answer in phrasing:
                 continue
-            similarity = semantic_similarity(answer, definition)
-            answers_with_clues.append((answer, similarity, clue))
-    return sorted(answers_with_clues, key=lambda x: (x[1], x[0]), reverse=True)
+            answers_with_clues.append(AnnotatedAnswer(answer, clue))
+    return sorted(answers_with_clues, reverse=True)
 
 
 if __name__ == '__main__':
