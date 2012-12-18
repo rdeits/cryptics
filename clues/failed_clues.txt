@@ -11,6 +11,5 @@ Young maiden New_York with measure_of speed (5) | NYMPH
 //Incorrect CFG parsing
 
 //Bad ranking
-Poison is primarily very bad omen (5) | VENOM
 Help absorbing cold corrosive liquid (4) | ACID
 Silly girl will eventually ask questions (5) | GRILL
