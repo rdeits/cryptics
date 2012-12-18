@@ -6,6 +6,7 @@ This is a general cryptic crossword clue solver, written in a mix of Python and 
 	nose
 	web
 	nltk
+	tk
 
 # Other requirements:
 
