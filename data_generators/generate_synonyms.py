@@ -19,7 +19,8 @@ def synonyms(word):
 
 
 def cleanup(clue):
-    clue = re.sub('___', '', clue)
+    if '___' in clue:
+        return ""
     clue = re.sub('"', '', clue)
     clue = re.sub(' ', '_', clue)
     clue = re.sub('-', '_', clue)
@@ -31,8 +32,15 @@ def cleanup(clue):
 
 all_synonyms = dict()
 
-with open('raw_data/sowpods.txt', 'r') as f:
-    WORDS = set(w.strip() for w in f.readlines())
+# with open('raw_data/sowpods.txt', 'r') as f:
+#     WORDS = set(w.strip() for w in f.readlines())
+
+with open('raw_data/UKACD.txt', 'r') as f:
+    while True:
+        line = f.readline()
+        if line[0] == "-":
+            break
+    WORDS = set(map(cleanup, f.readlines()))
 
 for word in WORDS:
     word = word.lower()
