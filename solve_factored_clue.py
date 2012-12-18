@@ -39,7 +39,7 @@ def solve_clue_text(clue_text):
     clue_text = clue_text.encode('ascii', 'ignore')
     # solved_parts = dict()
     all_phrasings, answer = parse_clue_text(clue_text)
-    if len(all_phrasings[0]) > 7:
+    if len(all_phrasings[0]) > 9:
         return ["Sorry, I can't handle clues longer than 7 phrases yet."]
     answers_with_clues = []
 
