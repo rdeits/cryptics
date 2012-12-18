@@ -23,6 +23,8 @@ class index:
         else:
             # phrases, answer = parse_clue_text(form.d.Clue)
             # answers = solve_phrases(phrases)[:50]
+            if len(form.d.Clue.split('(')[0].strip().split(' ')) > 7:
+                return render.index("Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them")
             answers = solve_clue_text(form.d.Clue)
             if answers == []:
                 answers = ["Sorry, I couldn't find any answers"]
