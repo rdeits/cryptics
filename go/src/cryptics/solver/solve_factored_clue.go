@@ -6,39 +6,9 @@ import (
 	// "fmt"
 )
 
-type transform func(string, int) map[string][]string
 type clue_function func([]string, utils.Phrasing) map[string]bool
 
 var FUNCTIONS map[string]clue_function = map[string]clue_function{"ana": utils.Anagrams, "sub": utils.AllLegalSubstrings, "rev": utils.Reverse, "ins": utils.AllInsertions}
-
-var TRANSFORMS map[string]transform = map[string]transform{
-	"lit": func(x string, l int) map[string][]string {
-		return map[string][]string{x: []string{}}
-	},
-	"null": func(x string, l int) map[string][]string {
-		return map[string][]string{"": []string{}}
-	},
-	"d": func(x string, l int) map[string][]string {
-		return map[string][]string{"": []string{}}
-	},
-	"first": func(x string, l int) map[string][]string {
-		return map[string][]string{string(x[0]): []string{}}
-	},
-	"syn": func(x string, l int) map[string][]string {
-		if syns, ok := (utils.SYNONYMS)[x]; ok {
-			if l == 0 {
-				panic("Got zero length")
-			}
-			result := map[string][]string{}
-			for _, s := range syns {
-				if len(s) <= l {
-					result[s] = []string{}
-				}
-			}
-			return result
-		}
-		return map[string][]string{}
-	}}
 
 var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": true}
 
