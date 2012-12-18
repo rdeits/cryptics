@@ -9,7 +9,6 @@ Focused light upset male bears (5,4) | LASER_BEAM
 Young maiden New_York with measure_of speed (5) | NYMPH
 
 //Incorrect CFG parsing
-At first, congoers like us eschew solving hints (5) | CLUES
 
 //Bad ranking
 Poison is primarily very bad omen (5) | VENOM

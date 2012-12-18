@@ -59,7 +59,11 @@ def check_clue_totals(clue):
         return False
     return True
 
-base_clue_rules = [[part] * i for i in range(4)]
+max_sub_parts = 3
+base_clue_rules = [[part] * i for i in range(max_sub_parts + 1)]
+
+base_clue_rules.extend([[null] + [first] * i for i in range(max_sub_parts + 1, 8)])
+base_clue_rules.extend([[first] * i + [null] for i in range(max_sub_parts + 1, 8)])
 clue_rules = []
 for r in base_clue_rules:
     clue_rules.append(r + [d])
