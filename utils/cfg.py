@@ -21,7 +21,21 @@ ana_ = cfg.Nonterminal('ana_')
 sub_ = cfg.Nonterminal('sub_')
 ins_ = cfg.Nonterminal('ins_')
 rev_ = cfg.Nonterminal('rev_')
-part = cfg.Nonterminal('part')
+
+clue_arg = cfg.Nonterminal('clue_arg')
+clue_members = [lit, syn, first, null, ana, sub, ins, rev]
+
+ins_arg = cfg.Nonterminal('ins_arg')
+ins_members = [lit, ana, syn, sub, first, rev]
+
+ana_arg = cfg.Nonterminal('ana_arg')
+ana_members = [lit]
+
+sub_arg = cfg.Nonterminal('sub_arg')
+sub_members = [lit, syn, rev]
+
+rev_arg = cfg.Nonterminal('rev_arg')
+rev_members = [lit, syn]
 
 known_functions = {
 'in': [ins_, lit, null, sub_],
@@ -40,11 +54,6 @@ known_functions = {
 'and': [null, lit]}
 
 
-clue_members = [lit, syn, first, null, ana, sub, ins, rev]
-ins_members = [lit, ana, syn, sub, first, rev]
-ana_members = [lit]
-sub_members = [lit, syn, rev]
-rev_members = [lit, syn]
 word_tags = [lit, d, syn, first, null, ana_, sub_, ins_, rev_]
 
 
@@ -60,7 +69,7 @@ def check_clue_totals(clue):
     return True
 
 max_sub_parts = 3
-base_clue_rules = [[part] * i for i in range(max_sub_parts + 1)]
+base_clue_rules = [[clue_arg] * i for i in range(max_sub_parts + 1)]
 
 base_clue_rules.extend([[null] + [first] * i for i in range(max_sub_parts + 1, 8)])
 base_clue_rules.extend([[first] * i + [null] for i in range(max_sub_parts + 1, 8)])
@@ -70,14 +79,16 @@ for r in base_clue_rules:
     clue_rules.append([d] + r)
 
 production_rules = {
-ins: tree_search([ins_members, [ins_], ins_members]),
-ana: [[lit, ana_], [ana_, lit]],
-sub: (tree_search([sub_members, [sub_]])
-           + tree_search([[sub_], sub_members])),
-rev: (tree_search([rev_members, [rev_]])
-    + tree_search([[rev_], rev_members])),
+ins: [[ins_arg, ins_, ins_arg], [ins_arg, ins_arg, ins_]],
+ana: [[ana_arg, ana_], [ana_, ana_arg]],
+sub: [[sub_arg, sub_], [sub_, sub_arg]],
+rev: [[rev_arg, rev_], [rev_, rev_arg]],
 cat: clue_rules,
-part: [[i] for i in clue_members]
+clue_arg: [[i] for i in clue_members],
+ins_arg: [[i] for i in ins_members],
+ana_arg: [[i] for i in ana_members],
+sub_arg: [[i] for i in sub_members],
+rev_arg: [[i] for i in rev_members]
 }
 
 base_prods = []
@@ -90,7 +101,7 @@ for n, rules in production_rules.items():
 def clue_from_tree(tree):
     if not isinstance(tree, Tree):
         return tree
-    elif tree.node == "part":
+    elif "_arg" in tree.node:
         return clue_from_tree(tree[0])
     else:
         return tuple([tree.node] + [clue_from_tree(t) for t in tree])
