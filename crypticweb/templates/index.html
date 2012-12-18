@@ -3,7 +3,13 @@ $def with (answers, form)
 <div id='clue'>
 	<form name='main' method='post'>
 		$:form.render()
-		<input type='submit' value='Solve'>
+		<input type='submit' value='Solve'/>
+	</form>
+</div>
+
+<div id='halt'>
+	<form action="/halt" method="post">
+		<input type="submit" value ="Halt"/>
 	</form>
 </div>
 
