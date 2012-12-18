@@ -1,7 +1,6 @@
 import nltk.grammar as cfg
 from nltk import parse
 from nltk.tree import Tree
-from utils.search import tree_search
 
 """
 A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword clues.
