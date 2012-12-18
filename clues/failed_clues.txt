@@ -17,6 +17,9 @@ Lay asphalt on quiet street (4) | PAVE
 Initial meetings disappoint Rosemary internally (6) | INTROS
 Obfuscated words meant “towards the mouth” (10) | DOWNSTREAM
 Charmingly celebrating Labor Day (8) | ADORABLY
+Stress cooler penny (6) | ACCENT
+Bill for $1,000 charge (7) | PROGRAM
+Gold bar I never initially received (5) | INGOT
 
 //Incorrect CFG parsing
 
@@ -26,6 +29,9 @@ Silly girl will eventually ask questions (5) | GRILL
 You finally beat Iowa; it's a perfect world (6) | UTOPIA
 Focuses in on menageries caging mammals, primarily (5) | ZOOMS
 Crushed ice per instruction list (6) | RECIPE
+Seedy bar's sharp decline (4) | DIVE
+Stirs, spilling soda (4) | ADOS
+Underwriter primarily sent lire abroad, not laundered (9) | UNSTERILE
 
 //Unknown
 “Eternal Flame” is one group in trouble? (5,5) | PILOTLIGHT
@@ -43,6 +49,13 @@ Healthy, competent boy nearly died (4-6) | ABLE-BODIED
 Home Office believes attractive couples make noise (8) | HOOFBEAT
 Heartless leader's cook (4) | CHIEF
 Cyrano's extraordinary feature! (4) | NOSE
+Cost limits maintaining a nude nightclub (7) | CABARET
+
 
 //Too long
 Adorned dash, running inside white stripe, starting to dim (10) | EMBLAZONED
+Bar shows low returns after first of the month (7) | TAPROOM
+Frazzled wife in hair cream in finance-related song (2,1,4,1,4,3)
+Could have had to pay for broken red ski (6) | RISKED
+Remunerate with a brand of spaghetti sauce in South American country (8) | PARAGUAY
+Temporary page spreading bread around, courting Monica, endlessly chasing love? (5-4)
