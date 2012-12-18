@@ -48,8 +48,8 @@ def solve_clue_text(clue_text):
         for ann_ans in solve_phrasing(p, go_proc):
             answers_with_clues.append(ann_ans)
         answers_with_clues.sort(reverse=True)
-        if len(answers_with_clues) > 0 and answers_with_clues[0].similarity > 0.85:
-            return answers_with_clues
+        # if len(answers_with_clues) > 0 and answers_with_clues[0].similarity > 0.85:
+        #     return answers_with_clues
     return answers_with_clues
 
 
