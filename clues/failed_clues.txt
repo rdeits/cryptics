@@ -7,9 +7,42 @@ Salve also covers calf muscle (4) | VEAL
 Drink with actress and instructor (7) | TEACHER
 Focused light upset male bears (5,4) | LASER_BEAM
 Young maiden New_York with measure_of speed (5) | NYMPH
+Take in brother's degree upon return (6) | ABSORB
+Entertains crowds (5) | HOSTS
+Vision in mirror half-appears to grow older (6) | MIRAGE
+Brad, get it perfect (4) | NAIL
+Attorney getting a model's number (4) | DATA
+Without a method, stupidly, extremists check fewer (10) | SYSTEMLESS
+Lay asphalt on quiet street (4) | PAVE
+Initial meetings disappoint Rosemary internally (6) | INTROS
+Obfuscated words meant “towards the mouth” (10) | DOWNSTREAM
+Charmingly celebrating Labor Day (8) | ADORABLY
 
 //Incorrect CFG parsing
 
 //Bad ranking
 Help absorbing cold corrosive liquid (4) | ACID
 Silly girl will eventually ask questions (5) | GRILL
+You finally beat Iowa; it's a perfect world (6) | UTOPIA
+Focuses in on menageries caging mammals, primarily (5) | ZOOMS
+Crushed ice per instruction list (6) | RECIPE
+
+//Unknown
+“Eternal Flame” is one group in trouble? (5,5) | PILOTLIGHT
+
+//Bad synonyms
+During exam I diagrammed viscera (4) | AMID
+
+//No homophones
+Traveler's stray mistake heard (8) | WAYFARER
+
+//Missing phrase
+Healthy, competent boy nearly died (4-6) | ABLE-BODIED
+
+//Unmodeled structure
+Home Office believes attractive couples make noise (8) | HOOFBEAT
+Heartless leader's cook (4) | CHIEF
+Cyrano's extraordinary feature! (4) | NOSE
+
+//Too long
+Adorned dash, running inside white stripe, starting to dim (10) | EMBLAZONED

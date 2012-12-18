@@ -57,3 +57,9 @@ Whippoorwill hides river creature (5) ..p.. | HIPPO
 TV genre host walks out (4,5) | TALK_SHOWS
 Liver spread covers large serving dish (5) .l... | PLATE
 Unsuitable paint smeared (5) | INAPT
+Be aware of nerd's flip-flop (4) | KNOW
+Male done mixing drink (8) | LEMONADE
+You finally beat Iowa; perfect world (6) | UTOPIA
+Carrier's gotta be upset (4,3) | TOTE_BAG
+Excitedly print Camus document (10) | MANUSCRIPT
+M's Rob Titon pitching slider? (10) | TROMBONIST
