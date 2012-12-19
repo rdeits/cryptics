@@ -67,6 +67,7 @@ class CrypticClueSolver(object):
             self.answers_with_clues.sort(reverse=True)
             if len(self.answers_with_clues) > 0 and self.answers_with_clues[0].similarity > 0.85:
                 break
+        return self.answers_with_clues
 
     def solve_phrasing(self, phrasing):
         """
