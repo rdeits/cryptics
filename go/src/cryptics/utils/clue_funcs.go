@@ -160,7 +160,7 @@ func AllInsertions(words []string, phrasing Phrasing) map[string]bool {
 		result[word1+word2] = true
 	}
 	w0, w1 := word1, word2
-	for j := 0; j < len(w1); j++ {
+	for j := 1; j < len(w1); j++ {
 		result[w1[0:j]+w0+w1[j:]] = true
 	}
 	w1, w0 = word1, word2
