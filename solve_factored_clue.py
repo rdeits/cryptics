@@ -2,6 +2,7 @@ from __future__ import division
 from utils.language import semantic_similarity
 from utils.cfg import generate_clues
 from utils.phrasings import phrasings
+from utils.synonyms import SYNONYMS
 import subprocess
 import re
 
@@ -10,14 +11,21 @@ class AnnotatedAnswer:
     def __init__(self, ans, clue):
         self.answer = ans
         self.clue = clue
-        d, self.definition, null = clue[[x[0] for x in clue].index('d')]
-        self.similarity = semantic_similarity(self.answer, self.definition)
+        d, self._definition, null = clue[[x[0] for x in clue].index('d')]
+        self.similarity = semantic_similarity(self.answer, self._definition)
 
     def __cmp__(self, other):
         return cmp((self.similarity, self.answer), (other.similarity, other.answer))
 
     def __str__(self):
         return str([self.answer, self.similarity, self.clue])
+
+
+class PatternAnswer(AnnotatedAnswer):
+    def __init__(self, ans):
+        self.answer = ans
+        self.similarity = 0
+        self.clue = "???"
 
 
 class CrypticClueSolver(object):
@@ -45,17 +53,14 @@ class CrypticClueSolver(object):
         self.running = False
 
     def run(self):
-        """
-        Solve a raw clue, like
-        Initially babies are naked (4) b... | BARE
-        """
         self.running = True
         self.clue_text = self.clue_text.encode('ascii', 'ignore')
         # solved_parts = dict()
-        all_phrasings, answer = parse_clue_text(self.clue_text)
+        all_phrasings, lengths, pattern, answer = parse_clue_text(self.clue_text)
+        # all_phrasings, answer = parse_clue_text(self.clue_text)
         self.answers_with_clues = []
 
-        self.go_proc.stdin.write("# %s %s\n" % (all_phrasings[0][-2], all_phrasings[0][-1]))
+        self.go_proc.stdin.write("# %s %s\n" % (lengths, pattern))
         print self.go_proc.stdout.readline()
         for p in all_phrasings:
             if not self.running:
@@ -65,9 +70,11 @@ class CrypticClueSolver(object):
             print p
             for ann_ans in self.solve_phrasing(p):
                 self.answers_with_clues.append(ann_ans)
-            self.answers_with_clues.sort(reverse=True)
+        self.answers_with_clues.sort(reverse=True)
             # if len(self.answers_with_clues) > 0 and self.answers_with_clues[0].similarity == 1:
             #     break
+        if len(self.answers_with_clues) == 0:
+            self.answers_with_clues = [PatternAnswer(x) for x in SYNONYMS.keys() if re.match("^" + pattern + "$", x)]
         return self.answers_with_clues
 
     def solve_phrasing(self, phrasing):
@@ -75,8 +82,6 @@ class CrypticClueSolver(object):
         Solve a clue which has been broken down into phrases, like:
         ['initially', 'babies', 'are', 'naked', 4, 'b...']
         """
-        pattern = phrasing.pop()
-        lengths = phrasing.pop()
         answers_with_clues = []
         possible_clues = list(generate_clues(phrasing))
 
@@ -91,7 +96,7 @@ class CrypticClueSolver(object):
                 if clue == []:
                     continue
                 answer = clue[-1].lower()
-                if answer in phrasing:
+                if answer in phrasing or any(x.startswith(answer) for x in phrasing):
                     continue
                 answers_with_clues.append(AnnotatedAnswer(answer, clue))
         return sorted(answers_with_clues, reverse=True)
@@ -117,10 +122,4 @@ def split_clue_text(clue_text):
 
 def parse_clue_text(clue_text):
     phrases, lengths, pattern, answer = split_clue_text(clue_text)
-    all_phrasings = []
-    for p in phrasings(phrases):
-        p += [lengths, pattern]
-        all_phrasings.append(p)
-    return all_phrasings, answer
-
-
+    return phrasings(phrases), lengths, pattern, answer
