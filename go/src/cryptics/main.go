@@ -1,8 +1,6 @@
 package main
 
 import (
-	// "cryptics/data_gen"
-	// "cryptics/load_utils"
 	"bufio"
 	"cryptics/solver"
 	"cryptics/utils"
@@ -28,7 +26,7 @@ func main() {
 	solved_parts := map[string]map[string][]string{}
 	stdin := bufio.NewReader(os.Stdin)
 	ans_c := make(chan solver.StructuredClue)
-	map_c := make(chan bool, 1)
+	map_c := make(chan bool, 1) // a channel to act as a mutex around the solved_parts map
 	map_c <- true
 	for {
 		clue, _ = stdin.ReadString('\n')

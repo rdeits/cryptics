@@ -28,9 +28,6 @@ func matches_pattern(word, pattern string) bool {
 }
 
 func SplitWords(ans string, lengths []int) []string {
-	// if strings.TrimSpace(ans) == "" {
-	// 	return []string{}
-	// }
 	j := 0
 	words := []string{}
 	var stop int
@@ -79,11 +76,4 @@ func valid_words(words []string) bool {
 	phrase := strings.Join(words, "_")
 	_, ok := SYNONYMS[phrase]
 	return ok
-	// // return NGRAMS[HashLengths(lengths)][ans]
-	// for i, w := range words {
-	// 	if _, ok := (SYNONYMS)[w]; !ok {
-	// 		return false
-	// 	}
-	// }
-	// return true
 }

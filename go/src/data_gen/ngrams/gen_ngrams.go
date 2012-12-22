@@ -18,23 +18,6 @@ func GenerateNgrams() {
 			continue
 		}
 		key = len(word)
-		// words = strings.Split(word, "_")
-		// lengths = []int{}
-		// for _, w = range words {
-		// 	lengths = append(lengths, len(w))
-		// }
-		// // word = strings.Replace(word, "_", "", -1)
-		// key = types.HashLengths(lengths)
-		// // skip = false
-		// // for _, c := range word {
-		// // 	if string(c) == "_" {
-		// // 		skip = true
-		// // 		break
-		// // 	}
-		// // }
-		// // if skip {
-		// // 	continue
-		// // }
 		if initial_ngrams[key] == nil {
 			initial_ngrams[key] = map[string]bool{}
 		}
@@ -56,18 +39,11 @@ func GenerateNgrams() {
 	}
 	defer ngrams_file.Close()
 	gob.NewEncoder(ngrams_file).Encode(ngrams)
-	// for s, _ := range ngrams {
-	// 	ngrams_file.WriteString(s + "\n")
-	// }
 
-	// initial_ngrams_file, err := os.Create("../data/initial_ngrams.txt")
 	initial_ngrams_file, err := os.Create("data/initial_ngrams.gob")
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer initial_ngrams_file.Close()
 	gob.NewEncoder(initial_ngrams_file).Encode(initial_ngrams)
-	// for s, _ := range initial_ngrams {
-	// 	initial_ngrams_file.WriteString(s + "\n")
-	// }
 }

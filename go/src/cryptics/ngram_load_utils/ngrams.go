@@ -6,11 +6,6 @@ import (
 	"os"
 )
 
-// type Ngrams struct {
-// 	Initial map[string]bool
-// 	All     map[string]bool
-// }
-
 func LoadNgrams() map[int]map[string]bool {
 	var ngrams map[int]map[string]bool
 	raw_ngrams, err := os.Open("data/ngrams.gob")
