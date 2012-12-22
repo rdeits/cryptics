@@ -94,13 +94,9 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 				}
 			}
 		} else if clue.Type == "cat" {
-			// member_test := func(x string) bool {
-			// 	return utils.PartialAnswerTest(x, phrasing)
-			// }
 			active_set := [][]string{{}}
 			new_active_set := [][]string{}
 			var candidate []string
-			// all_sub_answers := []map[string][]string{}
 			for _, sub_clue = range clue.Args {
 				new_active_set = [][]string{}
 				err = sub_clue.Solve(phrasing, solved_parts, map_c)
