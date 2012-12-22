@@ -23,7 +23,7 @@ Add the appropriate folders to your various PATH variables:
 	export PATH="<your-local-path>/cryptics/go/bin:${PATH}"
 	export PYTHONPATH="<your-local-path>/cryptics:${PYTHONPATH}"
 	
-. Then generate the n-grams and synonyms datasets by running
+Then generate the n-grams and synonyms datasets by running
 
 	rake data
 
