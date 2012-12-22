@@ -2,8 +2,8 @@ package solver
 
 import (
 	"cryptics/utils"
-	"strings"
 	// "fmt"
+	"strings"
 )
 
 type clue_function func([]string, utils.Phrasing) map[string]bool
@@ -89,7 +89,6 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 				args_set = new_args_set
 			}
 			for _, args := range args_set {
-				// fmt.Println("function args:", filter_empty_strings(args))
 				for sub_ans := range clue_func(filter_empty_strings(args), *phrasing) {
 					clue.Ans[sub_ans] = args
 				}
@@ -98,9 +97,9 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 			// member_test := func(x string) bool {
 			// 	return utils.PartialAnswerTest(x, phrasing)
 			// }
-			var candidate []string
 			active_set := [][]string{{}}
 			new_active_set := [][]string{}
+			var candidate []string
 			// all_sub_answers := []map[string][]string{}
 			for _, sub_clue = range clue.Args {
 				new_active_set = [][]string{}
@@ -115,7 +114,8 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 					for w := range sub_clue.Ans {
 						candidate = append(s, strings.Replace(w, "_", "", -1))
 						if utils.PartialAnswerTest(strings.Join(candidate, ""), phrasing) {
-							new_active_set = append(new_active_set, candidate)
+							new_active_set = append(new_active_set, make([]string, len(candidate)))
+							copy(new_active_set[len(new_active_set)-1], candidate)
 						}
 					}
 				}

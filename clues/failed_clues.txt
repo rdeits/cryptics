@@ -25,15 +25,12 @@ Gold bar I never initially received (5) | INGOT
 //Bad ranking
 Help absorbing cold corrosive liquid (4) | ACID
 Silly girl will eventually ask questions (5) | GRILL
-You finally beat Iowa; it's a perfect world (6) | UTOPIA
 Focuses in on menageries caging mammals, primarily (5) | ZOOMS
 Crushed ice per instruction list (6) | RECIPE
 Seedy bar's sharp decline (4) | DIVE
-Stirs, spilling soda (4) | ADOS
 Underwriter primarily sent lire abroad, not laundered (9) | UNSTERILE
 
 //Unknown
-“Eternal Flame” is one group in trouble? (5,5) | PILOTLIGHT
 
 //Bad synonyms
 
@@ -45,9 +42,10 @@ Healthy, competent boy nearly died (4-6) | ABLE-BODIED
 
 //Unmodeled structure
 Home Office believes attractive couples make noise (8) | HOOFBEAT
-Heartless leader's cook (4) | CHIEF
+Heartless leader's cook (4) | CHEF
 Cyrano's extraordinary feature! (4) | NOSE
 Cost limits maintaining a nude nightclub (7) | CABARET
+“Eternal Flame” is one group in trouble? (5,5) | PILOTLIGHT
 
 
 //Too long
