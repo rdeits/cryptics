@@ -46,7 +46,7 @@ Bottomless sea, stormy sea - waters' surface rises_and_falls (7) s.es... | SEESA
 Bring_up sentry as protection_for_tailender (9) r........ | REARGUARD
 Tenor and alto upset count (5) t.... | TOTAL
 Dotty, Sue,_Pearl, Joy (8) .l...... | PLEASURE
-Fluttering heart and thundering head is a danger (6) t....t | THREAT
+Fluttering heart and thundering head is danger (6) t....t | THREAT
 Setting for a_cello composition (6) l..... | LOCALE
 St._Michael transforms metal_transformer (9) a........ | ALCHEMIST
 Neato two armbones (5) r.... | RADII

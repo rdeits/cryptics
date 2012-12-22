@@ -19,6 +19,8 @@ Charmingly celebrating Labor Day (8) | ADORABLY
 Stress cooler penny (6) | ACCENT
 Bill for $1,000 charge (7) | PROGRAM
 Gold bar I never initially received (5) | INGOT
+Heartless leader's cook (4) | CHEF
+Truly team up again? (6) | REALLY
 
 //Incorrect CFG parsing
 
@@ -32,17 +34,21 @@ Underwriter primarily sent lire abroad, not laundered (9) | UNSTERILE
 
 //Unknown
 
+// Missing idioms
+Each retiring bachelor's promise finally cast in stone (7) | PERIDOT
+Keeping a seat warm for cross monarch? (8) | SPANKING
+
 //Bad synonyms
 
 //No homophones
 Traveler's stray mistake heard (8) | WAYFARER
+Sense of location, we hear (5) | SIGHT
 
 //Missing phrase
 Healthy, competent boy nearly died (4-6) | ABLE-BODIED
 
 //Unmodeled structure
 Home Office believes attractive couples make noise (8) | HOOFBEAT
-Heartless leader's cook (4) | CHEF
 Cyrano's extraordinary feature! (4) | NOSE
 Cost limits maintaining a nude nightclub (7) | CABARET
 “Eternal Flame” is one group in trouble? (5,5) | PILOTLIGHT
