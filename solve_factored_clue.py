@@ -22,9 +22,10 @@ class AnnotatedAnswer:
 
 
 class PatternAnswer(AnnotatedAnswer):
-    def __init__(self, ans):
+    def __init__(self, ans, phrasing):
         self.answer = ans
-        self.similarity = 0
+        self.similarity = max(semantic_similarity(ans, phrasing[0]),
+                              semantic_similarity(ans, phrasing[-1]))
         self.clue = "???"
 
 
@@ -70,11 +71,11 @@ class CrypticClueSolver(object):
             print p
             for ann_ans in self.solve_phrasing(p):
                 self.answers_with_clues.append(ann_ans)
-        self.answers_with_clues.sort(reverse=True)
             # if len(self.answers_with_clues) > 0 and self.answers_with_clues[0].similarity == 1:
             #     break
         if len(self.answers_with_clues) == 0:
-            self.answers_with_clues = [PatternAnswer(x) for x in SYNONYMS.keys() if re.match("^" + pattern + "$", x)]
+            self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS.keys() if re.match("^" + pattern + "$", x)]
+        self.answers_with_clues.sort(reverse=True)
         return self.answers_with_clues
 
     def solve_phrasing(self, phrasing):
