@@ -24,7 +24,8 @@ class index:
             phrases, lengths, pattern, answer = split_clue_text(form.d.Clue)
             if len(phrases) > 7:
                 return render.index(["Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them"], form)
-            solver_thread = threading.Thread(target=solver.solve_clue_text(form.d.Clue))
+            solver.clue_text = form.d.Clue
+            solver_thread = threading.Thread(target=solver.run)
             solver_thread.start()
             solver_thread.join()
             # answers = solve_clue_text(form.d.Clue)

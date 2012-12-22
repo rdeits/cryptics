@@ -24,6 +24,7 @@ class CrypticClueSolver(object):
     def __init__(self):
         self.running = False
         self.answers_with_clues = None
+        self.clue_text = None
 
     def __enter__(self):
         self.start_go_server()
@@ -43,15 +44,15 @@ class CrypticClueSolver(object):
     def stop(self):
         self.running = False
 
-    def solve_clue_text(self, clue_text):
+    def run(self):
         """
         Solve a raw clue, like
         Initially babies are naked (4) b... | BARE
         """
         self.running = True
-        clue_text = clue_text.encode('ascii', 'ignore')
+        self.clue_text = self.clue_text.encode('ascii', 'ignore')
         # solved_parts = dict()
-        all_phrasings, answer = parse_clue_text(clue_text)
+        all_phrasings, answer = parse_clue_text(self.clue_text)
         self.answers_with_clues = []
 
         self.go_proc.stdin.write("# %s %s\n" % (all_phrasings[0][-2], all_phrasings[0][-1]))
