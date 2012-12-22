@@ -66,8 +66,8 @@ class CrypticClueSolver(object):
             for ann_ans in self.solve_phrasing(p):
                 self.answers_with_clues.append(ann_ans)
             self.answers_with_clues.sort(reverse=True)
-            if len(self.answers_with_clues) > 0 and self.answers_with_clues[0].similarity > 0.85:
-                break
+            # if len(self.answers_with_clues) > 0 and self.answers_with_clues[0].similarity == 1:
+            #     break
         return self.answers_with_clues
 
     def solve_phrasing(self, phrasing):
