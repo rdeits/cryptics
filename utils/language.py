@@ -3,6 +3,14 @@ from nltk.corpus import wordnet as wn
 
 
 def semantic_similarity(word1, word2):
+    words1 = word1.split('_')
+    words2 = word2.split('_')
+    if len(words1) > 1 or len(words2) > 1:
+        sub_similarity = .9 * semantic_similarity(words1[-1], words2[-1])
+    else:
+        sub_similarity = 0
+    if sub_similarity == 1:
+        return sub_similarity
     if fast_semantic_similarity(word1, word2) == 1:
         return 1
     max_p = 0
@@ -15,7 +23,7 @@ def semantic_similarity(word1, word2):
                         return p
                     if p > max_p:
                         max_p = p
-    return max_p
+    return max(max_p, sub_similarity)
 
 
 def fast_semantic_similarity(word1, word2):
