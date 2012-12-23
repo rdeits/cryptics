@@ -86,7 +86,7 @@ class Puzzle:
         self.unk1 = '\0' * 2
         self.unk2 = '\0' * 12
         self.scrambled_cksum = 0
-        self.fill = ''
+        # self.fill = ''
         self.solution = ''
         self.clues = []
         self.notes = ''
@@ -115,7 +115,8 @@ class Puzzle:
 
         self.version = self.fileversion[:3]
         self.solution = s.read(self.width * self.height)
-        self.fill = s.read(self.width * self.height)
+        # self.fill = s.read(self.width * self.height)
+        self.grid = list(s.read(self.width * self.height))
 
         self.title = s.read_string()
         self.author = s.read_string()
@@ -148,6 +149,10 @@ class Puzzle:
         for code, cksum_ext in ext_cksum.items():
             if cksum_ext != data_cksum(self.extensions[code]):
                 raise PuzzleFormatError('extension %s checksum does not match' % code)
+
+    @property
+    def fill(self):
+        return "".join(self.grid)
 
     def save(self, filename):
         f = open(filename, 'wb')
@@ -296,6 +301,56 @@ class Puzzle:
 
         return cksum_magic
 
+    def set_clue_fill(self, clue, ans):
+        ans = ans.replace('_', '').upper().strip()
+        sq = self.occupied_squares(clue)
+        if len(ans) != len(sq):
+            print "Cannot fill in", ans, "for clue", clue, "Lengths don't match"
+            return
+        for i, x in enumerate(sq):
+            self.grid[x] = ans[i]
+
+    def get_clue_fill(self, clue):
+        return ''.join(self.grid[x] for x in self.occupied_squares(clue))
+
+    def occupied_squares(self, clue):
+        if clue['dir'] == 'a':
+            return range(clue['cell'], clue['cell'] + clue['len'])
+        else:
+            assert clue['dir'] == 'd'
+            return range(clue['cell'], clue['cell'] + self.width * clue['len'], self.width)
+
+    def intersecting_clues(self, clue):
+        target_squares = self.occupied_squares(clue)
+        if clue['dir'] == 'd':
+            source = self.across
+        else:
+            assert clue['dir'] == 'a'
+            source = self.down
+        return [c for c in source if any(s in target_squares for s in self.occupied_squares(c))]
+
+    def encode_clue_for_solver(self, clue):
+        result = clue['clue']
+        if '(' not in clue['clue']:
+            result += ' (' + str(clue['len']) + ')'
+        result = result.strip()
+        result += ' ' + self.get_clue_fill(clue).replace('-', '.')
+        result = result.encode('ascii', 'ignore')
+        return result
+
+    def print_clue_state(self):
+        print "Across:"
+        for clue in self.clue_numbering().across:
+            print str(clue['num']) + clue['dir'], self.encode_clue_for_solver(clue)
+        print "Down:"
+        for clue in self.clue_numbering().down:
+            print str(clue['num']) + clue['dir'], self.encode_clue_for_solver(clue)
+
+    def find_clue(self, id):
+        for clue in self.clue_numbering().across + self.clue_numbering().down:
+            if str(clue['num']) + clue['dir'] == id:
+                return clue
+
 
 class PuzzleBuffer:
     """PuzzleBuffer class
@@ -377,7 +432,6 @@ class DefaultClueNumbering:
         self.clues = clues
         self.width = width
         self.height = height
-
         # compute across & down
         a = []
         d = []
@@ -387,11 +441,11 @@ class DefaultClueNumbering:
             if not is_blacksquare(grid[i]):
                 lastc = c
                 if (self.col(i) == 0 or is_blacksquare(grid[i - 1])) and self.len_across(i) > 1:
-                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_across(i), 'fill': grid[i:i + self.len_across(i)], 'dir': 'a'}
+                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_across(i), 'dir': 'a'}
                     a.append(clue)
                     c += 1
                 if (self.row(i) == 0 or is_blacksquare(grid[i - width])) and self.len_down(i) > 1:
-                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_down(i), 'fill': ''.join(grid[x] for x in range(i, i + self.len_down(i) * self.width, self.width)), 'dir': 'd'}
+                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_down(i), 'dir': 'd'}
                     d.append(clue)
                     c += 1
                 if c > lastc:
@@ -399,22 +453,6 @@ class DefaultClueNumbering:
 
         self.across = a
         self.down = d
-
-    def occupied_squares(self, clue):
-        if clue['dir'] == 'a':
-            return range(clue['cell'], clue['cell'] + clue['len'])
-        else:
-            assert clue['dir'] == 'd'
-            return range(clue['cell'], clue['cell'] + self.width * clue['len'], self.width)
-
-    def intersecting_clues(self, clue):
-        target_squares = self.occupied_squares(clue)
-        if clue['dir'] == 'd':
-            source = self.across
-        else:
-            assert clue['dir'] == 'a'
-            source = self.down
-        return [c for c in source if any(s in target_squares for s in self.occupied_squares(c))]
 
     def col(self, index):
         return index % self.width

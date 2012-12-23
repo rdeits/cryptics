@@ -50,8 +50,15 @@ class CrypticClueSolver(object):
         self.go_proc.stdin.write('..\n')
         self.go_proc.wait()
 
+    def reset(self):
+        self.stop_go_server()
+        self.start_go_server()
+
     def stop(self):
         self.running = False
+
+    def setup(self, clue_text):
+        self.clue_text = clue_text
 
     def run(self):
         self.running = True
@@ -65,8 +72,7 @@ class CrypticClueSolver(object):
         print self.go_proc.stdout.readline()
         for p in all_phrasings:
             if not self.running:
-                self.stop_go_server()
-                self.start_go_server()
+                self.reset()
                 break
             print p
             for ann_ans in self.solve_phrasing(p):
@@ -109,6 +115,7 @@ def split_clue_text(clue_text):
     clue_text = clue_text.lower()
     clue, rest = clue_text.split('(')
     lengths, rest = rest.split(')')
+    lengths = lengths.replace('-', ',')
     lengths = tuple(int(x) for x in lengths.split(','))
     pattern, answer = rest.split('|')
     pattern = pattern.strip()

@@ -1,6 +1,6 @@
 import web
 from web import form
-from solve_factored_clue import CrypticClueSolver, split_clue_text
+from solve_clue import CrypticClueSolver, split_clue_text
 import threading
 
 
@@ -24,7 +24,7 @@ class index:
             phrases, lengths, pattern, answer = split_clue_text(form.d.Clue)
             if len(phrases) > 7:
                 return render.index(["Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them"], form)
-            solver.clue_text = form.d.Clue
+            solver.setup(form.d.Clue)
             solver_thread = threading.Thread(target=solver.run)
             solver_thread.start()
             solver_thread.join()
