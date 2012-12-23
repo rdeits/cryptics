@@ -387,11 +387,11 @@ class DefaultClueNumbering:
             if not is_blacksquare(grid[i]):
                 lastc = c
                 if (self.col(i) == 0 or is_blacksquare(grid[i - 1])) and self.len_across(i) > 1:
-                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_across(i), 'fill': grid[i:i + self.len_across(i)]}
+                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_across(i), 'fill': grid[i:i + self.len_across(i)], 'dir': 'a'}
                     a.append(clue)
                     c += 1
                 if (self.row(i) == 0 or is_blacksquare(grid[i - width])) and self.len_down(i) > 1:
-                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_down(i), 'fill': ''.join(grid[x] for x in range(i, i + self.len_down(i) * self.width, self.width))}
+                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_down(i), 'fill': ''.join(grid[x] for x in range(i, i + self.len_down(i) * self.width, self.width)), 'dir': 'd'}
                     d.append(clue)
                     c += 1
                 if c > lastc:
@@ -399,6 +399,22 @@ class DefaultClueNumbering:
 
         self.across = a
         self.down = d
+
+    def occupied_squares(self, clue):
+        if clue['dir'] == 'a':
+            return range(clue['cell'], clue['cell'] + clue['len'])
+        else:
+            assert clue['dir'] == 'd'
+            return range(clue['cell'], clue['cell'] + self.width * clue['len'], self.width)
+
+    def intersecting_clues(self, clue):
+        target_squares = self.occupied_squares(clue)
+        if clue['dir'] == 'd':
+            source = self.across
+        else:
+            assert clue['dir'] == 'a'
+            source = self.down
+        return [c for c in source if any(s in target_squares for s in self.occupied_squares(c))]
 
     def col(self, index):
         return index % self.width
