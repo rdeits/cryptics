@@ -32,16 +32,30 @@ with CrypticClueSolver() as solver:
                         solver.setup(p.encode_clue_for_solver(clue))
                         try:
                             answers = solver.run()
-                            for i in range(min(40, len(answers))):
-                                print i, answers[i]
-                            action = raw_input("Enter a number to select that answer, or leave blank to cancel: ")
-                            if action.strip() != "":
-                                try:
-                                    choice = int(action)
-                                except ValueError:
-                                    break
-                                p.set_clue_fill(clue, answers[choice].answer)
-                                break
+                            ans_strings = dict()
+                            ans_derivations = dict()
+                            ndx = 0
+                            for a in answers:
+                                if a.answer not in ans_strings.values():
+                                    ans_strings[ndx] = a.answer
+                                    ndx += 1
+                                ans_derivations.setdefault(a.answer, []).append(a)
+                            for i in range(min(15, len(ans_strings.keys()))):
+                                print i, ans_strings[i]
+                            while True:
+                                action = raw_input("[a]ccept/[d]erivations [number], or leave blank to cancel: ").strip()
+                                if action != "":
+                                    try:
+                                        verb, noun = action.split(' ')
+                                        choice = int(noun)
+                                        if verb == "a":
+                                            p.set_clue_fill(clue, ans_strings[choice])
+                                            break
+                                        if verb == "d":
+                                            for d in ans_derivations[ans_strings[choice]]:
+                                                print d
+                                    except ValueError:
+                                        pass
                         except KeyboardInterrupt:
                             solver.reset()
                     elif action == "b":
@@ -52,4 +66,4 @@ with CrypticClueSolver() as solver:
                         break
                     elif action == "e":
                         clue['clue'] = rlinput("Edited clue: ", clue['clue'])
-        p.save(fname)
+        # p.save(fname)
