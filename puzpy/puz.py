@@ -387,11 +387,11 @@ class DefaultClueNumbering:
             if not is_blacksquare(grid[i]):
                 lastc = c
                 if (self.col(i) == 0 or is_blacksquare(grid[i - 1])) and self.len_across(i) > 1:
-                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_across(i) }
+                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_across(i), 'fill': grid[i:i + self.len_across(i)]}
                     a.append(clue)
                     c += 1
                 if (self.row(i) == 0 or is_blacksquare(grid[i - width])) and self.len_down(i) > 1:
-                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_down(i) }
+                    clue = {'num': n, 'clue': clues[c], 'cell': i, 'len': self.len_down(i), 'fill': ''.join(grid[x] for x in range(i, i + self.len_down(i) * self.width, self.width))}
                     d.append(clue)
                     c += 1
                 if c > lastc:
