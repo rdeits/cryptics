@@ -17,7 +17,7 @@ with CrypticClueSolver() as solver:
 
     while True:
         p.print_clue_state()
-        action = raw_input("Action? ")
+        action = raw_input("Action? [q]uit [s]ave or enter a clue ID (e.g. 12a): ")
         if action == "q":
             break
         elif action == "s":

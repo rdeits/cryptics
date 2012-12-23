@@ -35,5 +35,5 @@ task :go do
 end
 
 task :puz => [:data, :go] do
-	sh "python python/solve_puz.py /Users/rdeits/downloads/rss0112.puz"
+	sh "python python/solve_puz.py sample_puzzles/kegler_cryptic_1.puz"
 end
