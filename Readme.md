@@ -156,6 +156,10 @@ This program uses the English bigrams corpus from [After the Deadline](http://bl
 
 In addition, it uses the UK Advanced Cryptics Dictionary, Copyright (c) 2009 J Ross Beresford. For license information see `raw_data/UKACD.txt.`
 
+Indicator word lists are from:
+http://sutherland-studios.com.au/puzzles/anagram.php
+http://www.crosswordunclued.com/2008/09/dictionary.html
+
 # License
 
 See LICENSE.txt
