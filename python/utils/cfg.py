@@ -1,6 +1,7 @@
 import nltk.grammar as cfg
 from nltk import parse
 from nltk.tree import Tree
+from utils.indicators import INDICATORS
 
 """
 A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword clues.
@@ -39,21 +40,13 @@ rev_members = [lit, syn]
 known_functions = {
 'in': [ins_, lit, null, sub_],
 'a': [lit, syn, null],
-'strange': [ana_, syn],
-'broken': [ana_, syn],
-'on_the_way_up': [rev_, syn],
-'going_up': [rev_, syn],
-'returning': [rev_, syn],
 'is': [null, lit],
 'for': [null, syn],
 'large': [first, syn],
-'hides': [sub_],
 'primarily': [sub_],
-'surface': [sub_],
 'and': [null, lit]}
 
 
-word_tags = [lit, d, syn, first, null, ana_, sub_, ins_, rev_]
 
 
 def check_clue_totals(clue):
@@ -106,13 +99,23 @@ def clue_from_tree(tree):
         return tuple([tree.node] + [clue_from_tree(t) for t in tree])
 
 
+word_tags = [lit, d, syn, first, null, ana_, sub_, ins_, rev_]
+
 def generate_grammar(phrases):
     prods = []
     for p in phrases:
         if p in known_functions:
             tags = known_functions[p]
         else:
-            tags = word_tags
+            found = False
+            tags = [lit, d, syn, first, null]
+            for kind in INDICATORS:
+                if any(w == p or (len(w) > 5 and p.startswith(w[:-3])) for w in INDICATORS[kind]):
+                    tags.append(cfg.Nonterminal(kind))
+                    found = True
+            if not found:
+                # tags = word_tags
+                tags = [lit, d, syn, first, null, ana_, sub_, rev_]
         for t in tags:
             prods.append(cfg.Production(t, [p]))
     return cfg.ContextFreeGrammar(cat, base_prods + prods)
