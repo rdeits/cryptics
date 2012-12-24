@@ -65,30 +65,29 @@ func AllLegalSubstrings(words []string, phrasing Phrasing) map[string]bool {
 	}
 	if strings.Contains(word, "_") {
 		word = strings.Replace(word, "_", "", -1)
-		for i := 0; i < len(word)-length+1; i++ {
-			s := word[i : i+length]
-			if _, ok := (SYNONYMS)[s]; ok {
-				subs[s] = true
-			}
+	}
+	for i := 0; i < len(word)-length+1; i++ {
+		s := word[i : i+length]
+		if _, ok := (SYNONYMS)[s]; ok {
+			subs[s] = true
 		}
-	} else {
-		for l := 1; l <= min(len(word)-1, length, 3); l++ {
-			subs[word[:l]] = true // first l letters
+	}
+	for l := 1; l <= min(len(word)-1, length, 3); l++ {
+		subs[word[:l]] = true // first l letters
+	}
+	subs[word[len(word)-1:]] = true // last letter
+	if len(word) > 2 {
+		subs[word[:1]+word[len(word)-1:]] = true // outside
+		if len(word)%2 == 0 {
+			subs[word[len(word)/2-1:len(word)/2+1]] = true         // center
+			subs[word[:len(word)/2-1]+word[len(word)/2+1:]] = true // all but center
+		} else {
+			subs[word[len(word)/2:len(word)/2+1]] = true         // center
+			subs[word[:len(word)/2]+word[len(word)/2+1:]] = true // all but center
 		}
-		subs[word[len(word)-1:]] = true // last letter
-		if len(word) > 2 {
-			subs[word[:1]+word[len(word)-1:]] = true // outside
-			if len(word)%2 == 0 {
-				subs[word[len(word)/2-1:len(word)/2+1]] = true         // center
-				subs[word[:len(word)/2-1]+word[len(word)/2+1:]] = true // all but center
-			} else {
-				subs[word[len(word)/2:len(word)/2+1]] = true         // center
-				subs[word[:len(word)/2]+word[len(word)/2+1:]] = true // all but center
-			}
-			subs[word[1:]] = true            // all but first
-			subs[word[:len(word)-1]] = true  // all but last
-			subs[word[1:len(word)-1]] = true // all but edges
-		}
+		subs[word[1:]] = true            // all but first
+		subs[word[:len(word)-1]] = true  // all but last
+		subs[word[1:len(word)-1]] = true // all but edges
 	}
 	return subs
 }
