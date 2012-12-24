@@ -40,7 +40,7 @@ class halt:
 
 
 if __name__ == "__main__":
-    render = web.template.render('crypticweb/templates/')
+    render = web.template.render('python/crypticweb/templates/')
 
     urls = ('/', 'index',
             '/halt', 'halt')
