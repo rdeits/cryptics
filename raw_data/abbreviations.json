@@ -1678,6 +1678,9 @@
  "plate": [
   "lp"
  ], 
+ "play": [
+ "act"
+ ],
  "playing": [
   "on"
  ], 
@@ -1699,8 +1702,11 @@
  ], 
  "policeman": [
   "pc"
+  "di", 
+  "met", 
+  "cid"
  ], 
- "policeman/men": [
+ "policemen": [
   "pc", 
   "di", 
   "met", 
