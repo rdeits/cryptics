@@ -79,8 +79,8 @@ class CrypticClueSolver(object):
                 self.answers_with_clues.append(ann_ans)
             # if len(self.answers_with_clues) > 0 and self.answers_with_clues[0].similarity == 1:
             #     break
-        if len(self.answers_with_clues) == 0:
-            self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS.keys() if re.match("^" + pattern + "$", x)]
+        if len(self.answers_with_clues) == 0 and pattern.replace('.', '') != "" :
+            self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS.keys() if matches_pattern(x, pattern, lengths)]
         self.answers_with_clues.sort(reverse=True)
         return self.answers_with_clues
 
@@ -107,6 +107,10 @@ class CrypticClueSolver(object):
                     continue
                 answers_with_clues.append(AnnotatedAnswer(answer, clue))
         return sorted(answers_with_clues, reverse=True)
+
+
+def matches_pattern(word, pattern, lengths):
+    return (tuple(len(x) for x in word.split('_')) == lengths) and re.match("^" + pattern + "$", word)
 
 
 def split_clue_text(clue_text):
