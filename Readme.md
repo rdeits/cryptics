@@ -63,7 +63,7 @@ You can give the solver a hint that a set of words form a phrase (and need not b
 
 The output is in the form of a solved, structured clue in the following form: 
 
-	['bare', 1, ('cat', ('sub', ('sub_', 'initially', ''), ('lit', 'babies', 'BABIES'), 'B'), ('lit', 'are', 'ARE'), ('d', 'naked', ''), 'BARE')] 
+	['bare', 1, ('top', ('sub', ('sub_', 'initially', ''), ('lit', 'babies', 'BABIES'), 'B'), ('lit', 'are', 'ARE'), ('d', 'naked', ''), 'BARE')] 
 
 The three elements in the output are: [answer, score, structured clue]. So, in the above example, the answer is "bare", the score is 1 (the highest possible value), and the structured clue involves a substring of "BABIES" added to "ARE" to get "BARE". 
 
@@ -85,7 +85,7 @@ In practice, these assumptions are pretty good.
 
 Given a clue, we first break the clue up into phrases (where a "phrase" is one or more words connected by underscores). For example, one phrasing of the clue "Initially babies are naked" is ["initially", "babies", "are", "naked], and another is ["initially", "babies_are", "naked"]. For each phrasing, we use the CFG to generate all possible syntactic structures for those words. For example, a structure for ["initially", "babies", "are", "naked] is:
 
-	('cat', 
+	('top', 
 	  (sub, 
 	  	('sub_', 'initially'), 
 	  	('lit', 'babies')), 
@@ -93,7 +93,7 @@ Given a clue, we first break the clue up into phrases (where a "phrase" is one o
 	  ('d', 'naked')
 	). 
 
-'cat' means to concatenate the strings produced by all of its arguments, and is always the top-level structure in a cryptic clue.
+'top' means to concatenate the strings produced by all of its arguments, and is always the top-level structure in a cryptic clue.
 
 'sub' indicates a substring
 
@@ -110,7 +110,7 @@ The output format of the solver gives not only this score, but also the substrin
 
 	['bare', 
 	 1, 
-	 ('cat', 
+	 ('top', 
 	   ('sub', 
 	     ('sub_', 'initially', ''), 
 	     ('lit', 'babies', 'BABIES'), 
@@ -124,7 +124,7 @@ Of course, we are certain to produce a great many bad answers using this method,
 
 	['evil', 
 	 0, 
-	 ('cat', 
+	 ('top', 
 	   ('d', 'initially', ''), 
 	   ('rev', 
 	     ('rev_', 'babies', ''), 
@@ -141,11 +141,11 @@ In this way, we generate the most probable interpretation and solution for a giv
 
 Currently, the solver is implemented in a mix of Python (for its fantastic Natural Language Toolkit) and Go (for its speed and concurrency). The web server, CFG parser, and answer scoring are implemented in Python, while the solving mechanics are all implemented in Go. The Go code runs as a subprocess spawned from Python and communicates over Stdin/Stdout.  Structured clues, such as: 
 
-	('cat', (sub, ('sub_', 'initially'), ('lit', 'babies')), ('lit', 'are'), ('d', 'naked'))
+	('top', (sub, ('sub_', 'initially'), ('lit', 'babies')), ('lit', 'are'), ('d', 'naked'))
 
 are generated in Python and sent to the Go solver over Stdin, and solved structured clues, such as: 
 
-	('cat', ('sub', ('sub_', 'initially', ''), ('lit', 'babies', 'BABIES'), 'B'), ('lit', 'are', 'ARE'), ('d', 'naked', ''), 'BARE')
+	('top', ('sub', ('sub_', 'initially', ''), ('lit', 'babies', 'BABIES'), 'B'), ('lit', 'are', 'ARE'), ('d', 'naked', ''), 'BARE')
 
 are returned from the Go solver to Python to have their answers scored and displayed. 
 
