@@ -8,18 +8,8 @@ import (
 
 var NGRAMS map[int]map[string]bool = ngram_load_utils.NGRAMS
 
-func remaining_letters(letters []rune, word string) map[rune]bool {
-	remaining := map[rune]bool{}
-	for _, x := range letters {
-		if strings.Count(string(letters), string(x)) > strings.Count(word, string(x)) {
-			remaining[x] = true
-		}
-	}
-	return remaining
-}
-
 func Anagrams(words []string, phrasing Phrasing) map[string]bool {
-	if len(words) > 1 {
+	if len(words) != 1 {
 		panic("Word must be [1]string")
 	}
 	word := strings.ToLower(words[0])
@@ -28,49 +18,52 @@ func Anagrams(words []string, phrasing Phrasing) map[string]bool {
 	if len(word) > l {
 		return map[string]bool{}
 	}
-	active_set := map[string]bool{"": true}
-	return anagrams_with_active_set(word, phrasing.Lengths, active_set)
-}
 
-func anagrams_with_active_set(word string, lengths []int, active_set map[string]bool) map[string]bool {
-	letters := []rune(word)
-	var valid bool
-	var candidate string
-	for w := range active_set {
-		if len(w) == len(letters) {
-			ans := map[string]bool{}
-			for w := range active_set {
-				if w != word {
-					ans[w] = true
+	letters := map[rune]int{}
+	for _, c := range word {
+		letters[c] += 1
+	}
+
+	// a map from partial anagrams to the remaining letters
+	active_set := map[string]map[rune]int{"": letters}
+	new_active_set := map[string]map[rune]int{}
+
+	for i := 0; i < len(word); i++ {
+		new_active_set = map[string]map[rune]int{}
+		for w, ls := range active_set {
+			for l := range ls {
+				candidate := w + string(l)
+				valid := true
+				for j, w := range SplitWords(candidate, phrasing.Lengths) {
+					if !NGRAMS[phrasing.Lengths[j]][w] {
+						// fmt.Println("invalid ngrams", w, "for word length", lengths[i])
+						valid = false
+						break
+					}
+				}
+				if valid {
+					new_active_set[candidate] = map[rune]int{}
+					for k, v := range ls {
+						if k == l && v > 1 {
+							new_active_set[candidate][k] = v - 1
+						} else if k != l {
+							new_active_set[candidate][k] = v
+						}
+					}
 				}
 			}
-			return ans
+		}
+		if len(new_active_set) == 0 {
+			return map[string]bool{}
 		} else {
-			break
+			active_set = new_active_set
 		}
 	}
-	new_active_set := map[string]bool{}
+	ans := map[string]bool{}
 	for w := range active_set {
-		for l := range remaining_letters(letters, w) {
-			candidate = w + string(l)
-			valid = true
-			for i, w := range SplitWords(candidate, lengths) {
-				if !NGRAMS[lengths[i]][w] {
-					// fmt.Println("invalid ngrams", w, "for word length", lengths[i])
-					valid = false
-					break
-				}
-			}
-			if valid {
-				new_active_set[candidate] = true
-			}
+		if w != word {
+			ans[w] = true
 		}
 	}
-	if len(new_active_set) == 0 {
-		return map[string]bool{}
-	} else {
-		return anagrams_with_active_set(string(letters), lengths, new_active_set)
-	}
-	panic("Should never get here")
-	return map[string]bool{}
+	return ans
 }
