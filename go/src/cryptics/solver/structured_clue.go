@@ -53,7 +53,6 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	} else {
 		clue.Ans = map[string][]string{}
 		var sub_clue *StructuredClue
-		var new_args []string
 		trans, trans_ok := TRANSFORMS[clue.Type]
 		if HEADS[clue.Type] {
 			trans = TRANSFORMS[NULL]
@@ -75,24 +74,20 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 					return true
 				}
 				new_args_set = [][]string{}
-				if clue.Type == TOP {
-					for _, s := range args_set {
-						for w := range sub_clue.Ans {
+				for _, s := range args_set {
+					for w := range sub_clue.Ans {
+						if clue.Type == TOP {
 							candidate = append(s, strings.Replace(w, "_", "", -1))
 							if utils.PartialAnswerTest(strings.Join(candidate, ""), phrasing) {
 								new_args_set = append(new_args_set, make([]string, len(candidate)))
 								copy(new_args_set[len(new_args_set)-1], candidate)
 							}
+						} else {
+							candidate = append(s, w)
+							new_args_set = append(new_args_set, make([]string, len(candidate)))
+							copy(new_args_set[len(new_args_set)-1], candidate)
 						}
-					}
-				} else {
-					for _, args := range args_set {
-						for sub_ans := range sub_clue.Ans {
-							new_args = append(args, sub_ans)
-							new_args_set = append(new_args_set, make([]string, len(new_args)))
-							copy(new_args_set[len(new_args_set)-1], new_args)
-							// new_args_set = append(new_args_set, new_args)
-						}
+
 					}
 				}
 				if len(new_args_set) > 0 {
