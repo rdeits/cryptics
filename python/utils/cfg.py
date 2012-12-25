@@ -1,4 +1,4 @@
-import nltk.grammar as cfg
+import nltk.grammar as gram
 from nltk import parse
 from nltk.tree import Tree
 from utils.indicators import INDICATORS
@@ -7,34 +7,34 @@ from utils.indicators import INDICATORS
 A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword clues.
 """
 
-top = cfg.Nonterminal('top')
-lit = cfg.Nonterminal('lit')
-d = cfg.Nonterminal('d')
-syn = cfg.Nonterminal('syn')
-first = cfg.Nonterminal('first')
-null = cfg.Nonterminal('null')
-ana = cfg.Nonterminal('ana')
-sub = cfg.Nonterminal('sub')
-ins = cfg.Nonterminal('ins')
-rev = cfg.Nonterminal('rev')
-ana_ = cfg.Nonterminal('ana_')
-sub_ = cfg.Nonterminal('sub_')
-ins_ = cfg.Nonterminal('ins_')
-rev_ = cfg.Nonterminal('rev_')
+top = gram.Nonterminal('top')
+lit = gram.Nonterminal('lit')
+d = gram.Nonterminal('d')
+syn = gram.Nonterminal('syn')
+first = gram.Nonterminal('first')
+null = gram.Nonterminal('null')
+ana = gram.Nonterminal('ana')
+sub = gram.Nonterminal('sub')
+ins = gram.Nonterminal('ins')
+rev = gram.Nonterminal('rev')
+ana_ = gram.Nonterminal('ana_')
+sub_ = gram.Nonterminal('sub_')
+ins_ = gram.Nonterminal('ins_')
+rev_ = gram.Nonterminal('rev_')
 
-clue_arg = cfg.Nonterminal('clue_arg')
+clue_arg = gram.Nonterminal('clue_arg')
 clue_members = [lit, syn, first, null, ana, sub, ins, rev]
 
-ins_arg = cfg.Nonterminal('ins_arg')
+ins_arg = gram.Nonterminal('ins_arg')
 ins_members = [lit, ana, syn, sub, first, rev]
 
-ana_arg = cfg.Nonterminal('ana_arg')
+ana_arg = gram.Nonterminal('ana_arg')
 ana_members = [lit]
 
-sub_arg = cfg.Nonterminal('sub_arg')
+sub_arg = gram.Nonterminal('sub_arg')
 sub_members = [lit, syn, rev]
 
-rev_arg = cfg.Nonterminal('rev_arg')
+rev_arg = gram.Nonterminal('rev_arg')
 rev_members = [lit, syn]
 
 known_functions = {
@@ -45,8 +45,6 @@ known_functions = {
 'large': [first, syn],
 'primarily': [sub_],
 'and': [null, lit]}
-
-
 
 
 def check_clue_totals(clue):
@@ -63,8 +61,8 @@ def check_clue_totals(clue):
 max_sub_parts = 3
 base_clue_rules = [[clue_arg] * i for i in range(max_sub_parts + 1)]
 
-base_clue_rules.extend([[null] + [first] * i for i in range(max_sub_parts + 1, 8)])
-base_clue_rules.extend([[first] * i + [null] for i in range(max_sub_parts + 1, 8)])
+base_clue_rules.extend([[sub_] + [first] * i for i in range(max_sub_parts + 1, 8)])
+base_clue_rules.extend([[first] * i + [sub_] for i in range(max_sub_parts + 1, 8)])
 clue_rules = []
 for r in base_clue_rules:
     clue_rules.append(r + [d])
@@ -84,19 +82,9 @@ rev_arg: [[i] for i in rev_members]
 }
 
 base_prods = []
-
 for n, rules in production_rules.items():
     for r in rules:
-        base_prods.append(cfg.Production(n, r))
-
-
-def clue_from_tree(tree):
-    if not isinstance(tree, Tree):
-        return tree
-    elif "_arg" in tree.node:
-        return clue_from_tree(tree[0])
-    else:
-        return tuple([tree.node] + [clue_from_tree(t) for t in tree])
+        base_prods.append(gram.Production(n, r))
 
 
 word_tags = [lit, d, syn, first, null, ana_, sub_, ins_, rev_]
@@ -111,14 +99,23 @@ def generate_grammar(phrases):
             tags = [lit, d, syn, first, null]
             for kind in INDICATORS:
                 if any(w == p or (len(w) > 5 and p.startswith(w[:-3])) for w in INDICATORS[kind]):
-                    tags.append(cfg.Nonterminal(kind))
+                    tags.append(gram.Nonterminal(kind))
                     found = True
             if not found:
                 # tags = word_tags
                 tags = [lit, d, syn, first, null, ana_, sub_, rev_]
         for t in tags:
-            prods.append(cfg.Production(t, [p]))
-    return cfg.ContextFreeGrammar(top, base_prods + prods)
+            prods.append(gram.Production(t, [p]))
+    return gram.ContextFreeGrammar(top, base_prods + prods)
+
+
+def clue_from_tree(tree):
+    if not isinstance(tree, Tree):
+        return tree
+    elif "_arg" in tree.node:
+        return clue_from_tree(tree[0])
+    else:
+        return tuple([tree.node] + [clue_from_tree(t) for t in tree])
 
 
 def generate_clues(phrases):

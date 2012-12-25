@@ -63,9 +63,7 @@ class CrypticClueSolver(object):
     def run(self):
         self.running = True
         self.clue_text = self.clue_text.encode('ascii', 'ignore')
-        # solved_parts = dict()
         all_phrasings, lengths, pattern, answer = parse_clue_text(self.clue_text)
-        # all_phrasings, answer = parse_clue_text(self.clue_text)
         self.answers_with_clues = []
 
         self.go_proc.stdin.write("# %s %s\n" % (lengths, pattern))
@@ -79,7 +77,7 @@ class CrypticClueSolver(object):
                 self.answers_with_clues.append(ann_ans)
             # if len(self.answers_with_clues) > 0 and self.answers_with_clues[0].similarity == 1:
             #     break
-        if len(self.answers_with_clues) == 0 and pattern.replace('.', '') != "" :
+        if len(self.answers_with_clues) == 0 and pattern.replace('.', '') != "":
             self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS.keys() if matches_pattern(x, pattern, lengths)]
         self.answers_with_clues.sort(reverse=True)
         return self.answers_with_clues
@@ -87,7 +85,7 @@ class CrypticClueSolver(object):
     def solve_phrasing(self, phrasing):
         """
         Solve a clue which has been broken down into phrases, like:
-        ['initially', 'babies', 'are', 'naked', 4, 'b...']
+        ['initially', 'babies', 'are', 'naked']
         """
         answers_with_clues = []
         possible_clues = list(generate_clues(phrasing))
