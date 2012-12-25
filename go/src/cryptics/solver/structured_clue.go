@@ -10,7 +10,7 @@ const (
 	SUB
 	REV
 	INS
-	CAT
+	TOP
 	ANA_
 	SUB_
 	INS_
@@ -29,7 +29,7 @@ var FUNCTIONS = map[int]clue_function{
 	SUB: utils.AllLegalSubstrings,
 	REV: utils.Reverse,
 	INS: utils.AllInsertions,
-	CAT: func(s []string, p utils.Phrasing) map[string]bool {
+	TOP: func(s []string, p utils.Phrasing) map[string]bool {
 		return map[string]bool{strings.Join(s, ""): true}
 	}}
 
@@ -75,7 +75,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 					return true
 				}
 				new_args_set = [][]string{}
-				if clue.Type == CAT {
+				if clue.Type == TOP {
 					for _, s := range args_set {
 						for w := range sub_clue.Ans {
 							candidate = append(s, strings.Replace(w, "_", "", -1))
@@ -89,7 +89,9 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 					for _, args := range args_set {
 						for sub_ans := range sub_clue.Ans {
 							new_args = append(args, sub_ans)
-							new_args_set = append(new_args_set, new_args)
+							new_args_set = append(new_args_set, make([]string, len(new_args)))
+							copy(new_args_set[len(new_args_set)-1], new_args)
+							// new_args_set = append(new_args_set, new_args)
 						}
 					}
 				}

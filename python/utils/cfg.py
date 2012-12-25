@@ -7,7 +7,7 @@ from utils.indicators import INDICATORS
 A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword clues.
 """
 
-cat = cfg.Nonterminal('cat')
+top = cfg.Nonterminal('top')
 lit = cfg.Nonterminal('lit')
 d = cfg.Nonterminal('d')
 syn = cfg.Nonterminal('syn')
@@ -75,7 +75,7 @@ ins: [[ins_arg, ins_, ins_arg], [ins_arg, ins_arg, ins_]],
 ana: [[ana_arg, ana_], [ana_, ana_arg]],
 sub: [[sub_arg, sub_], [sub_, sub_arg]],
 rev: [[rev_arg, rev_], [rev_, rev_arg]],
-cat: clue_rules,
+top: clue_rules,
 clue_arg: [[i] for i in clue_members],
 ins_arg: [[i] for i in ins_members],
 ana_arg: [[i] for i in ana_members],
@@ -118,7 +118,7 @@ def generate_grammar(phrases):
                 tags = [lit, d, syn, first, null, ana_, sub_, rev_]
         for t in tags:
             prods.append(cfg.Production(t, [p]))
-    return cfg.ContextFreeGrammar(cat, base_prods + prods)
+    return cfg.ContextFreeGrammar(top, base_prods + prods)
 
 
 def generate_clues(phrases):
