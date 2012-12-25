@@ -10,8 +10,8 @@ func Reverse(words []string, phrasing Phrasing) map[string]bool {
 		panic("Word must be [1]string: " + fmt.Sprint(words))
 	}
 	word := strings.ToLower(words[0])
-	ans := []rune(word)
 	l := len(word)
+	ans := make([]rune, l)
 	for i, c := range word {
 		ans[l-i-1] = c
 	}
@@ -106,15 +106,15 @@ func AllInsertions(words []string, phrasing Phrasing) map[string]bool {
 	if len(words) != 2 {
 		panic(fmt.Sprintf("Got wrong number of words. Expected 2, got %d", len(words)))
 	}
-	if len(words[0])+len(words[1]) > Sum(phrasing.Lengths) {
-		return map[string]bool{}
-	}
 	word1 := strings.Replace(words[0], "_", "", -1)
 	word2 := strings.Replace(words[1], "_", "", -1)
 	result := map[string]bool{}
-	if word1 == "" || word2 == "" {
-		result[word1+word2] = true
+	if word1 == "" || word2 == "" || len(word1)+len(word2) > Sum(phrasing.Lengths) {
+		return map[string]bool{}
 	}
+	// if len(words[0])+len(words[1]) > Sum(phrasing.Lengths) {
+	// 	return map[string]bool{}
+	// }
 	w0, w1 := word1, word2
 	for j := 1; j < len(w1); j++ {
 		result[w1[0:j]+w0+w1[j:]] = true
