@@ -5,6 +5,38 @@ import (
 	"strings"
 )
 
+var type_to_str = map[int]string{
+	ANA:   "ana",
+	SUB:   "sub",
+	REV:   "rev",
+	INS:   "ins",
+	CAT:   "cat",
+	ANA_:  "ana_",
+	SUB_:  "sub_",
+	INS_:  "ins_",
+	REV_:  "rev_",
+	LIT:   "lit",
+	NULL:  "null",
+	DEF:   "d",
+	FIRST: "first",
+	SYN:   "syn"}
+
+var str_to_type = map[string]int{
+	"ana":   ANA,
+	"sub":   SUB,
+	"rev":   REV,
+	"ins":   INS,
+	"cat":   CAT,
+	"ana_":  ANA_,
+	"sub_":  SUB_,
+	"ins_":  INS_,
+	"rev_":  REV_,
+	"lit":   LIT,
+	"null":  NULL,
+	"d":     DEF,
+	"first": FIRST,
+	"syn":   SYN}
+
 func ParseClue(raw_clue string) StructuredClue {
 	raw_clue = strings.Replace(raw_clue, "'", "", -1)
 	raw_clue = strings.Replace(raw_clue, " ", "", -1)
@@ -20,7 +52,7 @@ func ParseClue(raw_clue string) StructuredClue {
 			active = len(stack) - 1
 		} else if string(c) == "," {
 			if j-i > 1 {
-				stack[active].Type = strings.TrimSpace(raw_clue[i+1 : j])
+				stack[active].Type = str_to_type[strings.TrimSpace(raw_clue[i+1:j])]
 				// *stack[active] = append(*stack[active], strings.TrimSpace(raw_clue[i+1:j]))
 			}
 			i = j

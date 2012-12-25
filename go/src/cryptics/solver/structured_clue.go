@@ -5,14 +5,35 @@ import (
 	"strings"
 )
 
+const (
+	ANA = iota
+	SUB
+	REV
+	INS
+	CAT
+	ANA_
+	SUB_
+	INS_
+	REV_
+	NULL
+	LIT
+	DEF
+	FIRST
+	SYN
+)
+
 type clue_function func([]string, utils.Phrasing) map[string]bool
 
-var FUNCTIONS map[string]clue_function = map[string]clue_function{"ana": utils.Anagrams, "sub": utils.AllLegalSubstrings, "rev": utils.Reverse, "ins": utils.AllInsertions}
+var FUNCTIONS = map[int]clue_function{
+	ANA: utils.Anagrams,
+	SUB: utils.AllLegalSubstrings,
+	REV: utils.Reverse,
+	INS: utils.AllInsertions}
 
-var HEADS = map[string]bool{"ana_": true, "sub_": true, "ins_": true, "rev_": true}
+var HEADS = map[int]bool{ANA_: true, SUB_: true, INS_: true, REV_: true, DEF: true}
 
 type StructuredClue struct {
-	Type string
+	Type int
 	Head string
 	Args []*StructuredClue
 	Ans  map[string][]string // each answer to this clue is a key in the map and each value is the slice of sub-answers to each clue in Args that gave that particular answer
@@ -25,15 +46,15 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	<-map_c
 	ans, ok := solved_parts[clue.HashString()]
 	map_c <- true
-	clue.Ans = map[string][]string{}
-	var sub_clue *StructuredClue
-	var new_args []string
 	if ok {
 		clue.Ans = ans
 	} else {
+		clue.Ans = map[string][]string{}
+		var sub_clue *StructuredClue
+		var new_args []string
 		trans, trans_ok := TRANSFORMS[clue.Type]
 		if HEADS[clue.Type] {
-			trans = TRANSFORMS["null"]
+			trans = TRANSFORMS[NULL]
 			trans_ok = true
 		}
 		clue_func, func_ok := FUNCTIONS[clue.Type]
@@ -65,7 +86,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 					clue.Ans[sub_ans] = args
 				}
 			}
-		} else if clue.Type == "cat" {
+		} else if clue.Type == CAT {
 			active_set := [][]string{{}}
 			new_active_set := [][]string{}
 			var candidate []string
@@ -108,7 +129,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	map_c <- true
 	_, blank_ans := clue.Ans[""]
 	// fmt.Println("returning", clue.Ans, "for clue", clue.HashString())
-	if (len(clue.Ans) == 0 || (len(clue.Ans) == 1 && blank_ans)) && (clue.Type != "null" && clue.Type != "d" && !HEADS[clue.Type]) {
+	if (len(clue.Ans) == 0 || (len(clue.Ans) == 1 && blank_ans)) && (clue.Type != NULL && !HEADS[clue.Type]) {
 		// fmt.Println("err true")
 		return true
 	} else {
@@ -119,9 +140,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 }
 
 func (c *StructuredClue) HashString() string {
-	result := "("
-	result += c.Type + ", "
-	result += c.Head + ", "
+	result := "(" + type_to_str[c.Type] + ", " + c.Head + ", "
 	for _, s := range c.Args {
 		result += (s).HashString() + ", "
 	}
@@ -141,21 +160,12 @@ func (c *StructuredClue) FormatAnswers() []string {
 
 func (c *StructuredClue) print_with_answer(answer string) string {
 	var result string
-	result = "('" + c.Type + "', "
+	result = "('" + type_to_str[c.Type] + "', "
 	if c.Head != "" {
 		result += "'" + c.Head + "', "
 	}
 	parents := c.Ans[answer]
 	if len(parents) > 0 {
-		// if len(parents) != len(c.Args) {
-		// 	fmt.Println("parents and args don't match")
-		// 	fmt.Println("parents", parents)
-		// 	fmt.Println("args", c.Args)
-		// 	fmt.Println("answer", answer)
-		// 	fmt.Println("answers", c.Ans)
-		// 	fmt.Println("clue", c.HashString())
-		// }
-
 		for i, sub_clue := range c.Args {
 			result += sub_clue.print_with_answer(parents[i]) + ", "
 		}

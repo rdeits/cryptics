@@ -4,20 +4,17 @@ import "cryptics/utils"
 
 type transform func(string, int) map[string][]string
 
-var TRANSFORMS map[string]transform = map[string]transform{
-	"lit": func(x string, l int) map[string][]string {
+var TRANSFORMS = map[int]transform{
+	LIT: func(x string, l int) map[string][]string {
 		return map[string][]string{x: []string{}}
 	},
-	"null": func(x string, l int) map[string][]string {
+	NULL: func(x string, l int) map[string][]string {
 		return map[string][]string{"": []string{}}
 	},
-	"d": func(x string, l int) map[string][]string {
-		return map[string][]string{"": []string{}}
-	},
-	"first": func(x string, l int) map[string][]string {
+	FIRST: func(x string, l int) map[string][]string {
 		return map[string][]string{string(x[0]): []string{}}
 	},
-	"syn": func(x string, l int) map[string][]string {
+	SYN: func(x string, l int) map[string][]string {
 		if syns, ok := (utils.SYNONYMS)[x]; ok {
 			if l == 0 {
 				panic("Got zero length")
