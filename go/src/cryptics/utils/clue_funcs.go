@@ -18,10 +18,11 @@ func Reverse(words []string, phrasing Phrasing) map[string]bool {
 	return map[string]bool{string(ans): true}
 }
 
-// filter out results with more than one bigram violation. We allow strings with a bigram violation since they could have letters inserted into them later
+// filter out results with more than one bigram violation. We might allow strings with a bigram violation since they could have letters inserted into them later
 func bigram_filter(answers map[string]bool, lengths []int, threshold int) map[string]bool {
 	var violations int
 	var pass bool
+	threshold += len(lengths) - 1 // allow violations across word boundaries
 
 	for ans := range answers {
 		violations = 0
@@ -89,7 +90,7 @@ func AllLegalSubstrings(words []string, phrasing Phrasing) map[string]bool {
 		subs[word[:len(word)-1]] = true  // all but last
 		subs[word[1:len(word)-1]] = true // all but edges
 	}
-	return subs
+	return bigram_filter(subs, phrasing.Lengths, 1)
 }
 
 func min(x ...int) int {
