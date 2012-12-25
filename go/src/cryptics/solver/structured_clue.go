@@ -28,7 +28,10 @@ var FUNCTIONS = map[int]clue_function{
 	ANA: utils.Anagrams,
 	SUB: utils.AllLegalSubstrings,
 	REV: utils.Reverse,
-	INS: utils.AllInsertions}
+	INS: utils.AllInsertions,
+	CAT: func(s []string, p utils.Phrasing) map[string]bool {
+		return map[string]bool{strings.Join(s, ""): true}
+	}}
 
 var HEADS = map[int]bool{ANA_: true, SUB_: true, INS_: true, REV_: true, DEF: true}
 
@@ -41,7 +44,6 @@ type StructuredClue struct {
 
 func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[string]map[string][]string, map_c chan bool) (err bool) {
 	length := utils.Sum((*phrasing).Lengths)
-	var sub_answers map[string][]string
 	// fmt.Println("Trying to solve:", clue.HashString())
 	<-map_c
 	ans, ok := solved_parts[clue.HashString()]
@@ -63,7 +65,8 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 		} else if func_ok {
 			args_set := [][]string{{}}
 			new_args_set := [][]string{}
-			for _, sub_clue := range clue.Args {
+			var candidate []string
+			for _, sub_clue = range clue.Args {
 				err = sub_clue.Solve(phrasing, solved_parts, map_c)
 				if err {
 					<-map_c
@@ -72,53 +75,38 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 					return true
 				}
 				new_args_set = [][]string{}
-				for _, args := range args_set {
-					sub_answers = sub_clue.Ans
-					for sub_ans := range sub_answers {
-						new_args = append(args, sub_ans)
-						new_args_set = append(new_args_set, new_args)
+				if clue.Type == CAT {
+					for _, s := range args_set {
+						for w := range sub_clue.Ans {
+							candidate = append(s, strings.Replace(w, "_", "", -1))
+							if utils.PartialAnswerTest(strings.Join(candidate, ""), phrasing) {
+								new_args_set = append(new_args_set, make([]string, len(candidate)))
+								copy(new_args_set[len(new_args_set)-1], candidate)
+							}
+						}
 					}
-				}
-				args_set = new_args_set
-			}
-			for _, args := range args_set {
-				for sub_ans := range clue_func(filter_empty_strings(args), *phrasing) {
-					clue.Ans[sub_ans] = args
-				}
-			}
-		} else if clue.Type == CAT {
-			active_set := [][]string{{}}
-			new_active_set := [][]string{}
-			var candidate []string
-			for _, sub_clue = range clue.Args {
-				new_active_set = [][]string{}
-				err = sub_clue.Solve(phrasing, solved_parts, map_c)
-				if err {
-					<-map_c
-					(solved_parts)[clue.HashString()] = clue.Ans
-					map_c <- true
-					return true
-				}
-				for _, s := range active_set {
-					for w := range sub_clue.Ans {
-						candidate = append(s, strings.Replace(w, "_", "", -1))
-						if utils.PartialAnswerTest(strings.Join(candidate, ""), phrasing) {
-							new_active_set = append(new_active_set, make([]string, len(candidate)))
-							copy(new_active_set[len(new_active_set)-1], candidate)
+				} else {
+					for _, args := range args_set {
+						for sub_ans := range sub_clue.Ans {
+							new_args = append(args, sub_ans)
+							new_args_set = append(new_args_set, new_args)
 						}
 					}
 				}
-				if len(new_active_set) > 0 {
-					active_set = new_active_set
+				if len(new_args_set) > 0 {
+					args_set = new_args_set
 				} else {
 					<-map_c
 					(solved_parts)[clue.HashString()] = clue.Ans
 					map_c <- true
 					return true
 				}
+
 			}
-			for _, s := range active_set {
-				clue.Ans[strings.Join(s, "")] = s
+			for _, args := range args_set {
+				for sub_ans := range clue_func(filter_empty_strings(args), *phrasing) {
+					clue.Ans[sub_ans] = args
+				}
 			}
 		} else {
 			panic("Unrecognized clue type")
