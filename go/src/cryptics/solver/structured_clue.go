@@ -74,20 +74,19 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 					return true
 				}
 				new_args_set = [][]string{}
-				for _, s := range args_set {
-					for w := range sub_clue.Ans {
+				for _, args := range args_set {
+					for ans := range sub_clue.Ans {
 						if clue.Type == TOP {
-							candidate = append(s, strings.Replace(w, "_", "", -1))
+							candidate = append(args, strings.Replace(ans, "_", "", -1))
 							if utils.PartialAnswerTest(strings.Join(candidate, ""), phrasing) {
 								new_args_set = append(new_args_set, make([]string, len(candidate)))
 								copy(new_args_set[len(new_args_set)-1], candidate)
 							}
 						} else {
-							candidate = append(s, w)
+							candidate = append(args, ans)
 							new_args_set = append(new_args_set, make([]string, len(candidate)))
 							copy(new_args_set[len(new_args_set)-1], candidate)
 						}
-
 					}
 				}
 				if len(new_args_set) > 0 {
@@ -108,26 +107,27 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 		} else {
 			panic("Unrecognized clue type")
 		}
+		<-map_c
+		solved_parts[clue.HashString()] = clue.Ans
+		map_c <- true
 	}
-	<-map_c
-	solved_parts[clue.HashString()] = clue.Ans
-	map_c <- true
 	_, blank_ans := clue.Ans[""]
 	// fmt.Println("returning", clue.Ans, "for clue", clue.HashString())
 	if (len(clue.Ans) == 0 || (len(clue.Ans) == 1 && blank_ans)) && (clue.Type != NULL && !HEADS[clue.Type]) {
 		// fmt.Println("err true")
 		return true
-	} else {
-		// fmt.Println("err false")
-		return false
 	}
 	return false
 }
 
+var skip_types = map[int]bool{ANA_: true, SUB_: true, REV_: true, INS_: true, NULL: true, DEF: true}
+
 func (c *StructuredClue) HashString() string {
 	result := "(" + type_to_str[c.Type] + ", " + c.Head + ", "
-	for _, s := range c.Args {
-		result += (s).HashString() + ", "
+	for _, sub_clue := range c.Args {
+		if !skip_types[sub_clue.Type] {
+			result += sub_clue.HashString() + ", "
+		}
 	}
 	result += ")"
 	return result
