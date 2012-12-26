@@ -8,15 +8,15 @@ import threading
 class index:
     def GET(self):
         answers = solver.collect_answers()
-        return render.index(answers, solver.clue_text)
+        return render.index(answers, solver.clue_text, "")
 
     def POST(self):
         if not form.validates():
-            return render.index(["Sorry, something went wrong with that clue"], "")
+            return render.index([], "", "Sorry, something went wrong with that clue")
         else:
             phrases, lengths, pattern, answer = split_clue_text(form.d.Clue)
             if len(phrases) > 7:
-                return render.index(["Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them"], form)
+                return render.index([], form.d.Clue, "Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them")
             solver.setup(form.d.Clue)
             solver_thread = threading.Thread(target=solver.run)
             solver_thread.start()

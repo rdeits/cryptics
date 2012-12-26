@@ -1,4 +1,4 @@
-$def with (answers, clue)
+$def with (answers, clue, err_msg)
 
 <link href='/static/crypticweb.css' rel='stylesheet' type='text/css'>
 
@@ -11,22 +11,25 @@ $def with (answers, clue)
 
 <div id="solution">
 	$if answers is not None:
-		<div id="answer_nav">
-		<div id="similarities">
-		<b>Score</b><br>
-		$for (sim, ans) in answers.sorted_answers():
-			$"{:.2g}".format(sim) <br>
-		</div>
-		<div id="answers">
-		<b>Answer</b><br>
-		$for (sim, ans) in answers.sorted_answers():
-			<a href="#ans_header_$ans">$ans</a> <br>
-		</div>
-		</div>
-		<div id="derivations">
-			$for (sim, ans) in answers.sorted_answers()[:50]:
-				<span class="answer_header" id="ans_header_$ans">$ans: $sim </span> <br>
-				$for ann in answers.answer_derivations[ans][:5]:
-					$ann <br>
-		</div>
+		$if err_msg:
+			$err_msg
+		$else:
+			<div id="answer_nav">
+			<div id="similarities">
+			<b>Score</b><br>
+			$for (sim, ans) in answers.sorted_answers():
+				$"{:.2g}".format(sim) <br>
+			</div>
+			<div id="answers">
+			<b>Answer</b><br>
+			$for (sim, ans) in answers.sorted_answers():
+				<a href="#ans_header_$ans">$ans</a> <br>
+			</div>
+			</div>
+			<div id="derivations">
+				$for (sim, ans) in answers.sorted_answers()[:50]:
+					<span class="answer_header" id="ans_header_$ans">$ans: $sim </span> <br>
+					$for ann in answers.answer_derivations[ans][:5]:
+						$ann <br>
+			</div>
 </div>
