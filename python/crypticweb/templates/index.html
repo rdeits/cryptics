@@ -1,19 +1,32 @@
-$def with (answers, form)
+$def with (answers, clue)
 
-<div id='clue'>
-	<form name='main' method='post'>
-		$:form.render()
-		<input type='submit' value='Solve'/>
-	</form>
-</div>
+<link href='/static/crypticweb.css' rel='stylesheet' type='text/css'>
 
-<div id='halt'>
-	<form action="/halt" method="post">
-		<input type="submit" value ="Halt"/>
-	</form>
-</div>
+<form name="main" method="post" id="clue_form">
+	<label for="Clue">Clue</label>
+	<input name="Clue" type="text" id="Clue" placeholder="Spin broken shingle (7) ..g...." value="$clue" size="100"/>
+	<input type="submit" value="Solve"/>
+	<input type="submit" formaction="/halt" value="Halt"/>
+</form>
 
-<div id='answers'>
-	$for a in answers:
-		$a <br>
+<div id="solution">
+	$if answers is not None:
+		<div id="answer_nav">
+		<div id="similarities">
+		<b>Score</b><br>
+		$for (sim, ans) in answers.sorted_answers():
+			$"{:.2g}".format(sim) <br>
+		</div>
+		<div id="answers">
+		<b>Answer</b><br>
+		$for (sim, ans) in answers.sorted_answers():
+			<a href="#ans_header_$ans">$ans</a> <br>
+		</div>
+		</div>
+		<div id="derivations">
+			$for (sim, ans) in answers.sorted_answers()[:50]:
+				<span class="answer_header" id="ans_header_$ans">$ans: $sim </span> <br>
+				$for ann in answers.answer_derivations[ans][:5]:
+					$ann <br>
+		</div>
 </div>

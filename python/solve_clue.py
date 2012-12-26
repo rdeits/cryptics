@@ -29,6 +29,19 @@ class PatternAnswer(AnnotatedAnswer):
         self.clue = "???"
 
 
+class ClueSolutions:
+    def __init__(self, anns):
+        self.answer_scores = dict()
+        self.answer_derivations = dict()
+        for ann in anns:
+            self.answer_derivations.setdefault(ann.answer, []).append(ann)
+        for k, v in self.answer_derivations.items():
+            self.answer_scores[k] = max(a.similarity for a in v)
+
+    def sorted_answers(self):
+        return sorted([(v, k) for k, v in self.answer_scores.items()], reverse=True)
+
+
 class CrypticClueSolver(object):
     def __init__(self):
         self.running = False
@@ -106,6 +119,10 @@ class CrypticClueSolver(object):
                 answers_with_clues.append(AnnotatedAnswer(answer, clue))
         return sorted(answers_with_clues, reverse=True)
 
+    def collect_answers(self):
+        if self.answers_with_clues is not None:
+            return ClueSolutions(self.answers_with_clues)
+
 
 def matches_pattern(word, pattern, lengths):
     return (tuple(len(x) for x in word.split('_')) == lengths) and re.match("^" + pattern + "$", word)
@@ -133,3 +150,9 @@ def split_clue_text(clue_text):
 def parse_clue_text(clue_text):
     phrases, lengths, pattern, answer = split_clue_text(clue_text)
     return phrasings(phrases), lengths, pattern, answer
+
+if __name__ == '__main__':
+    clue = "initially babies are naked (4)"
+    with CrypticClueSolver() as solver:
+        solver.setup(clue)
+        print solver.run()[0]
