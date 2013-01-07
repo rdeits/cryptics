@@ -2,6 +2,7 @@ package solver
 
 import (
 	"cryptics/utils"
+	"fmt"
 	"strings"
 )
 
@@ -120,14 +121,25 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 	return false
 }
 
-var skip_types = map[int]bool{ANA_: true, SUB_: true, REV_: true, INS_: true, NULL: true, DEF: true}
+var skip_types = map[int]bool{ANA_: true, SUB_: true, REV_: true, INS_: true}
 
 func (c *StructuredClue) HashString() string {
 	result := "(" + type_to_str[c.Type] + ", " + c.Head + ", "
 	for _, sub_clue := range c.Args {
 		if !skip_types[sub_clue.Type] {
 			result += sub_clue.HashString() + ", "
+		} else {
+			result += " , "
 		}
+	}
+	result += ")"
+	return result
+}
+
+func (c *StructuredClue) String() string {
+	result := "(" + type_to_str[c.Type] + ", " + c.Head + ", "
+	for _, sub_clue := range c.Args {
+		result += sub_clue.HashString() + ", "
 	}
 	result += ")"
 	return result
@@ -150,6 +162,9 @@ func (c *StructuredClue) print_with_answer(answer string) string {
 		result += "'" + c.Head + "', "
 	}
 	parents := c.Ans[answer]
+	if len(parents) > 0 && len(parents) != len(c.Args) {
+		panic(fmt.Sprint("Ans map: ", c.Ans, "\nanswer: ", answer, "\nparents: ", parents, "\nclue : ", c.String(), "\nlen(parents)=", len(parents), "\nlen(c.Args)=", len(c.Args)))
+	}
 	if len(parents) > 0 {
 		for i, sub_clue := range c.Args {
 			result += sub_clue.print_with_answer(parents[i]) + ", "
