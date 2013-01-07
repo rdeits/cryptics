@@ -59,7 +59,6 @@ func main() {
 		} else {
 			num_clues += 1
 			go solver.SolveFactoredClue(clue, &phrasing, solved_parts, ans_c, map_c)
-			// fmt.Println(solver.FormatAnswers(solver.SolveFactoredClue(solver.ParseClue(clue), &phrasing, solved_parts)))
 		}
 	}
 }
