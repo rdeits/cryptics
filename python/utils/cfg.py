@@ -44,7 +44,9 @@ known_functions = {
 'for': [null, syn],
 'large': [first, syn],
 'primarily': [sub_],
-'and': [null, lit]}
+'and': [null, lit],
+'of': [null],
+'with': [null, ins_]}
 
 
 def check_clue_totals(clue):
@@ -96,9 +98,9 @@ def generate_grammar(phrases):
             tags = known_functions[p]
         else:
             found = False
-            tags = [lit, d, syn, first, null]
+            tags = [lit, d, syn, first]
             for kind in INDICATORS:
-                if any(w == p or (len(w) > 5 and p.startswith(w[:-3])) for w in INDICATORS[kind]):
+                if any(w == p or (len(w) > 5  and abs(len(w) - len(p)) <= 3 and p.startswith(w[:-3])) for w in INDICATORS[kind]):
                     tags.append(gram.Nonterminal(kind))
                     found = True
             if not found:
