@@ -67,10 +67,12 @@ func AllLegalSubstrings(words []string, phrasing Phrasing) map[string]bool {
 	if strings.Contains(word, "_") {
 		word = strings.Replace(word, "_", "", -1)
 	}
-	for i := 0; i < len(word)-length+1; i++ {
-		s := word[i : i+length]
-		if _, ok := (SYNONYMS)[s]; ok {
-			subs[s] = true
+	if len(word) > length {
+		for i := 0; i < len(word)-length+1; i++ {
+			s := word[i : i+length]
+			if _, ok := (SYNONYMS)[s]; ok {
+				subs[s] = true
+			}
 		}
 	}
 	for l := 1; l <= min(len(word)-1, length, 3); l++ {
