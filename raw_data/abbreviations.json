@@ -904,16 +904,56 @@
   "gre"
  ], 
  "greek_character": [
-  "pi", 
-  "nu", 
-  "mu", 
-  "xi"
+  "alpha",
+  "beta",
+  "gamma",
+  "delta",
+  "epsilon",
+  "zeta",
+  "eta",
+  "theta",
+  "iota",
+  "kappa",
+  "lambda",
+  "mu",
+  "nu",
+  "xi",
+  "omicron",
+  "pi",
+  "rho",
+  "sigma",
+  "tau",
+  "upsilon",
+  "phi",
+  "chi",
+  "psi",
+  "omega"
  ], 
  "greek_letter": [
-  "pi", 
-  "nu", 
-  "mu", 
-  "xi"
+  "alpha",
+  "beta",
+  "gamma",
+  "delta",
+  "epsilon",
+  "zeta",
+  "eta",
+  "theta",
+  "iota",
+  "kappa",
+  "lambda",
+  "mu",
+  "nu",
+  "xi",
+  "omicron",
+  "pi",
+  "rho",
+  "sigma",
+  "tau",
+  "upsilon",
+  "phi",
+  "chi",
+  "psi",
+  "omega"
  ], 
  "group": [
   "gp"
@@ -1701,7 +1741,7 @@
   "s"
  ], 
  "policeman": [
-  "pc"
+  "pc",
   "di", 
   "met", 
   "cid"

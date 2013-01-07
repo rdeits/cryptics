@@ -19,6 +19,7 @@ Bill for $1,000 charge (7) | PROGRAM
 Gold bar I never initially received (5) | INGOT
 Heartless leader's cook (4) | CHEF
 Truly team up again? (6) | REALLY
+Norm cut vegetable (7) | PARSNIP
 
 //Incorrect CFG parsing
 
@@ -31,6 +32,7 @@ Seedy bar's sharp decline (4) | DIVE
 Underwriter primarily sent lire abroad, not laundered (9) | UNSTERILE
 
 //Unknown
+St. Louis primarily consuming unrefined pastry (7)
 
 // Missing idioms
 Each retiring bachelor's promise finally cast in stone (7) | PERIDOT
@@ -52,6 +54,7 @@ Cost limits maintaining a nude nightclub (7) | CABARET
 “Eternal Flame” is one group in trouble? (5,5) | PILOTLIGHT
 Line around a shopping center is constricting (9) | STRAPPING
 Race cars Dr. Silver steers without trace of effort (9)
+Giggles, time after time, captivated by stories... (7) | TITTERS
 
 
 //Too long
