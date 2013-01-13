@@ -21,9 +21,9 @@ var TRANSFORMS = map[int]transform{
 			}
 			result := map[string][]string{}
 			for _, s := range syns {
-				// if len(s) <= l {
-				result[s] = []string{}
-				// }
+				if len(s) <= l+2 { // Don't allow ridiculously long synonyms
+					result[s] = []string{}
+				}
 			}
 			return result
 		}
