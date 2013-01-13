@@ -2083,6 +2083,8 @@
  "square": [
   "s"
  ], 
+ "stone": ["st"],
+ "st": ["stone"],
  "state": [
   "al", 
   "ak", 
