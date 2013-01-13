@@ -68,7 +68,7 @@ func AllLegalSubstrings(words []string, phrasing Phrasing) map[string]bool {
 		word = strings.Replace(word, "_", "", -1)
 	}
 	if len(word) > length {
-		for i := 0; i < len(word)-length+1; i++ {
+		for i := 1; i < len(word)-length; i++ {
 			s := word[i : i+length]
 			if _, ok := (SYNONYMS)[s]; ok {
 				subs[s] = true
