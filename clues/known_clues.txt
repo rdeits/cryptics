@@ -1,3 +1,5 @@
+Unsuitable paint smeared (5) | INAPT
+Stirs, spilling soda (4) a... | ADOS 
 Initial meetings disappoint Rosemary internally (6) | INTROS
 You finally beat Iowa; perfect world (6) | UTOPIA
 Couch is unfinished until now (4) | SOFA
@@ -6,12 +8,10 @@ They  primarily  play Diplomacy (4) | TACT
 TV genre host walks out (4,5) | TALK_SHOWS
 face_it_nurse is_holding back release (5) | UNTIE
 Position Ms Derek for bogus drug (7) p...... | PLACEBO
-Unsuitable paint smeared (5) | INAPT
 Male done mixing drink (8) | LEMONADE
 Carrier's gotta be upset (4,3) | TOTE_BAG
 Excitedly print Camus document (10) | MANUSCRIPT
 M's Rob Titon pitching slider? (10) | TROMBONIST
-Stirs, spilling soda (4) a... | ADOS 
 Poison is primarily very bad omen (5) | VENOM
 surprisingly rank_height_as important (12) | EARTHSHAKING
 be a fool and signal_fire (6) | BEACON
@@ -48,7 +48,7 @@ Bottomless sea, stormy sea - waters' surface rises_and_falls (7) s.es... | SEESA
 Bring_up sentry as protection_for_tailender (9) r........ | REARGUARD
 Tenor and alto upset count (5) t.... | TOTAL
 Dotty, Sue,_Pearl, Joy (8) .l...... | PLEASURE
-Fluttering heart and thundering head is danger (6) t....t | THREAT
+Fluttering heart and thundering head is danger (6) | THREAT
 Setting for a_cello composition (6) lo.... | LOCALE
 St._Michael transforms metal_transformer (9) a........ | ALCHEMIST
 Neato two armbones (5) r.... | RADII

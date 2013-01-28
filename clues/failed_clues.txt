@@ -20,6 +20,13 @@ Gold bar I never initially received (5) | INGOT
 Heartless leader's cook (4) | CHEF
 Truly team up again? (6) | REALLY
 Norm cut vegetable (7) | PARSNIP
+Getting away from excellent fighter-plane assessment (10) | EMIGRATING
+Big cats (lions) surrounding companion (8) | LEOPARDS
+Man of the cloth's average child (6) | PARSON
+Clumsy jump in Kentucky (6) | KLUTZY
+Indian dish coats lip with awful reek (8) | KEDGEREE
+Aerial hunters complain about hills (7) | RAPTORS
+
 
 //Incorrect CFG parsing
 
@@ -33,14 +40,22 @@ Underwriter primarily sent lire abroad, not laundered (9) | UNSTERILE
 
 //Unknown
 St. Louis primarily consuming unrefined pastry (7)
+Starts to offer description of rotten smell (4) | ODOR
+One sister starting to date soldier; it's overwhelming (8) | INUNDANT
 
 // Missing idioms
+Throw out second-rate prevention measure? (6) | BOUNCE
+Some chickens' stripes (6) | LAYERS
+From time to time, picadors tumbled (8) | SPORADIC
+I'll act very animatedly on the up-and-up? (10) | VERTICALLY
 Each retiring bachelor's promise finally cast in stone (7) | PERIDOT
 Keeping a seat warm for cross monarch? (8) | SPANKING
 
 //Bad synonyms
 
 //No homophones
+Charles talked about pictures of sea creatures (6,2,5) | PRINCEOFWHALES
+Discussed proper ceremony (4) | RITE
 Traveler's stray mistake heard (8) | WAYFARER
 Sense of location, we hear (5) | SIGHT
 
@@ -48,6 +63,7 @@ Sense of location, we hear (5) | SIGHT
 Healthy, competent boy nearly died (4-6) | ABLE-BODIED
 
 //Unmodeled structure
+Unruly before entering bunk at sea (10) | BEWILDERED
 Home Office believes attractive couples make noise (8) | HOOFBEAT
 Cyrano's extraordinary feature! (4) | NOSE
 Cost limits maintaining a nude nightclub (7) | CABARET
@@ -58,6 +74,11 @@ Giggles, time after time, captivated by stories... (7) | TITTERS
 
 
 //Too long
+Wearing a clingy dress for passion in building out back (8) | SHEATHED
+Go to dinner, with each one giving tips (3,3) | EATOUT
+Disreputable woman starting to snarl the last mentioned name (8) | SLATTERN
+Cook ran; ragout spilled; one might jump to conclusions here? (8,5)
+Nonspecific ailment; nurse's final quote: "It could give you gas"? (8) PIPELINE
 Adorned dash, running inside white stripe, starting to dim (10) | EMBLAZONED
 Bar shows low returns after first of the month (7) | TAPROOM
 Frazzled wife in hair cream in finance-related song (2,1,4,1,4,3)
