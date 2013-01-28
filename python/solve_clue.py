@@ -103,42 +103,20 @@ class CrypticClueSolver(object):
         answers_with_clues = []
         possible_clues = list(generate_clues(phrasing))
 
-        parallel = True
-
-        if parallel:
-            for i, clue in enumerate(possible_clues):
-                self.go_proc.stdin.write(str(clue) + '\n')
-            self.go_proc.stdin.write('.\n')
-            for i, x in enumerate(possible_clues):
+        for i, clue in enumerate(possible_clues):
+            self.go_proc.stdin.write(str(clue) + '\n')
+        self.go_proc.stdin.write('.\n')
+        for i, x in enumerate(possible_clues):
+            result = self.go_proc.stdout.readline()
+            while result.strip() != ".":
+                clue = eval(result)
                 result = self.go_proc.stdout.readline()
-                while result.strip() != ".":
-                    clue = eval(result)
-                    result = self.go_proc.stdout.readline()
-                    if clue == []:
-                        continue
-                    answer = clue[-1].lower()
-                    if answer in phrasing or any(x.startswith(answer) for x in phrasing):
-                        continue
-                    answers_with_clues.append(AnnotatedAnswer(answer, clue))
-        else:
-            for i, clue in enumerate(possible_clues):
-                # print clue
-                self.go_proc.stdin.write(str(clue) + '\n')
-                self.go_proc.stdin.write('.\n')
-                result = self.go_proc.stdout.readline()
-                while result.strip() != ".":
-                    if result[0] == "#":
-                        print result
-                        result = self.go_proc.stdout.readline()
-                        continue
-                    clue = eval(result)
-                    result = self.go_proc.stdout.readline()
-                    if clue == []:
-                        continue
-                    answer = clue[-1].lower()
-                    if answer in phrasing or any(x.startswith(answer) for x in phrasing):
-                        continue
-                    answers_with_clues.append(AnnotatedAnswer(answer, clue))
+                if clue == []:
+                    continue
+                answer = clue[-1].lower()
+                if answer in phrasing or any(x.startswith(answer) for x in phrasing):
+                    continue
+                answers_with_clues.append(AnnotatedAnswer(answer, clue))
         return sorted(answers_with_clues, reverse=True)
 
     def collect_answers(self):
@@ -154,7 +132,7 @@ def split_clue_text(clue_text):
     if '|' not in clue_text:
         clue_text += ' |'
     clue_text = clue_text.lower()
-    clue, rest = clue_text.split('(')
+    clue, paren, rest = clue_text.rpartition('(')
     lengths, rest = rest.split(')')
     lengths = lengths.replace('-', ',')
     lengths = tuple(int(x) for x in lengths.split(','))
