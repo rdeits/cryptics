@@ -18,9 +18,10 @@ class index:
             if len(phrases) > 7:
                 return render.index([], form.d.Clue, "Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them")
             solver.setup(form.d.Clue)
-            solver_thread = threading.Thread(target=solver.run)
-            solver_thread.start()
-            solver_thread.join()
+            solver.run()
+            # solver_thread = threading.Thread(target=solver.run)
+            # solver_thread.start()
+            # solver_thread.join()
             raise web.seeother('/')
 
 
