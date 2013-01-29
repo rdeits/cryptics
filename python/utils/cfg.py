@@ -52,7 +52,7 @@ known_functions = {
 def check_clue_totals(clue):
     if clue.count(ana) > 1:
         return False
-    if clue.count(null) > 2:
+    if clue.count(null) > 1:
         return False
     if all(c == null for c in clue):
         return False
@@ -89,8 +89,6 @@ for n, rules in production_rules.items():
         base_prods.append(gram.Production(n, r))
 
 
-word_tags = [lit, d, syn, first, null, ana_, sub_, ins_, rev_]
-
 def generate_grammar(phrases):
     prods = []
     for p in phrases:
@@ -100,12 +98,12 @@ def generate_grammar(phrases):
             found = False
             tags = [lit, d, syn, first]
             for kind in INDICATORS:
-                if any(w == p or (len(w) > 5  and abs(len(w) - len(p)) <= 3 and p.startswith(w[:-3])) for w in INDICATORS[kind]):
+                if any(w == p or (len(w) > 5 and abs(len(w) - len(p)) <= 3 and p.startswith(w[:-3])) for w in INDICATORS[kind]):
                     tags.append(gram.Nonterminal(kind))
                     found = True
             if not found:
                 # tags = word_tags
-                tags = [lit, d, syn, first, null, ana_, sub_, rev_]
+                tags = [lit, d, syn, first, ana_, sub_, rev_]
         for t in tags:
             prods.append(gram.Production(t, [p]))
     return gram.ContextFreeGrammar(top, base_prods + prods)
