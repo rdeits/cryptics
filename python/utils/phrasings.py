@@ -3,7 +3,8 @@ def phrasings(remaining):
         return [remaining]
     else:
         new_active_set = []
-        for i in range(len(remaining)):
+        # for i in range(len(remaining)):
+        for i in range(min(len(remaining), 3)):
             new_phrase = '_'.join(remaining[:i + 1])
             new_remaining = remaining[i + 1:]
             for new_s in phrasings(new_remaining):
