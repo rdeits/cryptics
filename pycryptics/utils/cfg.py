@@ -52,8 +52,6 @@ known_functions = {
 def check_clue_totals(clue):
     if clue.count(ana) > 1:
         return False
-    if clue.count(null) > 1:
-        return False
     if all(c == null for c in clue):
         return False
     if clue.count('ins') > 1:
