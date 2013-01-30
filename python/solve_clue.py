@@ -105,8 +105,6 @@ class CrypticClueSolver(object):
 
         for i, clue in enumerate(possible_clues):
             self.go_proc.stdin.write(str(clue) + '\n')
-        self.go_proc.stdin.write('.\n')
-        for i, x in enumerate(possible_clues):
             result = self.go_proc.stdout.readline()
             while result.strip() != ".":
                 clue = eval(result)
