@@ -27,7 +27,7 @@ $def with (answers, clue, err_msg)
 			</div>
 			</div>
 			<div id="derivations">
-				$for (sim, ans) in answers.sorted_answers()[:50]:
+				$for (sim, ans) in answers.sorted_answers()[:200]:
 					<span class="answer_header" id="ans_header_$ans">$ans: $sim </span> <br>
 					$for ann in answers.answer_derivations[ans][:5]:
 						$ann <br>
