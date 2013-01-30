@@ -60,12 +60,11 @@ class CrypticClueSolver(object):
         self.go_proc = subprocess.Popen(['cryptics'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
     def stop_go_server(self):
-        self.go_proc.stdin.write('..\n')
-        self.go_proc.wait()
-
-    def reset(self):
-        self.stop_go_server()
-        self.start_go_server()
+        try:
+            self.go_proc.stdin.write('..\n')
+            self.go_proc.wait()
+        except IOError:
+            self.go_proc.kill()
 
     def stop(self):
         self.running = False
@@ -83,7 +82,6 @@ class CrypticClueSolver(object):
         print self.go_proc.stdout.readline()
         for p in all_phrasings:
             if not self.running:
-                self.reset()
                 break
             print p
             for ann_ans in self.solve_phrasing(p):

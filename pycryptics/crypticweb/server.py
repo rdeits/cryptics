@@ -2,7 +2,7 @@ import web
 from web import form
 from solve_clue import CrypticClueSolver, split_clue_text
 # from fake_solve_clue import CrypticClueSolver, split_clue_text
-import threading
+# import threading
 
 
 class index:
@@ -32,7 +32,7 @@ class halt:
         raise web.seeother('/')
 
 if __name__ == "__main__":
-    render = web.template.render('python/crypticweb/templates/')
+    render = web.template.render('pycryptics/crypticweb/templates/')
 
     urls = ('/', 'index',
             '/halt', 'halt')
@@ -42,4 +42,6 @@ if __name__ == "__main__":
     form = myform()
     with CrypticClueSolver() as solver:
         app = web.application(urls, globals())
+        print "Starting up server. Press Ctrl+c to shut down"
         app.run()
+    print "Shutting down...."
