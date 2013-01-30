@@ -19,9 +19,7 @@ func main() {
 	var clue string
 	solved_parts := map[string]map[string][]string{}
 	stdin := bufio.NewReader(os.Stdin)
-	ans_c := make(chan solver.StructuredClue)
-	map_c := make(chan bool, 1) // a channel to act as a mutex around the solved_parts map
-	map_c <- true
+	solved_clues := []solver.StructuredClue{}
 	for {
 		clue, _ = stdin.ReadString('\n')
 		clue = strings.TrimSpace(clue)
@@ -31,12 +29,12 @@ func main() {
 			break
 		} else if clue == "." {
 			for i := 0; i < num_clues; i++ {
-				solved_clue := <-ans_c
-				for _, a := range solved_clue.FormatAnswers() {
+				for _, a := range solved_clues[i].FormatAnswers() {
 					fmt.Println(a)
 				}
 				fmt.Println(".")
 			}
+			solved_clues = []solver.StructuredClue{}
 			num_clues = 0
 		} else if string(clue[0]) == "#" {
 			num_clues = 0
@@ -58,7 +56,8 @@ func main() {
 			fmt.Println(phrasing)
 		} else {
 			num_clues += 1
-			go solver.SolveFactoredClue(clue, &phrasing, solved_parts, ans_c, map_c)
+			solved_clue := solver.SolveFactoredClue(clue, &phrasing, solved_parts)
+			solved_clues = append(solved_clues, solved_clue)
 		}
 	}
 }

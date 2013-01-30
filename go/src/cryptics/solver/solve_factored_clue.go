@@ -6,9 +6,9 @@ import (
 	"strings"
 )
 
-func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts map[string]map[string][]string, ans_c chan StructuredClue, map_c chan bool) {
+func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts map[string]map[string][]string) StructuredClue {
 	clue := ParseClue(clue_str)
-	err := clue.Solve(phrasing, solved_parts, map_c)
+	err := clue.Solve(phrasing, solved_parts)
 	if err {
 		clue = StructuredClue{}
 	} else {
@@ -20,5 +20,5 @@ func SolveFactoredClue(clue_str string, phrasing *utils.Phrasing, solved_parts m
 		}
 		clue.Ans = results
 	}
-	ans_c <- clue
+	return clue
 }

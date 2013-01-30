@@ -43,12 +43,10 @@ type StructuredClue struct {
 	Ans  map[string][]string // each answer to this clue is a key in the map and each value is the slice of sub-answers to each clue in Args that gave that particular answer
 }
 
-func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[string]map[string][]string, map_c chan bool) (err bool) {
+func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[string]map[string][]string) (err bool) {
 	length := utils.Sum((*phrasing).Lengths)
 	// fmt.Println("Trying to solve:", clue.HashString())
-	<-map_c
 	ans, ok := solved_parts[clue.HashString()]
-	map_c <- true
 	if ok {
 		clue.Ans = ans
 	} else {
@@ -67,11 +65,9 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 			new_args_set := [][]string{}
 			var candidate []string
 			for _, sub_clue = range clue.Args {
-				err = sub_clue.Solve(phrasing, solved_parts, map_c)
+				err = sub_clue.Solve(phrasing, solved_parts)
 				if err {
-					<-map_c
 					solved_parts[clue.HashString()] = clue.Ans
-					map_c <- true
 					return true
 				}
 				new_args_set = [][]string{}
@@ -93,9 +89,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 				if len(new_args_set) > 0 {
 					args_set = new_args_set
 				} else {
-					<-map_c
 					(solved_parts)[clue.HashString()] = clue.Ans
-					map_c <- true
 					return true
 				}
 
@@ -108,9 +102,7 @@ func (clue *StructuredClue) Solve(phrasing *utils.Phrasing, solved_parts map[str
 		} else {
 			panic("Unrecognized clue type")
 		}
-		<-map_c
 		solved_parts[clue.HashString()] = clue.Ans
-		map_c <- true
 	}
 	_, blank_ans := clue.Ans[""]
 	// fmt.Println("returning", clue.Ans, "for clue", clue.HashString())
