@@ -1,6 +1,6 @@
 import cPickle as pickle
-from utils.anagrams import anagrams
-from utils.words import WORDS
+from pycryptics.utils.anagrams import anagrams
+from pycryptics.utils.words import WORDS
 import json
 
 all_anagrams = dict()

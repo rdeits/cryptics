@@ -1,5 +1,5 @@
 import unittest
-from solve_clue import CrypticClueSolver, split_clue_text
+from pycryptics.solve_clue import CrypticClueSolver, split_clue_text
 
 
 class TestClues(unittest.TestCase):

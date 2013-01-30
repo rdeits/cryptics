@@ -1,7 +1,7 @@
 desc "Generate all data sets"
 task :data => ["data/synonyms.pck", "data/ngrams.gob"]
 
-file "data/synonyms.pck" => ["pycryptics/en"] do
+file "data/synonyms.pck" => ["en"] do
 	sh "mkdir -p data"
 	sh "python pycryptics/data_generators/generate_synonyms.py"
 end
@@ -15,11 +15,9 @@ file "data/ngrams.gob" do
 	sh "data_gen"
 end
 
-file "pycryptics/en" do
+file "en" do
 	sh "curl -o /tmp/en.zip http://nodebox.net/code/data/media/linguistics.zip"
-	sh "cd pycryptics"
 	sh "unzip /tmp/en.zip"
-	sh "cd .."
 end
 
 task :server => [:data, :go] do

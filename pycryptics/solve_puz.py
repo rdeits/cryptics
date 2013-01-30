@@ -1,5 +1,5 @@
-import puzpy.puz as puz
-from solve_clue import CrypticClueSolver
+import pycryptics.puzpy.puz as puz
+from pycryptics.solve_clue import CrypticClueSolver
 import sys
 import readline
 

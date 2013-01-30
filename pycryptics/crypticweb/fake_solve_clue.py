@@ -1,5 +1,5 @@
 import re
-import solve_clue
+import pycryptics.solve_clue as solve_clue
 
 
 def split_clue_text(clue_text):

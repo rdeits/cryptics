@@ -1,7 +1,7 @@
 import nltk.grammar as gram
 from nltk import parse
 from nltk.tree import Tree
-from utils.indicators import INDICATORS
+from pycryptics.utils.indicators import INDICATORS
 
 """
 A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword clues.

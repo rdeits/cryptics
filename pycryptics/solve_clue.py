@@ -1,8 +1,8 @@
 from __future__ import division
-from utils.language import semantic_similarity
-from utils.cfg import generate_clues
-from utils.phrasings import phrasings
-from utils.synonyms import SYNONYMS
+from pycryptics.utils.language import semantic_similarity
+from pycryptics.utils.cfg import generate_clues
+from pycryptics.utils.phrasings import phrasings
+from pycryptics.utils.synonyms import SYNONYMS
 import subprocess
 import re
 

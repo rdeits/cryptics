@@ -1,4 +1,4 @@
-from utils.synonyms import cached_synonyms
+from pycryptics.utils.synonyms import cached_synonyms
 from nltk.corpus import wordnet as wn
 
 

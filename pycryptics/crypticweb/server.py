@@ -1,6 +1,6 @@
 import web
 from web import form
-from solve_clue import CrypticClueSolver, split_clue_text
+from pycryptics.solve_clue import CrypticClueSolver, split_clue_text
 # from fake_solve_clue import CrypticClueSolver, split_clue_text
 # import threading
 
