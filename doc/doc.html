@@ -643,6 +643,47 @@ Here's an online cryptic dictionary: http://bestforpuzzles.com/cryptic-crossword
 And the only available cryptic solver program: http://www.crosswordmaestro.com/
 Some clues it works on: http://www.crosswordmaestro.com/clues.html</pre>
 </div>
+<div title="2013-02-01 Rewrite: parsing and solving simultaneously" modifier="RobinDeits" created="201302012151" modified="201302031752" tags="journal" changecount="3">
+<pre>Can I add a HEAD and TAIL element to each phrasing and make them elements in the CFG? Then &quot;d&quot; can just have parents of (HEAD, &lt;word&gt;) and (&lt;word&gt;, TAIL)
+
+For each parsing,
+
+each element in the parsing should be a (list of strings, factored_clue)
+
+so initially the parsing is just
+[(&quot;foo&quot;, (&quot;foo&quot;)), (&quot;bar&quot;, (&quot;bar&quot;)), (&quot;baz&quot;, (&quot;baz&quot;))]
+
+assigning definition gives (ommitting some quotes)
+[(&quot;&quot;, (d, (foo))), (&quot;bar&quot;, (bar)), (baz, (baz))]
+
+one parsing gives
+[(&quot;&quot;, (d, (foo))), ([&quot;ba&quot;, &quot;az&quot;, &quot;bz&quot;, &quot;a&quot;], (sub, (sub_, bar), (lit, baz)))]
+
+the only remaining parse gives
+[([&quot;ba&quot;, &quot;az&quot;, &quot;bz&quot;, &quot;a&quot;], (top, (d, foo), (sub, (sub_, bar), (lit, baz))))]
+
+
+even better:
+each element in the parsing is just a solved factored clue:
+[(foo, foo), (bar, bar), (baz, baz)]
+[(d, foo, &quot;&quot;), (bar, bar), (baz, baz)]
+[(d, (foo, foo), &quot;&quot;), (sub, (sub_, (bar, bar), &quot;&quot;), (lit, (baz, baz), baz),[&quot;ba&quot;, &quot;az&quot;, &quot;bz&quot;])]
+and so on
+
+oh, even better: make the assumption that the last item in the factored clue is always the list of answers
+[(foo,)), ((bar,)), ((baz,))]
+[(d, (foo,),&quot;&quot;), ((bar,)), ((baz,))]
+[(d, (foo,),&quot;&quot;), (sub, (sub_, (bar,),&quot;&quot;), (lit, (baz,), &quot;baz&quot;), [&quot;ba&quot;, &quot;az&quot;, &quot;bz&quot;)]
+
+yeah! The first item is always the type and the last is always the answers. I just need to be careful to distinguish an answer from a list of answers. That's awkward. Okay, perhaps the previous method is better:
+
+[(foo, [&quot;foo&quot;]), (bar, [&quot;bar&quot;]), (baz, [&quot;baz&quot;])]
+[(d, (foo, [&quot;foo&quot;]), [&quot;&quot;]), (sub, (sub_, (bar, [&quot;bar&quot;]), &quot;&quot;), (lit, (baz, [&quot;baz&quot;]), [&quot;baz&quot;]), [&quot;ba&quot;, &quot;az&quot;, &quot;bz&quot;])]
+
+Each time we make a choice, by choosing a production or by choosing an answer as an argument, we make a new copy of the parsing. If a parsing has no answers or has no valid productions, then we kill it.
+
+Looks like I don't need separate objects for each parsing, since all the information is captured in the factored clue. Plus, if I'm careful, I can make sure that all the children of a particular parsing contain their parent by reference, so we won't be duplicating data. This could actually be pretty efficient. </pre>
+</div>
 <div title="CloseOnCancelPlugin" modifier="MPTW" created="201004131209" modified="201009151231" tags="systemConfig">
 <pre>/***
 |Name:|CloseOnCancelPlugin|
