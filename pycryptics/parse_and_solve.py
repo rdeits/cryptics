@@ -5,6 +5,7 @@ from pycryptics.utils.clue_funcs import FUNCTIONS
 from pycryptics.utils.language import semantic_similarity
 from pycryptics.utils.clue_parser import split_clue_text
 from pycryptics.utils.phrasings import phrasings
+from collections import defaultdict
 
 RULES = TRANSFORMS
 RULES.update(FUNCTIONS)
@@ -64,6 +65,10 @@ class ClueParser():
         self.parsings = set([tuple([(p, (p,)) for p in phrasing.phrases[:-1]] + [(cfg.d, (phrasing.phrases[-1], phrasing.phrases[-1]), ("",))]),
                              tuple([(cfg.d, (phrasing.phrases[0], phrasing.phrases[0]), ("",))] + [(p, (p,)) for p in phrasing.phrases[1:]])])
         self.answers = []
+        self.prod_arg_map = defaultdict(lambda: [])
+        for prod in self.grammar.productions():
+            key = tuple([get_symbol(n) for n in prod.rhs()])
+            self.prod_arg_map[key].append(prod)
         # self.parsings = [("*HEAD*", [""])] + self.parsings + [("*TAIL*", [""])]
 
     def generate_answers(self):
@@ -99,23 +104,15 @@ class ClueParser():
                     # print "parsing is complete"
                     complete_parsings.add(parsing[0])
                 else:
-                    types = tuple([get_symbol(p[0]) for p in parsing])
+                    types = [get_symbol(p[0]) for p in parsing]
                     for pos in range(len(parsing)):
-                        for prod in self.grammar.productions(rhs=parsing[pos][0]):
-                            prod_args = tuple([get_symbol(n) for n in prod.rhs()])
-                            num_args = len(prod_args)
-                            arg_types = tuple(types[pos:pos+num_args])
-                            if pos + num_args > len(parsing):
-                                continue
-                            if prod.lhs() == cfg.top:
-                                # print "checking rule:", prod
-                                if num_args != len(parsing) or pos != 0:
-                                    # print "failed", num_args, len(parsing), pos
-                                    continue
-                                # print arg_types, "?=", prod_args, arg_types == prod_args
-                            # print types[pos:pos+num_args], "?=", prod.rhs()
-                            if arg_types == prod_args:
-                                # print "using rule:", prod
+                        for num_args in range(1, len(parsing) - pos + 1):
+                        # for prod in self.grammar.productions(rhs=parsing[pos][0]):
+                            key = tuple(types[pos:pos+num_args])
+                            for prod in self.prod_arg_map[key]:
+                                if prod.lhs() == cfg.top:
+                                    if num_args != len(parsing) or pos != 0:
+                                        continue
                                 arg_sets = [[]]
                                 for i in range(num_args):
                                     new_arg_sets = []
@@ -156,14 +153,13 @@ def solve_clue_text(clue_text):
         g = cfg.generate_grammar(p)
         pc = ClueParser(phrasing, g, memo)
         pc.generate_answers()
-        print pc.answers
         answers.extend(pc.answers)
     return sorted(answers, key=lambda x: x.similarity, reverse=True)
 
 if __name__ == '__main__':
-    clue_text = "stirs spilling soda (4)"
+    clue_text = "Initial meetings disappoint Rosemary internally (6)"
     answers = solve_clue_text(clue_text)
     print "================================================="
     print ClueSolutions(answers).sorted_answers()
-    for a in answers:
+    for a in answers[:10]:
         print a
