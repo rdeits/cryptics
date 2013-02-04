@@ -1,5 +1,5 @@
 desc "Generate all data sets"
-task :data => ["data/synonyms.pck", "data/ngrams.gob"]
+task :data => ["data/synonyms.pck", "data/ngrams.pck"]
 
 file "data/synonyms.pck" => ["en/__init__.py"] do
 	sh "mkdir -p data"
@@ -9,6 +9,10 @@ end
 file "data/ngrams.gob" do
 	sh "go install data_gen"
 	sh "data_gen"
+end
+
+file "data/ngrams.pck" do
+	sh "python pycryptics/data_generators/generate_ngrams.py"
 end
 
 file "en/__init__.py" do

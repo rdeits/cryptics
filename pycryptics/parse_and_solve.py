@@ -1,9 +1,19 @@
 from __future__ import division
 import pycryptics.utils.cfg as cfg
 from pycryptics.utils.transforms import TRANSFORMS
+from pycryptics.utils.clue_funcs import FUNCTIONS
 from pycryptics.utils.language import semantic_similarity
+from pycryptics.utils.clue_parser import split_clue_text
 
 RULES = TRANSFORMS
+RULES.update(FUNCTIONS)
+
+class Phrasing:
+    def __init__(self, phrases, lengths, pattern, known_answer=None):
+        self.phrases = phrases
+        self.lengths = lengths
+        self.pattern = pattern
+        self.known_answer = known_answer
 
 class AnnotatedAnswer:
     def __init__(self, ans, clue):
@@ -21,11 +31,27 @@ class AnnotatedAnswer:
     def __repr__(self):
         return self.__str__()
 
+class ClueSolutions:
+    def __init__(self, anns):
+        self.answer_scores = dict()
+        self.answer_derivations = dict()
+        for ann in anns:
+            self.answer_derivations.setdefault(ann.answer, []).append(ann)
+        for k, v in self.answer_derivations.items():
+            self.answer_scores[k] = max(a.similarity for a in v)
+
+    def sorted_answers(self):
+        return sorted([(v, k) for k, v in self.answer_scores.items()], reverse=True)
+
+def arg_filter(arg_set):
+    return [a for a in arg_set if not a == ""]
+
 class ClueParser():
-    def __init__(self, phrases, lengths, pattern, grammar):
-        self.phrases = phrases
-        self.lengths = lengths
-        self.pattern = pattern
+    def __init__(self, phrasing, grammar):
+        self.phrasing = phrasing
+        self.lengths = phrasing.lengths
+        self.pattern = phrasing.pattern
+        self.phrases = phrasing.phrases
         self.grammar = grammar
         self.parsings = set([tuple([(p, (p,)) for p in phrases[:-1]] + [(cfg.d, (phrases[-1], phrases[-1]), ("",))]),
                              tuple([(cfg.d, (phrases[0], phrases[0]), ("",))] + [(p, (p,)) for p in phrases[1:]])])
@@ -89,7 +115,7 @@ class ClueParser():
                                 # print "arg sets:", arg_sets
                                 for s in arg_sets:
                                     if prod.lhs() in RULES:
-                                        results = RULES[prod.lhs()](s, self.lengths, self.pattern)
+                                        results = RULES[prod.lhs()](arg_filter(s), self.phrasing)
                                         # print "results:", results
                                         if results is not None:
                                             solved_subclue = tuple((prod.lhs(),) + parsing[pos:pos+num_args] + (results,))
@@ -103,10 +129,14 @@ class ClueParser():
 
 
 if __name__ == '__main__':
-    phrases = "brass age ship".split(' ')
+    clue_text = "Stirs, spilling soda (4)"
+    phrases, lengths, pattern, answer = split_clue_text(clue_text)
+    phrasing = Phrasing(phrases, lengths, pattern, answer)
     g = cfg.generate_grammar(phrases)
 
-    pc = ClueParser(phrases,(7,),"",g)
-    print pc.parsings
+    pc = ClueParser(phrasing,g)
     pc.generate_answers()
-    print pc.answers
+    print "============================================"
+    print ClueSolutions(pc.answers).sorted_answers()
+    for a in sorted(pc.answers, key=lambda x: x.similarity, reverse=True):
+        print a

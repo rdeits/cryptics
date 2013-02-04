@@ -3,9 +3,9 @@ from pycryptics.utils.language import semantic_similarity
 from pycryptics.utils.cfg import generate_clues
 from pycryptics.utils.phrasings import phrasings
 from pycryptics.utils.synonyms import SYNONYMS
+from pycryptics.utils.clue_parser import split_clue_text
 import subprocess
 import re
-
 
 class AnnotatedAnswer:
     def __init__(self, ans, clue):
@@ -124,25 +124,6 @@ class CrypticClueSolver(object):
 
 def matches_pattern(word, pattern, lengths):
     return (tuple(len(x) for x in word.split('_')) == lengths) and re.match("^" + pattern + "$", word)
-
-
-def split_clue_text(clue_text):
-    if '|' not in clue_text:
-        clue_text += ' |'
-    clue_text = clue_text.lower()
-    clue, paren, rest = clue_text.rpartition('(')
-    lengths, rest = rest.split(')')
-    lengths = lengths.replace('-', ',')
-    lengths = tuple(int(x) for x in lengths.split(','))
-    pattern, answer = rest.split('|')
-    pattern = pattern.strip()
-    assert len(pattern) == 0 or len(pattern) == sum(lengths), "Answer lengths and length of pattern string must match: sum(%s) != %d" % (lengths, len(pattern))
-    clue = re.sub('-', '_', clue)
-    clue = re.sub(r'[^a-zA-Z\ _0-9]', '', clue)
-    clue = re.sub(r'\ +', ' ', clue)
-    phrases = clue.split(' ')
-    phrases = [p for p in phrases if p.strip() != '' and p.strip() != '_']
-    return phrases, lengths, pattern, answer
 
 
 def parse_clue_text(clue_text):

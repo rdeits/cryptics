@@ -25,31 +25,44 @@ def matches_pattern(ans, pattern):
 def valid_words(words):
     return "_".join(words) in WORDS
 
-def lit(s, l, p):
+def valid_answer(ans, phrasing):
+    words = split_words(ans, phrasing.lengths)
+    print len(ans) == sum(phrasing.lengths), matches_pattern(ans, phrasing.pattern), valid_words(words), not ans in phrasing.phrases
+
+    return len(ans) == sum(phrasing.lengths) and matches_pattern(ans, phrasing.pattern) and valid_words(words) and not ans in phrasing.phrases
+
+def lit(s, phrasing):
     return tuple(s)
 
-def null(s, l, p):
+def null(s, phrasing):
     return ("",)
 
-def first(s, l, p):
+def first(s, phrasing):
     assert(len(s) == 1)
     return (s[0][0],)
 
-def syn(s, l, p):
+def syn(s, phrasing):
     assert(len(s) == 1)
-    return tuple(cached_synonyms(s[0], sum(l) + 2))
+    return tuple(cached_synonyms(s[0], sum(phrasing.lengths) + 2))
 
-def top(s, l, p):
+def top(s, phrasing):
     ans = "".join(s)
-    words = split_words(ans, l)
-    if len(ans) == sum(l) and matches_pattern(ans, p) and valid_words(words):
+    if valid_answer(ans, phrasing):
         return tuple([ans])
+    else:
+        return None
 
 
 TRANSFORMS = {cfg.lit: lit,
+              cfg.sub_: null,
               cfg.sub_arg: lit,
               cfg.clue_arg: lit,
-              cfg.sub_: null,
+              cfg.rev_: null,
+              cfg.rev_arg: lit,
+              cfg.ins_: null,
+              cfg.ins_arg: lit,
+              cfg.ana_: null,
+              cfg.ana_arg: lit,
               cfg.top: top,
               cfg.syn: syn,
               cfg.first: first}
