@@ -54,7 +54,7 @@ def top(s, phrasing):
 TRANSFORMS = {cfg.lit: lit,
               cfg.sub_: null,
               # cfg.sub_arg: lit,
-              cfg.clue_arg: lit,
+              # cfg.clue_arg: lit,
               cfg.rev_: null,
               # cfg.rev_arg: lit,
               cfg.ins_: null,

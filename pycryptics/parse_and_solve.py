@@ -106,29 +106,32 @@ class ClueParser():
                 else:
                     types = [get_symbol(p[0]) for p in parsing]
                     # print types
+                    rules_to_apply = []
                     for pos in range(len(parsing)):
                         for num_args in range(1, len(parsing) - pos + 1):
-                        # for prod in self.grammar.productions(rhs=parsing[pos][0]):
                             key = tuple(types[pos:pos+num_args])
                             for prod in self.prod_arg_map[key]:
                                 if prod.lhs() == cfg.top:
                                     if num_args != len(parsing) or pos != 0:
                                         continue
-                                arg_sets = [[]]
-                                for i in range(num_args):
-                                    new_arg_sets = []
-                                    for s in arg_sets:
-                                        for a in parsing[pos+i][-1]:
-                                            new_arg_sets.append(s + [a])
-                                    arg_sets = new_arg_sets
-                                # print "arg sets:", arg_sets
-                                for s in arg_sets:
-                                    results = self.apply_rule(prod, s)
-                                    if results is not None:
-                                        solved_subclue = tuple((prod.lhs(),) + parsing[pos:pos+num_args] + (results,))
-                                        new_parsing = parsing[:pos] + (solved_subclue,) + parsing[pos+num_args:]
-                                        new_parsings.add(new_parsing)
-                                        # print "added new parsing:", new_parsing
+                                rules_to_apply.append((prod, pos, num_args))
+                    for (prod, pos, num_args) in rules_to_apply:
+                        # print "applying rule:", prod
+                        arg_sets = [[]]
+                        for i in range(num_args):
+                            new_arg_sets = []
+                            for s in arg_sets:
+                                for a in parsing[pos+i][-1]:
+                                    new_arg_sets.append(s + [a])
+                            arg_sets = new_arg_sets
+                        # print "arg sets:", arg_sets
+                        for s in arg_sets:
+                            results = self.apply_rule(prod, s)
+                            if results is not None:
+                                solved_subclue = tuple((prod.lhs(),) + parsing[pos:pos+num_args] + (results,))
+                                new_parsing = parsing[:pos] + (solved_subclue,) + parsing[pos+num_args:]
+                                new_parsings.add(new_parsing)
+                                # print "added new parsing:", new_parsing
             self.parsings = new_parsings
         for p in complete_parsings:
             self.answers.append(AnnotatedAnswer(p[-1][0], p))
@@ -167,7 +170,9 @@ def solve_clue_text(clue_text):
     return sorted(answers, key=lambda x: x.similarity, reverse=True)
 
 if __name__ == '__main__':
-    clue_text = "Initial meetings disappoint Rosemary internally (6)"
+    # clue_text = "Initial meetings disappoint Rosemary internally (6)"
+    # clue_text = "unsuitable paint smeared (5)"
+    clue_text = "you finally beat iowa perfect world (6)"
     answers = solve_clue_text(clue_text)
     print "================================================="
     print ClueSolutions(answers).sorted_answers()
