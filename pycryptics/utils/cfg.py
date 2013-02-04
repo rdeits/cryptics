@@ -25,16 +25,16 @@ rev_ = gram.Nonterminal('rev_')
 clue_arg = gram.Nonterminal('clue_arg')
 clue_members = [lit, syn, first, null, ana, sub, ins, rev]
 
-ins_arg = gram.Nonterminal('ins_arg')
+# ins_arg = gram.Nonterminal('ins_arg')
 ins_members = [lit, ana, syn, sub, first, rev]
 
-ana_arg = gram.Nonterminal('ana_arg')
+# ana_arg = gram.Nonterminal('ana_arg')
 ana_members = [lit]
 
-sub_arg = gram.Nonterminal('sub_arg')
+# sub_arg = gram.Nonterminal('sub_arg')
 sub_members = [lit, syn, rev]
 
-rev_arg = gram.Nonterminal('rev_arg')
+# rev_arg = gram.Nonterminal('rev_arg')
 rev_members = [lit, syn]
 
 known_functions = {
@@ -68,24 +68,45 @@ for r in base_clue_rules:
     clue_rules.append(r + [d])
     clue_rules.append([d] + r)
 
-production_rules = {
-ins: [[ins_arg, ins_, ins_arg], [ins_arg, ins_arg, ins_]],
-ana: [[ana_arg, ana_], [ana_, ana_arg]],
-sub: [[sub_arg, sub_], [sub_, sub_arg]],
-rev: [[rev_arg, rev_], [rev_, rev_arg]],
-top: clue_rules,
-clue_arg: [[i] for i in clue_members],
-ins_arg: [[i] for i in ins_members],
-ana_arg: [[i] for i in ana_members],
-sub_arg: [[i] for i in sub_members],
-rev_arg: [[i] for i in rev_members]
-}
+# production_rules = {
+# ins: [[ins_arg, ins_, ins_arg], [ins_arg, ins_arg, ins_]],
+# ana: [[ana_arg, ana_], [ana_, ana_arg]],
+# sub: [[sub_arg, sub_], [sub_, sub_arg]],
+# rev: [[rev_arg, rev_], [rev_, rev_arg]],
+# top: clue_rules,
+# ins_arg: [[i] for i in ins_members],
+# ana_arg: [[i] for i in ana_members],
+# sub_arg: [[i] for i in sub_members],
+# rev_arg: [[i] for i in rev_members]
+# }
 
+production_rules = {
+clue_arg: [[i] for i in clue_members],
+top: clue_rules
+}
 base_prods = []
 for n, rules in production_rules.items():
     for r in rules:
         base_prods.append(gram.Production(n, r))
 
+expanded_prod_rules = {
+ins: [[ins_members, [ins_], ins_members], [ins_members, ins_members, [ins_]]],
+ana: [[ana_members, [ana_]], [[ana_], ana_members]],
+sub: [[sub_members, [sub_]], [[sub_], sub_members]],
+rev: [[rev_members, [rev_]], [[rev_], rev_members]],
+}
+
+for n, rules in expanded_prod_rules.items():
+    for r in rules:
+        rule_set = [[]]
+        for el in r:
+            new_rule_set = []
+            for p in rule_set:
+                for arg in el:
+                    new_rule_set.append(p + [arg])
+            rule_set = new_rule_set
+    for rule in rule_set:
+        base_prods.append(gram.Production(n, rule))
 
 def generate_grammar(phrases):
     prods = []

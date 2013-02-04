@@ -105,6 +105,7 @@ class ClueParser():
                     complete_parsings.add(parsing[0])
                 else:
                     types = [get_symbol(p[0]) for p in parsing]
+                    # print types
                     for pos in range(len(parsing)):
                         for num_args in range(1, len(parsing) - pos + 1):
                         # for prod in self.grammar.productions(rhs=parsing[pos][0]):
@@ -122,22 +123,31 @@ class ClueParser():
                                     arg_sets = new_arg_sets
                                 # print "arg sets:", arg_sets
                                 for s in arg_sets:
-                                    if prod.lhs() in RULES:
-                                        if (prod.lhs(), arg_filter(s)) in self.memo:
-                                            results = self.memo[(prod.lhs(), arg_filter(s))]
-                                        else:
-                                            results = RULES[prod.lhs()](arg_filter(s), self.phrasing)
-                                            self.memo[(prod.lhs(), arg_filter(s))] = results
-                                        # print "results:", results
-                                        if results is not None:
-                                            solved_subclue = tuple((prod.lhs(),) + parsing[pos:pos+num_args] + (results,))
-                                            new_parsing = parsing[:pos] + (solved_subclue,) + parsing[pos+num_args:]
-                                            new_parsings.add(new_parsing)
-                                            # print "added new parsing:", new_parsing
+                                    results = self.apply_rule(prod, s)
+                                    if results is not None:
+                                        solved_subclue = tuple((prod.lhs(),) + parsing[pos:pos+num_args] + (results,))
+                                        new_parsing = parsing[:pos] + (solved_subclue,) + parsing[pos+num_args:]
+                                        new_parsings.add(new_parsing)
+                                        # print "added new parsing:", new_parsing
             self.parsings = new_parsings
         for p in complete_parsings:
             self.answers.append(AnnotatedAnswer(p[-1][0], p))
         return self.answers
+
+    def apply_rule(self, prod, args):
+        filtered_args = arg_filter(args)
+        memo_key = (prod.lhs(), filtered_args)
+        if prod.lhs() in RULES:
+            if memo_key in self.memo:
+                results = self.memo[memo_key]
+            else:
+                results = RULES[prod.lhs()](filtered_args, self.phrasing)
+                self.memo[memo_key] = results
+        else:
+            results = None
+        return results
+
+
 
 def parse_clue_text(clue_text):
     phrases, lengths, pattern, answer = split_clue_text(clue_text)
