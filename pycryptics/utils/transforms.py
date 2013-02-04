@@ -46,7 +46,7 @@ def syn(s, phrasing):
 def top(s, phrasing):
     ans = "".join(s)
     if valid_answer(ans, phrasing):
-        return tuple([ans])
+        return tuple(['_'.join(split_words(ans, phrasing.lengths))])
     else:
         return None
 
