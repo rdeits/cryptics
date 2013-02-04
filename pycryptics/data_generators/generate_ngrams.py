@@ -1,10 +1,10 @@
 import cPickle as pickle
-from pycryptics.utils.synonyms import WORDS
+from pycryptics.utils.synonyms import SYNONYMS
 
 initial_ngrams = dict()
 ngrams = dict()
 
-for word in WORDS:
+for word in SYNONYMS:
     if '_' in word:
         continue
     l = len(word)
