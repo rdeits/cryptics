@@ -20,11 +20,11 @@ file "en/__init__.py" do
 	sh "unzip /tmp/en.zip"
 end
 
-task :server => [:data, :go] do
+task :server => [:data] do
 	sh "python pycryptics/crypticweb/server.py"
 end
 
-task :test => [:data, :go] do
+task :test => [:data] do
 	sh "nosetests --nocapture pycryptics"
 end
 

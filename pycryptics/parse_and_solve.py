@@ -4,6 +4,7 @@ from pycryptics.utils.transforms import TRANSFORMS
 from pycryptics.utils.clue_funcs import FUNCTIONS
 from pycryptics.utils.language import semantic_similarity
 from pycryptics.utils.clue_parser import split_clue_text
+from pycryptics.utils.phrasings import phrasings
 
 RULES = TRANSFORMS
 RULES.update(FUNCTIONS)
@@ -44,17 +45,24 @@ class ClueSolutions:
         return sorted([(v, k) for k, v in self.answer_scores.items()], reverse=True)
 
 def arg_filter(arg_set):
-    return [a for a in arg_set if not a == ""]
+    return tuple([a for a in arg_set if not a == ""])
+
+def get_symbol(x):
+    if hasattr(x, "symbol"):
+        return x.symbol()
+    else:
+        return x
 
 class ClueParser():
-    def __init__(self, phrasing, grammar):
+    def __init__(self, phrasing, grammar, memo):
+        self.memo = memo
         self.phrasing = phrasing
         self.lengths = phrasing.lengths
         self.pattern = phrasing.pattern
         self.phrases = phrasing.phrases
         self.grammar = grammar
-        self.parsings = set([tuple([(p, (p,)) for p in phrases[:-1]] + [(cfg.d, (phrases[-1], phrases[-1]), ("",))]),
-                             tuple([(cfg.d, (phrases[0], phrases[0]), ("",))] + [(p, (p,)) for p in phrases[1:]])])
+        self.parsings = set([tuple([(p, (p,)) for p in phrasing.phrases[:-1]] + [(cfg.d, (phrasing.phrases[-1], phrasing.phrases[-1]), ("",))]),
+                             tuple([(cfg.d, (phrasing.phrases[0], phrasing.phrases[0]), ("",))] + [(p, (p,)) for p in phrasing.phrases[1:]])])
         self.answers = []
         # self.parsings = [("*HEAD*", [""])] + self.parsings + [("*TAIL*", [""])]
 
@@ -91,20 +99,23 @@ class ClueParser():
                     # print "parsing is complete"
                     complete_parsings.add(parsing[0])
                 else:
-                    types = [p[0] for p in parsing]
-                    for prod in self.grammar.productions():
-                        # print "checking rule:", prod
-                        num_args = len(prod.rhs())
-                        if prod.lhs() == cfg.top:
-                            if num_args != len(parsing):
+                    types = tuple([get_symbol(p[0]) for p in parsing])
+                    for pos in range(len(parsing)):
+                        for prod in self.grammar.productions(rhs=parsing[pos][0]):
+                            prod_args = tuple([get_symbol(n) for n in prod.rhs()])
+                            num_args = len(prod_args)
+                            arg_types = tuple(types[pos:pos+num_args])
+                            if pos + num_args > len(parsing):
                                 continue
-                            else:
-                                starts = [0]
-                        else:
-                            starts = range(len(parsing) - num_args + 1)
-                        for pos in starts:
+                            if prod.lhs() == cfg.top:
+                                # print "checking rule:", prod
+                                if num_args != len(parsing) or pos != 0:
+                                    # print "failed", num_args, len(parsing), pos
+                                    continue
+                                # print arg_types, "?=", prod_args, arg_types == prod_args
                             # print types[pos:pos+num_args], "?=", prod.rhs()
-                            if tuple(types[pos:pos+num_args]) == prod.rhs():
+                            if arg_types == prod_args:
+                                # print "using rule:", prod
                                 arg_sets = [[]]
                                 for i in range(num_args):
                                     new_arg_sets = []
@@ -115,7 +126,11 @@ class ClueParser():
                                 # print "arg sets:", arg_sets
                                 for s in arg_sets:
                                     if prod.lhs() in RULES:
-                                        results = RULES[prod.lhs()](arg_filter(s), self.phrasing)
+                                        if (prod.lhs(), arg_filter(s)) in self.memo:
+                                            results = self.memo[(prod.lhs(), arg_filter(s))]
+                                        else:
+                                            results = RULES[prod.lhs()](arg_filter(s), self.phrasing)
+                                            self.memo[(prod.lhs(), arg_filter(s))] = results
                                         # print "results:", results
                                         if results is not None:
                                             solved_subclue = tuple((prod.lhs(),) + parsing[pos:pos+num_args] + (results,))
@@ -127,16 +142,28 @@ class ClueParser():
             self.answers.append(AnnotatedAnswer(p[-1][0], p))
         return self.answers
 
+def parse_clue_text(clue_text):
+    phrases, lengths, pattern, answer = split_clue_text(clue_text)
+    return phrasings(phrases), lengths, pattern, answer
+
+def solve_clue_text(clue_text):
+    memo = dict([])
+    answers = []
+    phrasings, lengths, pattern, answer = parse_clue_text(clue_text)
+    for p in phrasings:
+        print p
+        phrasing = Phrasing(p, lengths, pattern, answer)
+        g = cfg.generate_grammar(p)
+        pc = ClueParser(phrasing, g, memo)
+        pc.generate_answers()
+        print pc.answers
+        answers.extend(pc.answers)
+    return sorted(answers, key=lambda x: x.similarity, reverse=True)
 
 if __name__ == '__main__':
-    clue_text = "Stirs, spilling soda (4)"
-    phrases, lengths, pattern, answer = split_clue_text(clue_text)
-    phrasing = Phrasing(phrases, lengths, pattern, answer)
-    g = cfg.generate_grammar(phrases)
-
-    pc = ClueParser(phrasing,g)
-    pc.generate_answers()
-    print "============================================"
-    print ClueSolutions(pc.answers).sorted_answers()
-    for a in sorted(pc.answers, key=lambda x: x.similarity, reverse=True):
+    clue_text = "stirs spilling soda (4)"
+    answers = solve_clue_text(clue_text)
+    print "================================================="
+    print ClueSolutions(answers).sorted_answers()
+    for a in answers:
         print a

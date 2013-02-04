@@ -1,5 +1,5 @@
 import pycryptics.utils.cfg as cfg
-from pycryptics.utils.synonyms import cached_synonyms, WORDS
+from pycryptics.utils.synonyms import cached_synonyms, SYNONYMS
 import re
 
 def split_words(ans, lengths):
@@ -23,12 +23,10 @@ def matches_pattern(ans, pattern):
         return bool(re.match(pattern, ans[:len(pattern)]))
 
 def valid_words(words):
-    return "_".join(words) in WORDS
+    return "_".join(words) in SYNONYMS
 
 def valid_answer(ans, phrasing):
     words = split_words(ans, phrasing.lengths)
-    print len(ans) == sum(phrasing.lengths), matches_pattern(ans, phrasing.pattern), valid_words(words), not ans in phrasing.phrases
-
     return len(ans) == sum(phrasing.lengths) and matches_pattern(ans, phrasing.pattern) and valid_words(words) and not ans in phrasing.phrases
 
 def lit(s, phrasing):

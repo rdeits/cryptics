@@ -1,5 +1,5 @@
 from __future__ import division
-from pycryptics.utils.synonyms import WORDS
+from pycryptics.utils.synonyms import SYNONYMS
 import pycryptics.utils.cfg as cfg
 from pycryptics.utils.ngrams import NGRAMS
 import re
@@ -9,8 +9,7 @@ def reverse(s, phrasing):
     assert len(s) == 1
     return tuple(bigram_filter([''.join(reversed(s[0]))], phrasing))
 
-def all_legal_substrings(s, phrasing):
-    words = [w for w in s if w != ""]
+def all_legal_substrings(words, phrasing):
     assert len(words) == 1
     word = words[0].lower().replace('_', "")
     length = sum(phrasing.lengths)
@@ -20,7 +19,7 @@ def all_legal_substrings(s, phrasing):
     if len(word) > length:
         for i in range(1, len(word) - length):
             s = word[i:i+length]
-            if s in WORDS:
+            if s in SYNONYMS:
                 subs.add(s)
     for l in range(1, min(len(word), length + 1, 4)):
         subs.add(word[:l])
@@ -39,8 +38,7 @@ def all_legal_substrings(s, phrasing):
     return tuple(bigram_filter(subs, phrasing))
 
 
-def all_insertions(s, phrasing):
-    words = [w for w in s if w != ""]
+def all_insertions(words, phrasing):
     assert len(words) == 2
     word1, word2 = [w.lower().replace('_', "") for w in words]
     results = set([])
@@ -60,30 +58,29 @@ def remaining_letters(letters, w):
             yield c
 
 
-def anagrams(letters, active_set=['']):
+def anagrams(letters, phrasing, active_set=['']):
     letters = re.sub(r'_', '', str(letters))
     if len(active_set[0]) == len(letters):
         return filter(lambda x: x != str(letters), active_set)
     else:
         new_active_set = []
         for w in active_set:
-            for l in set(remaining_letters(letters, w)):
-                candidate = w + l
-                if candidate in NGRAMS[len(candidate)]:
+            for c in set(remaining_letters(letters, w)):
+                candidate = w + c
+                if any(candidate in NGRAMS[l] for l in phrasing.lengths):
                     new_active_set.append(candidate)
         if len(new_active_set) == 0:
             return []
         else:
-            return anagrams(letters, new_active_set)
+            return anagrams(letters, phrasing, new_active_set)
 
-def valid_anagrams(s, phrasing):
-    words = [w for w in s if w != ""]
+def valid_anagrams(words, phrasing):
     assert len(words) == 1
     word = words[0].lower().replace('_', '')
     if len(word) > sum(phrasing.lengths):
         return None
     else:
-        return tuple([a for a in anagrams(word) if a != word])
+        return tuple([a for a in anagrams(word, phrasing) if a != word])
 
 def bigram_filter(answers, phrasing):
     threshold = len(phrasing.lengths) - 1  # allow violations across word boundaries
@@ -112,3 +109,4 @@ FUNCTIONS = {cfg.sub: all_legal_substrings,
 if __name__ == '__main__':
     from pycryptics.parse_and_solve import Phrasing
     print reverse(['soda'], Phrasing([], [4,], ""))
+    print valid_anagrams(['paint'], Phrasing([], [5], ""))

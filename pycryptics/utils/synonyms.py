@@ -8,7 +8,6 @@ def load_synonyms():
 
 
 SYNONYMS = load_synonyms()
-WORDS = SYNONYMS.keys()
 
 
 def cached_synonyms(x, length=None):
