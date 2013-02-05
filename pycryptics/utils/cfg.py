@@ -7,6 +7,7 @@ from pycryptics.utils.indicators import INDICATORS
 A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword clues.
 """
 
+
 top = gram.Nonterminal('top')
 lit = gram.Nonterminal('lit')
 d = gram.Nonterminal('d')
