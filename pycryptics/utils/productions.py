@@ -14,11 +14,11 @@ class Production:
             for start in range(len(parsing) - self.num_args + 1):
                 for ind_pos in range(self.num_args):
                     if parsing[start + ind_pos][0] in self.ind_words and all(p[0] in self.arg_types for p in parsing[start:start+ind_pos] + parsing[start+ind_pos+1:start+self.num_args]):
-                        positions.append((start, ind_pos))
+                        positions.append((start, ind_pos, self.num_args))
         else:
             for start in range(len(parsing) - self.num_args + 1):
                 if all(p[0] in self.arg_types for p in parsing[start:start+self.num_args]):
-                    positions.append((start, None))
+                    positions.append((start, None, self.num_args))
         return positions
 
     def __str__(self):
@@ -26,6 +26,17 @@ class Production:
 
     def __repr__(self):
         return self.__str__()
+
+class TopProduction(Production):
+    def __init__(self, name, arg_types):
+        self.name = name
+        self.arg_types = arg_types
+
+    def locate(self, parsing):
+        if all(p[0] in self.arg_types for p in parsing):
+            return [(0, None, len(parsing))]
+        else:
+            return []
 
 known_functions = {
 'in': ['ins', 'lit', 'null', 'sub'],
@@ -54,10 +65,7 @@ def generate_productions(phrases):
         }
 
     top_args = ind_productions.keys() + base_productions.keys() + ['d']
-    top_productions = [
-        Production('top', 2, top_args),
-        Production('top', 3, top_args),
-        Production('top', 4, top_args)]
+    top_productions = [TopProduction('top', top_args)]
 
     for p in phrases:
         if p in known_functions:

@@ -108,18 +108,15 @@ class ClueParser():
                     # print types
                     rules_to_apply = []
                     for prod in self.productions:
-                        for (start, ind_pos) in prod.locate(parsing):
+                        for (start, ind_pos, num_args) in prod.locate(parsing):
                             if prod.name == 'top':
-                                if start != 0 or prod.num_args != len(parsing):
+                                if start != 0 or num_args != len(parsing):
                                     continue
-                            rules_to_apply.append((prod, start, ind_pos))
-                    print parsing
-                    print rules_to_apply
-                    import pdb; pdb.set_trace()
-                    for (prod, start, ind_pos) in rules_to_apply:
+                            rules_to_apply.append((prod, start, ind_pos, num_args))
+                    for (prod, start, ind_pos, num_args) in rules_to_apply:
                         # print "applying rule:", prod
                         arg_sets = [[]]
-                        for i in range(prod.num_args):
+                        for i in range(num_args):
                             if i == ind_pos:
                                 continue
                             new_arg_sets = []
@@ -131,16 +128,16 @@ class ClueParser():
                         for s in arg_sets:
                             results = self.apply_rule(prod, s)
                             if results is not None:
-                                solved_subclue = tuple((prod.name,) + parsing[start:start+prod.num_args] + (results,))
-                                new_parsing = parsing[:start] + (solved_subclue,) + parsing[start+prod.num_args:]
+                                solved_subclue = tuple((prod.name,) + parsing[start:start+num_args] + (results,))
+                                new_parsing = parsing[:start] + (solved_subclue,) + parsing[start+num_args:]
                                 dead_end = False
                                 try:
                                     new_parsings.add(new_parsing)
                                 except:
                                     import pdb; pdb.set_trace()
                                 # print "added new parsing:", new_parsing
-                    if dead_end:
-                        print "dead end parsing:", [p[0] for p in parsing]
+                    # if dead_end:
+                    #     print "dead end parsing:", [p[0] for p in parsing]
             self.parsings = new_parsings
         for p in complete_parsings:
             self.answers.append(AnnotatedAnswer(p[-1][0], p))
