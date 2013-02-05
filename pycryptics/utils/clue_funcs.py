@@ -16,7 +16,7 @@ def all_legal_substrings(words, phrasing):
     length = sum(phrasing.lengths)
     subs = set([])
     if len(word) <= 1:
-        return subs
+        return None
     if len(word) > length:
         for i in range(1, len(word) - length):
             s = word[i:i+length]

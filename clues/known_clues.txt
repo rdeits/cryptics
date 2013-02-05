@@ -5,13 +5,12 @@ You finally beat Iowa; perfect world (6) | UTOPIA
 Couch is unfinished until now (4) | SOFA
 They primarily play Diplomacy (4) | TACT
 TV genre host walks out (4,5) | TALK_SHOWS
-face_it_nurse is_holding back release (5) | UNTIE
 Position Ms Derek for bogus drug (7) p...... | PLACEBO
 Male done mixing drink (8) | LEMONADE
 Carrier's gotta be upset (4,3) | TOTE_BAG
 Excitedly print Camus document (10) | MANUSCRIPT
 M's Rob Titon pitching slider? (10) | TROMBONIST
-Poison is primarily very bad omen (5) | VENOM
+Poison is primarily very bad omen (5) v.... | VENOM
 surprisingly rank_height_as important (12) | EARTHSHAKING
 be a fool and signal_fire (6) | BEACON
 in_glee_over unusual color (5, 5) | OLIVE_GREEN
@@ -37,6 +36,7 @@ Join trio_of astronomers in marsh (6) | FASTEN
 Singers in_a special_Tosca production (5) | ALTOS
 Form_of licit_sea salt (8) | SILICATE
 Mollify with fried sausage (7) | ASSUAGE
+face_it_nurse is_holding back release (5) | UNTIE
 Be aware of nerd's flip-flop (4) k... | KNOW
 Liver spread covers large serving dish (5) p.... | PLATE
 in_the_first_place shouldnt be a bigot (6) | SEXIST

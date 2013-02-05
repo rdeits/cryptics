@@ -27,7 +27,8 @@ def valid_words(words):
 
 def valid_answer(ans, phrasing):
     words = split_words(ans, phrasing.lengths)
-    return len(ans) == sum(phrasing.lengths) and matches_pattern(ans, phrasing.pattern) and valid_words(words) and not ans in phrasing.phrases
+    clue_words = reduce(list.__add__, [p.split('_') for p in phrasing.phrases])
+    return len(ans) == sum(phrasing.lengths) and matches_pattern(ans, phrasing.pattern) and valid_words(words) and not ans in clue_words and not any(w.startswith(ans) for w in clue_words)
 
 def lit(s, phrasing):
     return tuple(s)

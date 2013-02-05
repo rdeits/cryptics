@@ -130,7 +130,10 @@ class ClueParser():
                             if results is not None:
                                 solved_subclue = tuple((prod.lhs(),) + parsing[pos:pos+num_args] + (results,))
                                 new_parsing = parsing[:pos] + (solved_subclue,) + parsing[pos+num_args:]
-                                new_parsings.add(new_parsing)
+                                try:
+                                    new_parsings.add(new_parsing)
+                                except:
+                                    import pdb; pdb.set_trace()
                                 # print "added new parsing:", new_parsing
             self.parsings = new_parsings
         for p in complete_parsings:
@@ -171,8 +174,8 @@ def solve_clue_text(clue_text):
 
 if __name__ == '__main__':
     # clue_text = "Initial meetings disappoint Rosemary internally (6)"
-    # clue_text = "unsuitable paint smeared (5)"
-    clue_text = "you finally beat iowa perfect world (6)"
+    clue_text = "unsuitable paint smeared (5)"
+    # clue_text = "you finally beat iowa perfect world (6)"
     answers = solve_clue_text(clue_text)
     print "================================================="
     print ClueSolutions(answers).sorted_answers()
