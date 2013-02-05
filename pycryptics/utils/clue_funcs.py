@@ -117,7 +117,10 @@ def bigram_filter(answers, phrasing):
 #              cfg.ana: anagrams,
 #              cfg.ins: all_insertions}
 
-FUNCTIONS = {'ana': anagrams}
+FUNCTIONS = {'ana': anagrams,
+             'sub': all_legal_substrings,
+             'rev': reverse,
+             'ins': all_insertions}
 
 if __name__ == '__main__':
     from pycryptics.parse_and_solve import Phrasing

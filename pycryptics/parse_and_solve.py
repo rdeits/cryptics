@@ -4,7 +4,7 @@ from pycryptics.utils.clue_funcs import FUNCTIONS
 from pycryptics.utils.language import semantic_similarity
 from pycryptics.utils.clue_parser import split_clue_text
 from pycryptics.utils.phrasings import phrasings
-from pycryptics.utils.productions import PRODUCTIONS
+from pycryptics.utils.productions import generate_productions
 from collections import defaultdict
 
 RULES = TRANSFORMS
@@ -55,13 +55,13 @@ def get_symbol(x):
         return x
 
 class ClueParser():
-    def __init__(self, phrasing, productions, memo):
+    def __init__(self, phrasing, memo):
         self.memo = memo
         self.phrasing = phrasing
         self.lengths = phrasing.lengths
         self.pattern = phrasing.pattern
         self.phrases = phrasing.phrases
-        self.productions = productions
+        self.productions = generate_productions(phrasing.phrases)
         self.parsings = set([tuple([(p, (p,)) for p in phrasing.phrases[:-1]] + [('d', (phrasing.phrases[-1], phrasing.phrases[-1]), ("",))]),
                              tuple([('d', (phrasing.phrases[0], phrasing.phrases[0]), ("",))] + [(p, (p,)) for p in phrasing.phrases[1:]])])
         self.answers = []
@@ -99,6 +99,7 @@ class ClueParser():
         while len(self.parsings) > 0:
             new_parsings = set([])
             for parsing in self.parsings:
+                dead_end = True
                 # print "looking at parsing:", parsing
                 if len(parsing) == 1 and parsing[0][0] == 'top':
                     # print "parsing is complete"
@@ -108,18 +109,15 @@ class ClueParser():
                     rules_to_apply = []
                     for prod in self.productions:
                         for (start, ind_pos) in prod.locate(parsing):
+                            if prod.name == 'top':
+                                if start != 0 or prod.num_args != len(parsing):
+                                    continue
                             rules_to_apply.append((prod, start, ind_pos))
-
-                    # for pos in range(len(parsing)):
-                    #     for num_args in range(1, len(parsing) - pos + 1):
-                    #         key = tuple(types[pos:pos+num_args])
-                    #         for prod in self.prod_arg_map[key]:
-                    #             if prod.lhs() == cfg.top:
-                    #                 if num_args != len(parsing) or pos != 0:
-                    #                     continue
-                    #             rules_to_apply.append((prod, pos, num_args))
+                    print parsing
+                    print rules_to_apply
+                    import pdb; pdb.set_trace()
                     for (prod, start, ind_pos) in rules_to_apply:
-                        print "applying rule:", prod
+                        # print "applying rule:", prod
                         arg_sets = [[]]
                         for i in range(prod.num_args):
                             if i == ind_pos:
@@ -135,11 +133,14 @@ class ClueParser():
                             if results is not None:
                                 solved_subclue = tuple((prod.name,) + parsing[start:start+prod.num_args] + (results,))
                                 new_parsing = parsing[:start] + (solved_subclue,) + parsing[start+prod.num_args:]
+                                dead_end = False
                                 try:
                                     new_parsings.add(new_parsing)
                                 except:
                                     import pdb; pdb.set_trace()
-                                print "added new parsing:", new_parsing
+                                # print "added new parsing:", new_parsing
+                    if dead_end:
+                        print "dead end parsing:", [p[0] for p in parsing]
             self.parsings = new_parsings
         for p in complete_parsings:
             self.answers.append(AnnotatedAnswer(p[-1][0], p))
@@ -148,14 +149,11 @@ class ClueParser():
     def apply_rule(self, prod, args):
         filtered_args = arg_filter(args)
         memo_key = (prod.name, filtered_args)
-        if prod.name in RULES:
-            if memo_key in self.memo:
-                results = self.memo[memo_key]
-            else:
-                results = RULES[prod.name](filtered_args, self.phrasing)
-                self.memo[memo_key] = results
+        if memo_key in self.memo:
+            results = self.memo[memo_key]
         else:
-            results = None
+            results = RULES[prod.name](filtered_args, self.phrasing)
+            self.memo[memo_key] = results
         return results
 
 
@@ -172,15 +170,15 @@ def solve_clue_text(clue_text):
         print p
         phrasing = Phrasing(p, lengths, pattern, answer)
         # g = cfg.generate_grammar(p)
-        pc = ClueParser(phrasing, PRODUCTIONS, memo)
+        pc = ClueParser(phrasing, memo)
         pc.generate_answers()
         answers.extend(pc.answers)
     return sorted(answers, key=lambda x: x.similarity, reverse=True)
 
 if __name__ == '__main__':
     # clue_text = "Initial meetings disappoint Rosemary internally (6)"
-    clue_text = "unsuitable paint smeared (5)"
-    # clue_text = "you finally beat iowa perfect world (6)"
+    # clue_text = "unsuitable paint smeared (5)"
+    clue_text = "you finally beat iowa perfect world (6)"
     answers = solve_clue_text(clue_text)
     print "================================================="
     print ClueSolutions(answers).sorted_answers()

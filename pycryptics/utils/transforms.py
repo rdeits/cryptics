@@ -67,4 +67,7 @@ def top(s, phrasing):
 #               cfg.first: first}
 
 TRANSFORMS = {'lit': lit,
-              'top': top}
+              'top': top,
+              'syn': syn,
+              'null': null,
+              'first': first}
