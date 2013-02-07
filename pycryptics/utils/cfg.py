@@ -21,42 +21,11 @@ ana_ = gram.Nonterminal('ana_')
 sub_ = gram.Nonterminal('sub_')
 ins_ = gram.Nonterminal('ins_')
 rev_ = gram.Nonterminal('rev_')
-
 clue_arg = gram.Nonterminal('clue_arg')
-clue_members = [lit, syn, first, null, ana, sub, ins, rev]
-
 ins_arg = gram.Nonterminal('ins_arg')
-ins_members = [lit, ana, syn, sub, first, rev]
-
 ana_arg = gram.Nonterminal('ana_arg')
-ana_members = [lit]
-
 sub_arg = gram.Nonterminal('sub_arg')
-sub_members = [lit, syn, rev]
-
 rev_arg = gram.Nonterminal('rev_arg')
-rev_members = [lit, syn]
-
-known_functions = {
-'in': [ins_, lit, null, sub_],
-'a': [lit, syn, null],
-'is': [null, lit],
-'for': [null, syn],
-'large': [first, syn],
-'primarily': [sub_],
-'and': [null, lit],
-'of': [null],
-'with': [null, ins_]}
-
-
-def check_clue_totals(clue):
-    if clue.count(ana) > 1:
-        return False
-    if all(c == null for c in clue):
-        return False
-    if clue.count('ins') > 1:
-        return False
-    return True
 
 max_sub_parts = 3
 base_clue_rules = [[clue_arg] * i for i in range(max_sub_parts + 1)]
@@ -68,18 +37,40 @@ for r in base_clue_rules:
     clue_rules.append(r + [d])
     clue_rules.append([d] + r)
 
+
 production_rules = {
-ins: [[ins_arg, ins_, ins_arg], [ins_arg, ins_arg, ins_]],
-ana: [[ana_arg, ana_], [ana_, ana_arg]],
-sub: [[sub_arg, sub_], [sub_, sub_arg]],
-rev: [[rev_arg, rev_], [rev_, rev_arg]],
-top: clue_rules,
-clue_arg: [[i] for i in clue_members],
-ins_arg: [[i] for i in ins_members],
-ana_arg: [[i] for i in ana_members],
-sub_arg: [[i] for i in sub_members],
-rev_arg: [[i] for i in rev_members]
-}
+    ins: [[ins_arg, ins_, ins_arg], [ins_arg, ins_arg, ins_]],
+    ana: [[ana_arg, ana_], [ana_, ana_arg]],
+    sub: [[sub_arg, sub_], [sub_, sub_arg]],
+    rev: [[rev_arg, rev_], [rev_, rev_arg]],
+    top: clue_rules,
+    clue_arg: [[lit], [syn], [first], [null], [ana], [sub], [ins], [rev]],
+    ins_arg: [[lit], [ana], [syn], [sub], [first], [rev]],
+    ana_arg: [[lit]],
+    sub_arg: [[lit], [syn], [rev]],
+    rev_arg: [[lit], [syn]]
+    }
+
+known_functions = {
+'in': [ins_, lit, null, sub_],
+'a': [lit, syn, null],
+'is': [null, lit],
+'for': [null, syn],
+'large': [first, syn],
+'primarily': [sub_],
+'and': [null, lit],
+'of': [null],
+'on': [ins_, null, lit, syn],
+'with': [null, ins_]}
+
+
+def check_clue_totals(clue):
+    if clue.count(ana) > 1:
+        return False
+    if clue.count('ins') > 1:
+        return False
+    return True
+
 
 base_prods = []
 for n, rules in production_rules.items():
