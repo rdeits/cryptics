@@ -27,29 +27,34 @@ ana_arg = gram.Nonterminal('ana_arg')
 sub_arg = gram.Nonterminal('sub_arg')
 rev_arg = gram.Nonterminal('rev_arg')
 
-max_sub_parts = 3
-base_clue_rules = [[clue_arg] * i for i in range(max_sub_parts + 1)]
-
-base_clue_rules.extend([[sub_] + [first] * i for i in range(max_sub_parts + 1, 8)])
-base_clue_rules.extend([[first] * i + [sub_] for i in range(max_sub_parts + 1, 8)])
-clue_rules = []
-for r in base_clue_rules:
-    clue_rules.append(r + [d])
-    clue_rules.append([d] + r)
-
-
 production_rules = {
     ins: [[ins_arg, ins_, ins_arg], [ins_arg, ins_arg, ins_]],
     ana: [[ana_arg, ana_], [ana_, ana_arg]],
     sub: [[sub_arg, sub_], [sub_, sub_arg]],
     rev: [[rev_arg, rev_], [rev_, rev_arg]],
-    top: clue_rules,
     clue_arg: [[lit], [syn], [first], [null], [ana], [sub], [ins], [rev]],
     ins_arg: [[lit], [ana], [syn], [sub], [first], [rev]],
     ana_arg: [[lit]],
     sub_arg: [[lit], [syn], [rev]],
-    rev_arg: [[lit], [syn]]
+    rev_arg: [[lit], [syn]],
+    top: [[clue_arg, d],
+          [clue_arg, clue_arg, d],
+          [clue_arg, clue_arg, clue_arg, d],
+          [d, clue_arg],
+          [d, clue_arg, clue_arg],
+          [d, clue_arg, clue_arg, clue_arg],
+          ]
     }
+
+additional_clue_rules = [[sub_] + [first] * i for i in range(3, 8)] + [[first] * i + [sub_] for i in range(3, 8)]
+for r in additional_clue_rules:
+    production_rules[top].append(r + [d])
+    production_rules[top].append([d] + r)
+
+base_prods = []
+for n, rules in production_rules.items():
+    for r in rules:
+        base_prods.append(gram.Production(n, r))
 
 known_functions = {
 'in': [ins_, lit, null, sub_],
@@ -70,12 +75,6 @@ def check_clue_totals(clue):
     if clue.count('ins') > 1:
         return False
     return True
-
-
-base_prods = []
-for n, rules in production_rules.items():
-    for r in rules:
-        base_prods.append(gram.Production(n, r))
 
 
 def generate_grammar(phrases):
