@@ -14,22 +14,25 @@ class index:
 
 class solve:
     def GET(self, clue):
-        try:
-            phrases, lengths, pattern, answer = split_clue_text(clue)
-            if sum(lengths) != len(pattern) and pattern != '':
-                print "length mismatch"
-                return render.index(None, clue, "The length of the pattern must exactly match the number of letters in the answer, or you can just leave it blank. Here are some allowable patterns:<br>(5) ....s<br>(3,2) a.e..<br>(9)<br>")
-            assert len(pattern) == 0 or len(pattern) == sum(lengths), "Answer lengths and length of pattern string must match: sum(%s) != %d" % (lengths, len(pattern))
-        except Exception as e:
-            print e
-            return render.index(None, clue, "Sorry, went wrong that I don't know how to handle. Here's python's attempt at an explanation: " + str(e))
-        if len(phrases) > 7:
-            return render.index(None, clue, "Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them")
-        solver.setup(clue)
-        solver.run()
-        answers = solver.collect_answers()
-        print "returning:", answers
-        return render.index(answers, solver.clue_text, "")
+        if clue.strip() != "":
+            try:
+                phrases, lengths, pattern, answer = split_clue_text(clue)
+                if sum(lengths) != len(pattern) and pattern != '':
+                    print "length mismatch"
+                    return render.index(None, clue, "The length of the pattern must exactly match the number of letters in the answer, or you can just leave it blank. Here are some allowable patterns:<br>(5) ....s<br>(3,2) a.e..<br>(9)<br>")
+                assert len(pattern) == 0 or len(pattern) == sum(lengths), "Answer lengths and length of pattern string must match: sum(%s) != %d" % (lengths, len(pattern))
+            except Exception as e:
+                print e
+                return render.index(None, clue, "Sorry, went wrong that I don't know how to handle. Here's python's attempt at an explanation: " + str(e))
+            if len(phrases) > 7:
+                return render.index(None, clue, "Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them")
+            solver.setup(clue)
+            solver.run()
+            answers = solver.collect_answers()
+            print "returning:", answers
+            return render.index(answers, solver.clue_text, "")
+        else:
+            return render.index(None, "", "")
 
     def POST(self, clue):
         if not form.validates():
