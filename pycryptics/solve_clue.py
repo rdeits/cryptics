@@ -47,6 +47,16 @@ class CrypticClueSolver(object):
         self.running = False
         self.answers_with_clues = None
         self.clue_text = None
+        self.total_phrasings = 0
+        self.finished_phrasings = 0
+        self.phrasing_clues = 0
+        self.finished_phrasing_clues = 0
+
+    @property
+    def progress(self):
+        if self.total_phrasings == 0 or self.phrasing_clues == 0:
+            return None
+        return self.finished_phrasings / self.total_phrasings + (self.finished_phrasing_clues / self.phrasing_clues) * 1 / (self.total_phrasings)
 
     def __enter__(self):
         self.start_go_server()
@@ -76,6 +86,8 @@ class CrypticClueSolver(object):
         self.running = True
         self.clue_text = self.clue_text.encode('ascii', 'ignore')
         all_phrasings, lengths, pattern, answer = parse_clue_text(self.clue_text)
+        self.total_phrasings = len(all_phrasings)
+        self.finished_phrasings = 0
         self.answers_with_clues = []
 
         self.go_proc.stdin.write("# %s %s\n" % (lengths, pattern))
@@ -86,8 +98,8 @@ class CrypticClueSolver(object):
             print p
             for ann_ans in self.solve_phrasing(p):
                 self.answers_with_clues.append(ann_ans)
-            # if len(self.answers_with_clues) > 0 and self.answers_with_clues[0].similarity == 1:
-            #     break
+            self.finished_phrasing_clues = 0
+            self.finished_phrasings += 1
         if len(self.answers_with_clues) == 0 and pattern.replace('.', '') != "":
             self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS.keys() if matches_pattern(x, pattern, lengths)]
         self.answers_with_clues.sort(reverse=True)
@@ -100,6 +112,8 @@ class CrypticClueSolver(object):
         """
         answers_with_clues = []
         possible_clues = list(generate_clues(phrasing))
+        self.phrasing_clues = len(possible_clues)
+        self.finished_phrasing_clues = 0
 
         for i, clue in enumerate(possible_clues):
             if not self.running:
@@ -115,6 +129,7 @@ class CrypticClueSolver(object):
                 if answer in phrasing or any(x.startswith(answer) for x in phrasing):
                     continue
                 answers_with_clues.append(AnnotatedAnswer(answer, clue))
+            self.finished_phrasing_clues += 1
         return sorted(answers_with_clues, reverse=True)
 
     def collect_answers(self):

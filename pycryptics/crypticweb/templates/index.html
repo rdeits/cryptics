@@ -2,6 +2,23 @@ $def with (answers, clue, err_msg)
 
 <link href='/static/crypticweb.css' rel='stylesheet' type='text/css'>
 
+<h1><a href="/">Cryptic Crossword Clue Solver</a></h1>
+This is a general tool for solving cryptic (or "British-style") crossword clues. Run it by entering a cryptic clue along with the answer length (or lengths) in parenthesis. If you know some of the letters in the answer, you can type them in after the lengths, using a single '.' for each unknown letter. Here are some examples of clues it can solve correctly:<br><br>
+
+<a href="/solve/Spin%20broken%20shingle%20(7)">Spin broken shingle (7)</a><br>
+ENGLISH<br>
+<a href="/solve/Be%20aware%20of%20nerd's%20flip-flop%20(4)%20k...">Be aware of nerd's flip-flop (4) k...</a><br>
+WONK<br>
+<a href="/solve/Stirs,%20spilling%20soda%20(4)%20.d..">Stirs, spilling soda (4) .d..</a><br>
+ADOS<br>
+<a href="/solve/Male%20done%20mixing%20drink%20(8)">Male done mixing drink (8)</a><br>
+LEMONADE<br>
+<a href="/solve/Bottomless%20sea,%20stormy%20sea%20-%20waters'%20surface%20rises_and_falls%20(7)%20s.es...">Bottomless sea, stormy sea - waters' surface rises_and_falls (7) s.es...</a><br>
+SEESAWS<br>
+<br>
+
+Longer clues take longer to solve. You can help the solver by connecting words which act together with an underscore ('_') to from a phrase, as with "rises_and_falls" in the last example.
+
 <form name="main" method="post" id="clue_form">
 	<label for="Clue">Clue</label>
 	<input name="Clue" type="text" id="Clue" placeholder="Spin broken shingle (7) ..g...." value="$clue" size="100"/>
