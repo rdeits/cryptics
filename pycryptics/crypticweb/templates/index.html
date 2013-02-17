@@ -27,10 +27,10 @@ Longer clues take longer to solve. You can help the solver by connecting words w
 </form>
 
 <div id="solution">
-	$if answers is not None:
-		$if err_msg:
-			$err_msg
-		$else:
+	$if err_msg:
+		$:err_msg
+	$else:
+		$if answers is not None:
 			<div id="answer_nav">
 			<div id="similarities">
 			<b>Score</b><br>
