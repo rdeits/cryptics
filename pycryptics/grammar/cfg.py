@@ -2,6 +2,7 @@ import nltk.grammar as gram
 from nltk import parse
 from nltk.tree import Tree
 from pycryptics.utils.indicators import INDICATORS
+from pycryptics.grammar.memo_chart import MemoChart
 
 """
 A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword clues.
@@ -108,5 +109,5 @@ def clue_from_tree(tree):
 
 def generate_clues(phrases):
     g = generate_grammar(phrases)
-    parser = parse.EarleyChartParser(g)
+    parser = parse.EarleyChartParser(g, chart_class=MemoChart)
     return [clue_from_tree(t) for t in parser.nbest_parse(phrases)]

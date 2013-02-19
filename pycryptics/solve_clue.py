@@ -1,6 +1,6 @@
 from __future__ import division
 from pycryptics.utils.language import semantic_similarity
-from pycryptics.utils.cfg import generate_clues
+from pycryptics.grammar.cfg import generate_clues
 from pycryptics.utils.phrasings import phrasings
 from pycryptics.utils.synonyms import SYNONYMS
 import subprocess
