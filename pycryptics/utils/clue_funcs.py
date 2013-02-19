@@ -8,7 +8,7 @@ import re
 
 def reverse(s, phrasing):
     assert len(s) == 1
-    return tuple(bigram_filter([''.join(reversed(s[0]))], phrasing))
+    return bigram_filter([''.join(reversed(s[0]))], phrasing)
 
 def all_legal_substrings(words, phrasing):
     assert len(words) == 1
@@ -36,7 +36,7 @@ def all_legal_substrings(words, phrasing):
         subs.add(word[1:])
         subs.add(word[:len(word)-1])
         subs.add(word[1:-1])
-    return tuple(bigram_filter(subs, phrasing))
+    return bigram_filter(subs, phrasing)
 
 
 def all_insertions(words, phrasing):
@@ -50,7 +50,7 @@ def all_insertions(words, phrasing):
     word2, word1 = word1, word2
     for j in range(len(word2)):
         results.add(word2[:j] + word1 + word2[j:])
-    return tuple(bigram_filter(results, phrasing))
+    return bigram_filter(results, phrasing)
 
 
 def anagrams(words, phrasing):
@@ -91,7 +91,7 @@ def anagrams(words, phrasing):
         else:
             active_set = new_active_set
     # return active_set
-    return tuple([a for a in active_set if a != word])
+    return [a for a in active_set if a != word]
 
 def bigram_filter(answers, phrasing):
     threshold = len(phrasing.lengths) - 1  # allow violations across word boundaries

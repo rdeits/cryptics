@@ -5,10 +5,7 @@
 			"path": "."
 		},
 		{
-			"path": "../pscryptics"
-			},
-		{
-			"path": "/usr/local/lib/python2.7/site-packages/nltk/"
+			"path": "/usr/local/lib/python2.7/site-packages/nltk"
 		}
 	]
 }

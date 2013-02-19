@@ -29,6 +29,7 @@ Aerial hunters complain about hills (7) | RAPTORS
 
 
 //Incorrect CFG parsing
+face_it_nurse is_holding back release (5) | UNTIE
 
 //Bad ranking
 Help absorbing cold corrosive liquid (4) | ACID
