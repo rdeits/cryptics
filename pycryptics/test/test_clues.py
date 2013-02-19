@@ -6,6 +6,7 @@ class TestClues(unittest.TestCase):
     def test_known_clues(self):
         with CrypticClueSolver() as solver:
             for clue_text in open('clues/known_clues.txt', 'r').readlines():
+                print "\n========================================"
                 phrases, lengths, pattern, known_answer = split_clue_text(clue_text)
                 solver.setup(clue_text)
                 answers = solver.run()

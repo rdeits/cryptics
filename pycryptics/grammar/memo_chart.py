@@ -1,6 +1,12 @@
 from nltk.parse.earleychart import IncrementalChart
 from nltk.parse.chart import LeafEdge, Tree
 
+class ClueTree(Tree):
+    def __init__(self, node_or_str, children=None):
+        self.answers = None
+        super(ClueTree, self).__init__(node_or_str, children)
+
+
 class MemoChart(IncrementalChart):
     def parses(self, root, tree_class=Tree):
         """
@@ -10,10 +16,10 @@ class MemoChart(IncrementalChart):
         trees = []
         self.memo = {}
         for edge in self.select(start=0, end=self._num_leaves, lhs=root):
-            trees += self.trees(edge, tree_class=tree_class, complete=True)
+            trees += self.trees(edge, tree_class=ClueTree, complete=True)
         return trees
 
-    def trees(self, edge, tree_class=Tree, complete=False):
+    def trees(self, edge, tree_class=ClueTree, complete=False):
         """
         Return a list of the tree structures that are associated
         with ``edge``.
@@ -39,11 +45,11 @@ class MemoChart(IncrementalChart):
             than once, we can reuse the same trees.
         """
         # If we've seen this edge before, then reuse our old answer.
-        print "edge:", edge
-        print "memo:", self.memo
+        # print "edge:", edge
+        # print "memo:", self.memo
         # import pdb; pdb.set_trace()
         if edge in self.memo:
-            print "cache hit for edge:", edge
+            # print "cache hit for edge:", edge
             return self.memo[edge]
 
         trees = []
@@ -90,5 +96,5 @@ class MemoChart(IncrementalChart):
         self.memo[edge] = trees
 
         # Return the list of trees.
-        print "returning trees:", trees
+        # print "returning trees:", trees
         return trees

@@ -1,17 +1,33 @@
 from __future__ import division
 from pycryptics.utils.language import semantic_similarity
 from pycryptics.grammar.cfg import generate_clues
+from pycryptics.utils.transforms import TRANSFORMS
+from pycryptics.utils.clue_funcs import FUNCTIONS
 from pycryptics.utils.phrasings import phrasings
 from pycryptics.utils.synonyms import SYNONYMS
 import subprocess
 import re
+
+RULES = TRANSFORMS
+RULES.update(FUNCTIONS)
+
+class ClueUnsolvableError(Exception):
+    pass
+
+class Phrasing:
+    def __init__(self, phrases, lengths, pattern, known_answer=None):
+        self.phrases = phrases
+        self.lengths = lengths
+        self.pattern = pattern
+        self.known_answer = known_answer
 
 
 class AnnotatedAnswer:
     def __init__(self, ans, clue):
         self.answer = ans
         self.clue = clue
-        d, self._definition, null = clue[[x[0] for x in clue].index('d')]
+        d_tree = clue[[x.node for x in clue].index('d')]
+        self._definition = d_tree[0]
         self.similarity = semantic_similarity(self.answer, self._definition)
 
     def __cmp__(self, other):
@@ -42,6 +58,12 @@ class ClueSolutions:
         return sorted([(v, k) for k, v in self.answer_scores.items()], reverse=True)
 
 
+def arg_filter(arg_set):
+    if arg_set != [""]:
+        return tuple([a for a in arg_set if not a == ""])
+    return arg_set
+
+
 class CrypticClueSolver(object):
     def __init__(self):
         self.running = False
@@ -51,6 +73,7 @@ class CrypticClueSolver(object):
         self.finished_phrasings = 0
         self.phrasing_clues = 0
         self.finished_phrasing_clues = 0
+        self.phrasing = None
 
     @property
     def progress(self):
@@ -59,12 +82,12 @@ class CrypticClueSolver(object):
         return self.finished_phrasings / self.total_phrasings + (self.finished_phrasing_clues / self.phrasing_clues) * 1 / (self.total_phrasings)
 
     def __enter__(self):
-        self.start_go_server()
+        # self.start_go_server()
         return self
 
     def __exit__(self, type, value, traceback):
         self.stop()
-        self.stop_go_server()
+        # self.stop_go_server()
 
     def start_go_server(self):
         self.go_proc = subprocess.Popen(['cryptics'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
@@ -90,9 +113,10 @@ class CrypticClueSolver(object):
         self.finished_phrasings = 0
         self.answers_with_clues = []
 
-        self.go_proc.stdin.write("# %s %s\n" % (lengths, pattern))
-        print self.go_proc.stdout.readline()
+        # self.go_proc.stdin.write("# %s %s\n" % (lengths, pattern))
+        # print self.go_proc.stdout.readline()
         for p in all_phrasings:
+            self.phrasing = Phrasing(p, lengths, pattern, answer)
             if not self.running:
                 break
             print p
@@ -118,23 +142,67 @@ class CrypticClueSolver(object):
         for i, clue in enumerate(possible_clues):
             if not self.running:
                 break
-            self.go_proc.stdin.write(str(clue) + '\n')
-            result = self.go_proc.stdout.readline()
-            while result.strip() != ".":
-                clue = eval(result)
-                result = self.go_proc.stdout.readline()
-                if clue == []:
-                    continue
-                answer = clue[-1].lower()
+            # print "solving:", clue
+            try:
+                answers = self.get_answers(clue)
+            except ClueUnsolvableError:
+                answers = []
+            # except Exception as e:
+            #     print e
+            #     import pdb; pdb.set_trace()
+            for answer in answers:
                 if answer in phrasing or any(x.startswith(answer) for x in phrasing):
                     continue
-                answers_with_clues.append(AnnotatedAnswer(answer, clue))
+                if answer in phrasing or any(x.startswith(answer) for x in phrasing) or any(answer == x for p in phrasing for x in p.split('_')):
+                    pass
+                else:
+                    answers_with_clues.append(AnnotatedAnswer(answer, clue))
+
+
+            # self.go_proc.stdin.write(str(clue) + '\n')
+            # result = self.go_proc.stdout.readline()
+            # while result.strip() != ".":
+            #     clue = eval(result)
+            #     result = self.go_proc.stdout.readline()
+            #     if clue == []:
+            #         continue
+            #     answer = clue[-1].lower()
+            #     if answer in phrasing or any(x.startswith(answer) for x in phrasing):
+            #         continue
+            #     answers_with_clues.append(AnnotatedAnswer(answer, clue))
             self.finished_phrasing_clues += 1
         return sorted(answers_with_clues, reverse=True)
 
     def collect_answers(self):
         if self.answers_with_clues is not None:
             return ClueSolutions(self.answers_with_clues)
+
+    def get_answers(self, t):
+        if isinstance(t, str):
+            return [t]
+        if t.answers is None:
+            t.answers = {}
+            self.solve_clue_tree(t)
+        if t.answers == {}:
+            raise ClueUnsolvableError
+        return t.answers
+
+    def solve_clue_tree(self, t):
+        arg_sets = [[]]
+        for child in t:
+            new_arg_sets = []
+            for s in arg_sets:
+                for ans in self.get_answers(child):
+                    new_arg_sets.append(s + [ans])
+            arg_sets = new_arg_sets
+        for args in arg_sets:
+            filtered_args = arg_filter(args)
+            answers = RULES[t.node](filtered_args, self.phrasing)
+            if answers is None:
+                answers = []
+            for ans in answers:
+                t.answers[ans] = args
+
 
 
 def matches_pattern(word, pattern, lengths):
@@ -163,8 +231,14 @@ def parse_clue_text(clue_text):
     phrases, lengths, pattern, answer = split_clue_text(clue_text)
     return phrasings(phrases), lengths, pattern, answer
 
+
 if __name__ == '__main__':
-    clue = "initially babies are naked (4)"
+    clue = "sink graduate with sin (5)"
+    # all_phrasings, lengths, pattern, answer = parse_clue_text(clue)
+    # phrasing = Phrasing(all_phrasings[0],lengths,pattern,answer)
+    # print RULES['clue_arg']([""], phrasing)
     with CrypticClueSolver() as solver:
         solver.setup(clue)
-        print solver.run()[0]
+        answers = solver.run()
+        for a in answers[:5]: print a
+

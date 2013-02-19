@@ -1,6 +1,6 @@
 import nltk.parse as parse
 import nltk.grammar as grammar
-from pycryptics.grammar.memo_chart import MemoChart
+from pycryptics.grammar.memo_chart import MemoChart, ClueTree
 
 top = grammar.Nonterminal('top')
 bar = grammar.Nonterminal('bar')
@@ -19,3 +19,4 @@ print p[0][0][0]
 print p[1][0][0]
 print "==", p[0][0][0] == p[1][0][0]
 print "is", p[0][0][0] is p[1][0][0]
+print isinstance(p[0], ClueTree)
