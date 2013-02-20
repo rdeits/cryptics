@@ -26,8 +26,10 @@ def valid_words(words):
     return "_".join(words) in SYNONYMS
 
 def valid_answer(ans, phrasing):
+    if len(ans) != sum(phrasing.lengths) or not matches_pattern(ans, phrasing.pattern) or ans in phrasing.phrases:
+        return False, None
     words = split_words(ans, phrasing.lengths)
-    return len(ans) == sum(phrasing.lengths) and matches_pattern(ans, phrasing.pattern) and valid_words(words) and not ans in phrasing.phrases
+    return valid_words(words), words
 
 def lit(s, phrasing):
     return s
@@ -45,11 +47,9 @@ def syn(s, phrasing):
 
 def top(s, phrasing):
     ans = "".join(s)
-    words = split_words(ans, phrasing.lengths)
-    if valid_answer(ans, phrasing):
+    is_valid, words = valid_answer(ans, phrasing)
+    if is_valid:
         return ['_'.join(words)]
-    else:
-        return None
 
 
 TRANSFORMS = {'lit': lit,

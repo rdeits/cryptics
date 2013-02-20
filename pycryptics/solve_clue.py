@@ -60,7 +60,7 @@ class ClueSolutions:
 
 def arg_filter(arg_set):
     if arg_set != [""]:
-        return tuple([a for a in arg_set if not a == ""])
+        return [a for a in arg_set if not a == ""]
     return arg_set
 
 
@@ -149,9 +149,6 @@ class CrypticClueSolver(object):
                 answers = self.get_answers(clue)
             except ClueUnsolvableError:
                 answers = []
-            # except Exception as e:
-            #     print e
-            #     import pdb; pdb.set_trace()
             for answer in answers:
                 if answer in phrasing or any(x.startswith(answer) for x in phrasing):
                     continue
@@ -159,19 +156,6 @@ class CrypticClueSolver(object):
                     pass
                 else:
                     answers_with_clues.append(AnnotatedAnswer(answer, clue))
-
-
-            # self.go_proc.stdin.write(str(clue) + '\n')
-            # result = self.go_proc.stdout.readline()
-            # while result.strip() != ".":
-            #     clue = eval(result)
-            #     result = self.go_proc.stdout.readline()
-            #     if clue == []:
-            #         continue
-            #     answer = clue[-1].lower()
-            #     if answer in phrasing or any(x.startswith(answer) for x in phrasing):
-            #         continue
-            #     answers_with_clues.append(AnnotatedAnswer(answer, clue))
             self.finished_phrasing_clues += 1
         return sorted(answers_with_clues, reverse=True)
 
@@ -183,35 +167,57 @@ class CrypticClueSolver(object):
         if isinstance(t, str):
             return [t]
 
-        # t_hash = str(t)
-        # if t_hash in self.memo:
-        #     return self.memo[t_hash]
-
         if t.answers is None:
             t.answers = {}
             self.solve_clue_tree(t)
-        # self.memo[t_hash] = t.answers
         if t.answers == {}:
             raise ClueUnsolvableError
         return t.answers
 
     def solve_clue_tree(self, t):
-        arg_sets = [[]]
-        for child in t:
-            new_arg_sets = []
-            for s in arg_sets:
-                for ans in self.get_answers(child):
-                    new_arg_sets.append(s + [ans])
-            arg_sets = new_arg_sets
+        child_answers = [self.get_answers(c) for c in t]
+        for i, s in enumerate(child_answers):
+            if isinstance(s, dict):
+                child_answers[i] = s.keys()
+        if t.node == 'top':
+            arg_sets = make_arg_sets(child_answers, sum(self.phrasing.lengths))
+        else:
+            arg_sets = new_make_arg_sets(child_answers)
+
         for args in arg_sets:
-            filtered_args = arg_filter(args)
-            answers = RULES[t.node](filtered_args, self.phrasing)
+            answers = RULES[t.node](arg_filter(args), self.phrasing)
             if answers is None:
                 answers = []
             for ans in answers:
                 t.answers[ans] = args
 
 
+def new_make_arg_sets(child_answers):
+    child_set_lengths = [len(s) for s in child_answers]
+    if not all(child_set_lengths):
+        return
+    count = 0
+    current_ans = [None for i in child_answers]
+    cum_prods = [1 for i in child_answers]
+    for i in range(len(child_answers)-2, -1, -1):
+        cum_prods[i] = cum_prods[i+1] * child_set_lengths[i+1]
+    while count < cum_prods[0] * child_set_lengths[0]:
+        for i, ans_list in enumerate(child_answers):
+            current_ans[i] = ans_list[(count // cum_prods[i]) % child_set_lengths[i]]
+        count += 1
+        yield current_ans
+
+def make_arg_sets(child_answers, target_len):
+    arg_sets = [([], 0)]
+    for ans_list in child_answers:
+        new_arg_sets = []
+        for ans in ans_list:
+            for s in arg_sets:
+                candidate = (s[0] + [ans], s[1] + len(ans))
+                if candidate[1] <= target_len:
+                    new_arg_sets.append(candidate)
+        arg_sets = new_arg_sets
+    return [s[0] for s in arg_sets if s[1] == target_len]
 
 def matches_pattern(word, pattern, lengths):
     return (tuple(len(x) for x in word.split('_')) == lengths) and re.match("^" + pattern + "$", word)
