@@ -45,8 +45,9 @@ def syn(s, phrasing):
 
 def top(s, phrasing):
     ans = "".join(s)
+    words = split_words(ans, phrasing.lengths)
     if valid_answer(ans, phrasing):
-        return ['_'.join(split_words(ans, phrasing.lengths))]
+        return ['_'.join(words)]
     else:
         return None
 

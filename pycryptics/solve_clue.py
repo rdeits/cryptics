@@ -74,6 +74,7 @@ class CrypticClueSolver(object):
         self.phrasing_clues = 0
         self.finished_phrasing_clues = 0
         self.phrasing = None
+        self.memo = {}
 
     @property
     def progress(self):
@@ -104,6 +105,7 @@ class CrypticClueSolver(object):
 
     def setup(self, clue_text):
         self.clue_text = clue_text
+        self.memo = {}
 
     def run(self):
         self.running = True
@@ -180,9 +182,15 @@ class CrypticClueSolver(object):
     def get_answers(self, t):
         if isinstance(t, str):
             return [t]
+
+        # t_hash = str(t)
+        # if t_hash in self.memo:
+        #     return self.memo[t_hash]
+
         if t.answers is None:
             t.answers = {}
             self.solve_clue_tree(t)
+        # self.memo[t_hash] = t.answers
         if t.answers == {}:
             raise ClueUnsolvableError
         return t.answers
@@ -233,7 +241,8 @@ def parse_clue_text(clue_text):
 
 
 if __name__ == '__main__':
-    clue = "sink graduate with sin (5)"
+    # clue = "sink graduate with sin (5)"
+    clue = "you finally beat iowa perfect world (6)"
     # all_phrasings, lengths, pattern, answer = parse_clue_text(clue)
     # phrasing = Phrasing(all_phrasings[0],lengths,pattern,answer)
     # print RULES['clue_arg']([""], phrasing)

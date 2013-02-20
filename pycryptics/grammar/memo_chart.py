@@ -6,6 +6,12 @@ class ClueTree(Tree):
         self.answers = None
         super(ClueTree, self).__init__(node_or_str, children)
 
+    def __str__(self):
+        return self._pprint_flat('', '()', False)
+
+# TODO: create Memo class
+
+memo = dict()
 
 class MemoChart(IncrementalChart):
     def parses(self, root, tree_class=Tree):
@@ -14,7 +20,7 @@ class MemoChart(IncrementalChart):
         the entire chart, and whose root node is ``root``.
         """
         trees = []
-        self.memo = {}
+        self.memo = memo
         for edge in self.select(start=0, end=self._num_leaves, lhs=root):
             trees += self.trees(edge, tree_class=ClueTree, complete=True)
         return trees
