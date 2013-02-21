@@ -182,11 +182,8 @@ class CrypticClueSolver(object):
                 child_answers[i] = s.keys()
         if t.node == 'top':
             arg_sets = make_arg_sets(child_answers, sum(self.phrasing.lengths))
-            # print "top clue running with arg sets:", arg_sets
-            # print "from child answers:", child_answers
         else:
-            arg_sets = new_make_arg_sets(child_answers)
-
+            arg_sets = make_arg_sets(child_answers)
         for args in arg_sets:
             answers = RULES[t.node](arg_filter(args), self.phrasing)
             if answers is None:
@@ -195,32 +192,20 @@ class CrypticClueSolver(object):
                 t.answers[ans] = args[:]
 
 
-def new_make_arg_sets(child_answers):
-    child_set_lengths = [len(s) for s in child_answers]
-    if not all(child_set_lengths):
-        return
-    count = 0
-    current_ans = [None for i in child_answers]
-    cum_prods = [1 for i in child_answers]
-    for i in range(len(child_answers)-2, -1, -1):
-        cum_prods[i] = cum_prods[i+1] * child_set_lengths[i+1]
-    while count < cum_prods[0] * child_set_lengths[0]:
-        for i, ans_list in enumerate(child_answers):
-            current_ans[i] = ans_list[(count // cum_prods[i]) % child_set_lengths[i]]
-        count += 1
-        yield current_ans
-
-def make_arg_sets(child_answers, target_len):
+def make_arg_sets(child_answers, target_len=None):
     arg_sets = [([], 0)]
     for ans_list in child_answers:
         new_arg_sets = []
         for ans in ans_list:
             for s in arg_sets:
                 candidate = (s[0] + [ans], s[1] + len(ans))
-                if candidate[1] <= target_len:
+                if target_len is None or candidate[1] <= target_len:
                     new_arg_sets.append(candidate)
         arg_sets = new_arg_sets
-    return [s[0] for s in arg_sets if s[1] == target_len]
+    if target_len is not None:
+        return [s[0] for s in arg_sets if s[1] == target_len]
+    else:
+        return [s[0] for s in arg_sets]
 
 def matches_pattern(word, pattern, lengths):
     return (tuple(len(x) for x in word.split('_')) == lengths) and re.match("^" + pattern + "$", word)
