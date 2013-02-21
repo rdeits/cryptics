@@ -9,6 +9,27 @@ class ClueTree(Tree):
     def __str__(self):
         return self._pprint_flat('', '()', False)
 
+    def __repr__(self):
+        return self.__str__()
+
+    def derivations(self, answer):
+        if self.node.endswith('_arg'):
+            return self[0].derivations(self.answers[answer][0])
+        result = "(" + self.node + " "
+        arg_answers = self.answers[answer]
+        for i, child in enumerate(self):
+            if isinstance(child, basestring):
+                result += '"' + child + '"'
+            else:
+                result += child.derivations(arg_answers[i])
+            if i < len(self) - 1:
+                result += " "
+        if answer != "" and not any(answer == a for a in arg_answers):
+            result += " -> " + answer.upper()
+        result += ")"
+        return result
+
+
 class MemoChart(IncrementalChart):
     def parses(self, root, tree_class=Tree):
         """

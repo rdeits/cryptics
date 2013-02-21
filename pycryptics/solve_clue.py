@@ -34,7 +34,7 @@ class AnnotatedAnswer:
         return cmp((self.similarity, self.answer), (other.similarity, other.answer))
 
     def __str__(self):
-        return str([self.answer, self.similarity, self.clue])
+        return str([self.answer, self.similarity, self.clue.derivations(self.answer)])
 
 
 class PatternAnswer(AnnotatedAnswer):
@@ -115,8 +115,6 @@ class CrypticClueSolver(object):
         self.finished_phrasings = 0
         self.answers_with_clues = []
 
-        # self.go_proc.stdin.write("# %s %s\n" % (lengths, pattern))
-        # print self.go_proc.stdout.readline()
         for p in all_phrasings:
             self.phrasing = Phrasing(p, lengths, pattern, answer)
             if not self.running:
@@ -127,7 +125,7 @@ class CrypticClueSolver(object):
             self.finished_phrasing_clues = 0
             self.finished_phrasings += 1
         if len(self.answers_with_clues) == 0 and pattern.replace('.', '') != "":
-            self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS.keys() if matches_pattern(x, pattern, lengths)]
+            self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS if matches_pattern(x, pattern, lengths)]
         self.answers_with_clues.sort(reverse=True)
         return self.answers_with_clues
 
@@ -150,8 +148,6 @@ class CrypticClueSolver(object):
             except ClueUnsolvableError:
                 answers = []
             for answer in answers:
-                if answer in phrasing or any(x.startswith(answer) for x in phrasing):
-                    continue
                 if answer in phrasing or any(x.startswith(answer) for x in phrasing) or any(answer == x for p in phrasing for x in p.split('_')):
                     pass
                 else:
@@ -220,9 +216,11 @@ class CrypticClueSolver(object):
             arg_sets = new_arg_sets
         return arg_sets
 
-def matches_pattern(word, pattern, lengths):
-    return (tuple(len(x) for x in word.split('_')) == lengths) and re.match("^" + pattern + "$", word)
+# def matches_pattern(word, pattern, lengths):
+#     return (tuple(len(x) for x in word.split('_')) == lengths) and re.match("^" + pattern + "$", word)
 
+def matches_pattern(word, pattern, lengths):
+    return (tuple(len(x) for x in word.split('_')) == lengths) and all(c == pattern[i] or pattern[i] == '.' for i, c in enumerate(word.replace('_', '')))
 
 
 def split_clue_text(clue_text):
@@ -252,7 +250,8 @@ if __name__ == '__main__':
     # clue = "sink graduate with sin (5)"
     # clue = "you finally beat iowa perfect world (6)"
     # clue = "be aware of nerd's flip_flop (4) k..."
-    clue = "Bottomless sea, stormy sea - waters' surface rises_and_falls (7) s.es..."
+    # clue = "Bottomless sea, stormy sea - waters' surface rises_and_falls (7) s.es..."
+    clue = "foo bar (8) n....... | NEEDLESS"
     # phrasing = Phrasing([],(7,),'s.es...')
     # print valid_partial_answer('se', phrasing)
     with CrypticClueSolver() as solver:
