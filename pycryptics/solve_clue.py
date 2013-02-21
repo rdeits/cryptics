@@ -1,7 +1,7 @@
 from __future__ import division
 from pycryptics.utils.language import semantic_similarity
 from pycryptics.grammar.cfg import generate_clues
-from pycryptics.utils.transforms import TRANSFORMS
+from pycryptics.utils.transforms import TRANSFORMS, valid_partial_answer
 from pycryptics.utils.clue_funcs import FUNCTIONS
 from pycryptics.utils.phrasings import phrasings
 from pycryptics.utils.synonyms import SYNONYMS
@@ -181,9 +181,9 @@ class CrypticClueSolver(object):
             if isinstance(s, dict):
                 child_answers[i] = s.keys()
         if t.node == 'top':
-            arg_sets = make_arg_sets(child_answers, sum(self.phrasing.lengths))
+            arg_sets = self.make_top_arg_sets(child_answers)
         else:
-            arg_sets = make_arg_sets(child_answers)
+            arg_sets = self.make_arg_sets(child_answers)
         for args in arg_sets:
             answers = RULES[t.node](arg_filter(args), self.phrasing)
             if answers is None:
@@ -191,24 +191,33 @@ class CrypticClueSolver(object):
             for ans in answers:
                 t.answers[ans] = args[:]
 
-
-def make_arg_sets(child_answers, target_len=None):
-    arg_sets = [([], 0)]
-    for ans_list in child_answers:
-        new_arg_sets = []
-        for ans in ans_list:
-            for s in arg_sets:
-                candidate = (s[0] + [ans], s[1] + len(ans))
-                if target_len is None or candidate[1] <= target_len:
-                    new_arg_sets.append(candidate)
-        arg_sets = new_arg_sets
-    if target_len is not None:
+    def make_top_arg_sets(self, child_answers):
+        target_len = sum(self.phrasing.lengths)
+        arg_sets = [([], 0, '')]
+        for ans_list in child_answers:
+            new_arg_sets = []
+            for ans in ans_list:
+                for s in arg_sets:
+                    candidate = (s[0] + [ans], s[1] + len(ans), s[2] + ans)
+                    if valid_partial_answer(candidate[2], self.phrasing):
+                    # if candidate[1] <= target_len:
+                        new_arg_sets.append(candidate)
+            arg_sets = new_arg_sets
         return [s[0] for s in arg_sets if s[1] == target_len]
-    else:
-        return [s[0] for s in arg_sets]
+
+    def make_arg_sets(self, child_answers):
+        arg_sets = [[]]
+        for ans_list in child_answers:
+            new_arg_sets = []
+            for ans in ans_list:
+                for s in arg_sets:
+                    new_arg_sets.append(s + [ans])
+            arg_sets = new_arg_sets
+        return arg_sets
 
 def matches_pattern(word, pattern, lengths):
     return (tuple(len(x) for x in word.split('_')) == lengths) and re.match("^" + pattern + "$", word)
+
 
 
 def split_clue_text(clue_text):
@@ -237,10 +246,10 @@ def parse_clue_text(clue_text):
 if __name__ == '__main__':
     # clue = "sink graduate with sin (5)"
     # clue = "you finally beat iowa perfect world (6)"
-    clue = "be aware of nerd's flip_flop (4) k..."
-    # all_phrasings, lengths, pattern, answer = parse_clue_text(clue)
-    # phrasing = Phrasing(all_phrasings[0],lengths,pattern,answer)
-    # print RULES['clue_arg']([""], phrasing)
+    # clue = "be aware of nerd's flip_flop (4) k..."
+    clue = "Bottomless sea, stormy sea - waters' surface rises_and_falls (7) s.es..."
+    # phrasing = Phrasing([],(7,),'s.es...')
+    # print valid_partial_answer('se', phrasing)
     with CrypticClueSolver() as solver:
         solver.setup(clue)
         answers = solver.run()

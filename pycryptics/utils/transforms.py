@@ -1,5 +1,5 @@
-import pycryptics.utils.cfg as cfg
 from pycryptics.utils.synonyms import cached_synonyms, SYNONYMS
+from pycryptics.utils.ngrams import INITIAL_NGRAMS
 import re
 
 def split_words(ans, lengths):
@@ -20,7 +20,7 @@ def matches_pattern(ans, pattern):
     if pattern == "":
         return True
     else:
-        return bool(re.match(pattern, ans[:len(pattern)]))
+        return bool(re.match(pattern[:len(ans)], ans))
 
 def valid_words(words):
     return "_".join(words) in SYNONYMS
@@ -30,6 +30,17 @@ def valid_answer(ans, phrasing):
         return False, None
     words = split_words(ans, phrasing.lengths)
     return valid_words(words), words
+
+def valid_partial_answer(ans, phrasing):
+    if len(ans) > sum(phrasing.lengths):
+        return False
+    if not matches_pattern(ans, phrasing.pattern):
+        return False
+    words = split_words(ans, phrasing.lengths)
+    for i, word in enumerate(words):
+        if word not in INITIAL_NGRAMS[phrasing.lengths[i]]:
+            return False
+    return True
 
 def lit(s, phrasing):
     return s
