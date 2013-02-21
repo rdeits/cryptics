@@ -20,7 +20,7 @@ class MemoChart(IncrementalChart):
         the entire chart, and whose root node is ``root``.
         """
         trees = []
-        self.memo = memo
+        self.memo = {}
         for edge in self.select(start=0, end=self._num_leaves, lhs=root):
             trees += self.trees(edge, tree_class=ClueTree, complete=True)
         return trees

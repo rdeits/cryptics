@@ -166,12 +166,13 @@ class CrypticClueSolver(object):
     def get_answers(self, t):
         if isinstance(t, str):
             return [t]
-
         if t.answers is None:
             t.answers = {}
             self.solve_clue_tree(t)
         if t.answers == {}:
+            # print "clue:", t, "unsolvable"
             raise ClueUnsolvableError
+        # print "solved:", t, "\ngot:", t.answers
         return t.answers
 
     def solve_clue_tree(self, t):
@@ -181,6 +182,8 @@ class CrypticClueSolver(object):
                 child_answers[i] = s.keys()
         if t.node == 'top':
             arg_sets = make_arg_sets(child_answers, sum(self.phrasing.lengths))
+            # print "top clue running with arg sets:", arg_sets
+            # print "from child answers:", child_answers
         else:
             arg_sets = new_make_arg_sets(child_answers)
 
@@ -189,7 +192,7 @@ class CrypticClueSolver(object):
             if answers is None:
                 answers = []
             for ans in answers:
-                t.answers[ans] = args
+                t.answers[ans] = args[:]
 
 
 def new_make_arg_sets(child_answers):
@@ -248,7 +251,8 @@ def parse_clue_text(clue_text):
 
 if __name__ == '__main__':
     # clue = "sink graduate with sin (5)"
-    clue = "you finally beat iowa perfect world (6)"
+    # clue = "you finally beat iowa perfect world (6)"
+    clue = "be aware of nerd's flip_flop (4) k..."
     # all_phrasings, lengths, pattern, answer = parse_clue_text(clue)
     # phrasing = Phrasing(all_phrasings[0],lengths,pattern,answer)
     # print RULES['clue_arg']([""], phrasing)
