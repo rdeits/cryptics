@@ -1,5 +1,5 @@
 # Introduction
-This is a general cryptic crossword clue solver, written in a mix of Python and Go. 
+This is a general cryptic crossword clue solver, written in Python
 
 # Required python packages:
 
@@ -13,13 +13,11 @@ This is a general cryptic crossword clue solver, written in a mix of Python and 
 	python (tested with 2.7)
 	rake
 	git
-	go (tested with v.1.0.2)
 
 # Installation:
 
 Add the appropriate folders to your various PATH variables:
 
-	export GOPATH="<your-local-path>/cryptics/go:${GOPATH}"
 	export PATH="<your-local-path>/cryptics/go/bin:${PATH}"
 	export PYTHONPATH="<your-local-path>/cryptics:${PYTHONPATH}"
 	
@@ -136,18 +134,6 @@ Of course, we are certain to produce a great many bad answers using this method,
 
 The above says: "Take a synonym of 'are': LIVE, reverse it: EVIL to get a word meaning INITIALLY. However, the similarity in meaning between EVIL and INITIALLY is essentially zero, so this answer gets a score of 0. 
 In this way, we generate the most probable interpretation and solution for a given clue. 
-
-# Internal Implementation
-
-Currently, the solver is implemented in a mix of Python (for its fantastic Natural Language Toolkit) and Go (for its speed and concurrency). The web server, CFG parser, and answer scoring are implemented in Python, while the solving mechanics are all implemented in Go. The Go code runs as a subprocess spawned from Python and communicates over Stdin/Stdout.  Structured clues, such as: 
-
-	('top', (sub, ('sub_', 'initially'), ('lit', 'babies')), ('lit', 'are'), ('d', 'naked'))
-
-are generated in Python and sent to the Go solver over Stdin, and solved structured clues, such as: 
-
-	('top', ('sub', ('sub_', 'initially', ''), ('lit', 'babies', 'BABIES'), 'B'), ('lit', 'are', 'ARE'), ('d', 'naked', ''), 'BARE')
-
-are returned from the Go solver to Python to have their answers scored and displayed. 
 
 
 # Acknowledgements
