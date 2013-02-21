@@ -9,10 +9,6 @@ class ClueTree(Tree):
     def __str__(self):
         return self._pprint_flat('', '()', False)
 
-# TODO: create Memo class
-
-memo = dict()
-
 class MemoChart(IncrementalChart):
     def parses(self, root, tree_class=Tree):
         """

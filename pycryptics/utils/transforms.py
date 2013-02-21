@@ -16,11 +16,18 @@ def split_words(ans, lengths):
         j += l
     return words
 
+# def matches_pattern(ans, pattern):
+#     if pattern == "":
+#         return True
+#     else:
+#         return bool(re.match(pattern[:len(ans)], ans))
+
 def matches_pattern(ans, pattern):
     if pattern == "":
         return True
     else:
-        return bool(re.match(pattern[:len(ans)], ans))
+        return all(c == pattern[i] or pattern[i] == '.' for i, c in enumerate(ans))
+
 
 def valid_words(words):
     return "_".join(words) in SYNONYMS

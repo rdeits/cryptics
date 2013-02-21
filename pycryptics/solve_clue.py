@@ -166,6 +166,10 @@ class CrypticClueSolver(object):
     def get_answers(self, t):
         if isinstance(t, str):
             return [t]
+
+        # t_hash = t._pprint_flat('', '()', '"')
+        # if t_hash in self.memo:
+        #     t.answers = self.memo[t_hash]
         if t.answers is None:
             t.answers = {}
             self.solve_clue_tree(t)
@@ -173,6 +177,7 @@ class CrypticClueSolver(object):
             # print "clue:", t, "unsolvable"
             raise ClueUnsolvableError
         # print "solved:", t, "\ngot:", t.answers
+        # self.memo[t_hash] = t.answers
         return t.answers
 
     def solve_clue_tree(self, t):
