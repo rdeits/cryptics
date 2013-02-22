@@ -1,6 +1,8 @@
 import web
 from web import form
 from pycryptics.solve_clue import CrypticClueSolver, split_clue_text
+import webbrowser
+import threading
 # import re
 # from fake_solve_clue import FakeCrypticClueSolver as CrypticClueSolver
 # from fake_solve_clue import split_clue_text
@@ -59,5 +61,9 @@ if __name__ == "__main__":
     with CrypticClueSolver() as solver:
         app = web.application(urls, globals())
         print "Starting up server. Press Ctrl+c to shut down"
+        # t = threading.Thread(target=app.run)
+        # t.start()
+        webbrowser.open("http://localhost:8080", new=2)
         app.run()
+        # t.join()
     print "Shutting down...."
