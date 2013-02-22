@@ -14,6 +14,10 @@ This is a general cryptic crossword clue solver, written in Python
 	rake
 
 # Installation:
+
+Run this command to download the Nodebox Linguistics library from [http://nodebox.net/code/index.php/Linguistics](http://nodebox.net/code/index.php/Linguistics) and the python NLTK Wordnet corpus from [http://nltk.org/data.html](http://nltk.org/data.html):
+
+	rake download
 	
 Generate the n-grams and synonyms datasets by running
 
