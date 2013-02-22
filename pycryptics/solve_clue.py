@@ -44,6 +44,8 @@ class PatternAnswer(AnnotatedAnswer):
                               semantic_similarity(ans, phrasing[-1]))
         self.clue = "???"
 
+    def __str__(self):
+        return str([self.answer, self.similarity, self.clue])
 
 class ClueSolutions:
     def __init__(self, anns):
