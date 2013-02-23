@@ -13,7 +13,9 @@ for word in SYNONYMS:
         for j in range(len(word) - i + 1):
             ngrams.setdefault(l, set([])).add(word[j: j + i])
 
-with open('data/initial_ngrams.pck', 'wb') as f:
-    pickle.dump(dict(initial_ngrams), f)
-with open('data/ngrams.pck', 'wb') as f:
-    pickle.dump(dict(ngrams), f)
+for i in initial_ngrams:
+    with open('data/initial_ngrams.%02d.pck' % i, 'wb') as f:
+        pickle.dump({i: initial_ngrams[i]}, f)
+for i in ngrams:
+    with open('data/ngrams.%02d.pck' %i, 'wb') as f:
+        pickle.dump({i: ngrams[i]}, f)

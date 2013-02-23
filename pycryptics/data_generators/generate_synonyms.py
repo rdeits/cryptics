@@ -108,8 +108,15 @@ def main():
         all_synonyms[k] = list(set(v))
     print 'removed duplicates'
 
-    with open('data/synonyms.pck', 'wb') as f:
-        pickle.dump(dict(all_synonyms), f)
+    words = all_synonyms.keys()
+    splits = range(0, len(all_synonyms), 10000) + [len(all_synonyms)]
+    syn_dicts = [dict() for s in splits]
+    for i in range(len(splits)-1):
+        for w in words[splits[i]:splits[i+1]]:
+            syn_dicts[i][w] = all_synonyms[w]
+        with open('data/synonyms.%02d.pck' %i, 'wb') as f:
+            pickle.dump(syn_dicts[i], f)
+            # pickle.dump(dict(all_synonyms), f)
 
     with open('data/synonyms.json', 'w') as f:
         json.dump(all_synonyms, f, separators=(',', ':'), indent=0)

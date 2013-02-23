@@ -1,9 +1,7 @@
 from __future__ import division
 from pycryptics.utils.synonyms import SYNONYMS
-import pycryptics.utils.cfg as cfg
 from pycryptics.utils.ngrams import NGRAMS
 from pycryptics.utils.transforms import split_words
-import re
 
 
 def reverse(s, phrasing):
