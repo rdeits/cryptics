@@ -1,0 +1,19 @@
+application: cryptic-solver
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /.*
+  script: gae_app.app
+
+libraries:
+- name: numpy
+  version: "latest"
+
+env_variables:
+  NLTK_DATA: "./nltk_data"
