@@ -2,8 +2,6 @@ import web
 from web import form
 from pycryptics.solve_clue import CrypticClueSolver, split_clue_text
 import webbrowser
-import threading
-# import re
 # from fake_solve_clue import FakeCrypticClueSolver as CrypticClueSolver
 # from fake_solve_clue import split_clue_text
 
@@ -25,7 +23,7 @@ class solve:
                 assert len(pattern) == 0 or len(pattern) == sum(lengths), "Answer lengths and length of pattern string must match: sum(%s) != %d" % (lengths, len(pattern))
             except Exception as e:
                 print e
-                return render.index(None, clue, "Sorry, went wrong that I don't know how to handle. Here's python's attempt at an explanation: " + str(e))
+                return render.index(None, clue, "Something went wrong that I don't know how to handle. Here's python's attempt at an explanation:<br>" + str(e))
             if len(phrases) > 7:
                 return render.index(None, clue, "Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them")
             solver.setup(clue)
@@ -47,23 +45,24 @@ class halt:
         solver.stop()
         raise web.seeother('/')
 
-if __name__ == "__main__":
-    render = web.template.render('pycryptics/crypticweb/templates/')
+render = web.template.render('pycryptics/crypticweb/templates/')
 
-    urls = ('/', 'index',
-            '/solve/(.*)', 'solve',
-            '/halt', 'halt')
+urls = ('/', 'index',
+        '/solve/(.*)', 'solve',
+        '/halt', 'halt')
 
-    vclue = form.regexp(r"[^\(\)]*\([0-9 ]*[,[0-9 ]]*\)[ \.a-zA-Z]*", "invalid clue format")
-    myform = form.Form(
-        form.Textbox("Clue", vclue, size="100"))
-    form = myform()
-    with CrypticClueSolver() as solver:
-        app = web.application(urls, globals())
-        print "Starting up server. Press Ctrl+c to shut down"
-        # t = threading.Thread(target=app.run)
-        # t.start()
-        webbrowser.open("http://localhost:8080", new=2)
-        app.run()
-        # t.join()
-    print "Shutting down...."
+vclue = form.regexp(r"[^\(\)]*\([0-9 ]*[,[0-9 ]]*\)[ \.a-zA-Z]*", "invalid clue format")
+myform = form.Form(
+    form.Textbox("Clue", vclue, size="100"))
+form = myform()
+
+solver = CrypticClueSolver()
+
+app = web.application(urls, globals())
+print "Starting up server. Press Ctrl+c to shut down"
+# t = threading.Thread(target=app.run)
+# t.start()
+webbrowser.open("http://localhost:8080", new=2)
+app.run()
+# t.join()
+print "Shutting down...."
