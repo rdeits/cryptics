@@ -226,6 +226,7 @@ def matches_pattern(word, pattern, lengths):
 
 
 def split_clue_text(clue_text):
+    clue_text = clue_text.encode('ascii', 'ignore')
     if '|' not in clue_text:
         clue_text += ' |'
     clue_text = clue_text.lower()
