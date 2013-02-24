@@ -22,6 +22,7 @@ class solve:
                     return render.index(None, clue, "The length of the pattern must exactly match the number of letters in the answer, or you can just leave it blank. Here are some allowable patterns:<br>(5) ....s<br>(3,2) a.e..<br>(9)<br>")
                 assert len(pattern) == 0 or len(pattern) == sum(lengths), "Answer lengths and length of pattern string must match: sum(%s) != %d" % (lengths, len(pattern))
             except Exception as e:
+                raise e
                 print e
                 return render.index(None, clue, "Something went wrong that I don't know how to handle. Here's python's attempt at an explanation:<br>" + str(e))
             if len(phrases) > 7:
@@ -45,24 +46,25 @@ class halt:
         solver.stop()
         raise web.seeother('/')
 
-render = web.template.render('pycryptics/crypticweb/templates/')
+if __name__ == '__main__':
+    render = web.template.render('pycryptics/crypticweb/templates/')
 
-urls = ('/', 'index',
-        '/solve/(.*)', 'solve',
-        '/halt', 'halt')
+    urls = ('/', 'index',
+            '/solve/(.*)', 'solve',
+            '/halt', 'halt')
 
-vclue = form.regexp(r"[^\(\)]*\([0-9 ]*[,[0-9 ]]*\)[ \.a-zA-Z]*", "invalid clue format")
-myform = form.Form(
-    form.Textbox("Clue", vclue, size="100"))
-form = myform()
+    vclue = form.regexp(r"[^\(\)]*\([0-9 ]*[,[0-9 ]]*\)[ \.a-zA-Z]*", "invalid clue format")
+    myform = form.Form(
+        form.Textbox("Clue", vclue, size="100"))
+    form = myform()
 
-solver = CrypticClueSolver()
+    solver = CrypticClueSolver()
 
-app = web.application(urls, globals())
-print "Starting up server. Press Ctrl+c to shut down"
-# t = threading.Thread(target=app.run)
-# t.start()
-webbrowser.open("http://localhost:8080", new=2)
-app.run()
-# t.join()
-print "Shutting down...."
+    app = web.application(urls, globals())
+    print "Starting up server. Press Ctrl+c to shut down"
+    # t = threading.Thread(target=app.run)
+    # t.start()
+    webbrowser.open("http://localhost:8080", new=2)
+    app.run()
+    # t.join()
+    print "Shutting down...."
