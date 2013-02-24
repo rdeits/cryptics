@@ -1,9 +1,7 @@
 import web
 from web import form
 from pycryptics.solve_clue import CrypticClueSolver, split_clue_text
-import webbrowser
-# from fake_solve_clue import FakeCrypticClueSolver as CrypticClueSolver
-# from fake_solve_clue import split_clue_text
+from pycryptics.crypticweb.server import index, solve, halt
 
 
 class index:
@@ -37,7 +35,7 @@ class solve:
     def POST(self, clue):
         if not form.validates():
             return render.index(None, form.d.Clue, "I don't quite understand the formatting of that clue. Please make sure that the clue is of the form: Clue Text (Length) Pattern, as in the examples above.")
-        raise web.seeother('/solve/'+form.d.Clue)
+        raise web.seeother('/solve/'+form.d.Clue.replace('?', ''))
 
 class halt:
     def POST(self):
