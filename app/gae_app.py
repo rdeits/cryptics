@@ -49,7 +49,7 @@ urls = ('/', 'index',
         '/solve/(.*)', 'solve',
         '/halt', 'halt')
 
-vclue = form.regexp(r"[^\(\)]*\([0-9 ]*[,[0-9 ]]*\)[ \.a-zA-Z]*", "invalid clue format")
+vclue = form.regexp(r"[^\(\)]*\([0-9]+ *[,[0-9 ]*]*\)[ \.a-zA-Z]*", "invalid clue format")
 myform = form.Form(
     form.Textbox("Clue", vclue, size="100"))
 form = myform()
