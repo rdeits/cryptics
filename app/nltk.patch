@@ -1,0 +1,149 @@
+diff -p -r -x '*.pyc' /usr/local/lib/python2.7/site-packages/nltk/__init__.py nltk/__init__.py
+*** /usr/local/lib/python2.7/site-packages/nltk/__init__.py	2012-05-25 02:32:31.000000000 -0400
+--- nltk/__init__.py	2013-02-23 17:08:25.000000000 -0500
+*************** except ImportError:
+*** 153,170 ****
+  else:
+      import cluster; from cluster import *
+  
+! from downloader import download, download_shell
+! try:
+!     import Tkinter
+! except ImportError:
+!     pass
+! else:
+!     try:
+!         from downloader import download_gui
+!     except RuntimeError, e:
+!         import warnings
+!         warnings.warn("Corpus downloader GUI not loaded "
+!                       "(RuntimeError during import: %s)" % str(e))
+  
+  # explicitly import all top-level modules (ensuring
+  # they override the same names inadvertently imported
+--- 153,170 ----
+  else:
+      import cluster; from cluster import *
+  
+! # from downloader import download, download_shell
+! # try:
+! #     import Tkinter
+! # except ImportError:
+! #     pass
+! # else:
+! #     try:
+! #         from downloader import download_gui
+! #     except RuntimeError, e:
+! #         import warnings
+! #         warnings.warn("Corpus downloader GUI not loaded "
+! #                       "(RuntimeError during import: %s)" % str(e))
+  
+  # explicitly import all top-level modules (ensuring
+  # they override the same names inadvertently imported
+diff -p -r -x '*.pyc' /usr/local/lib/python2.7/site-packages/nltk/data.py nltk/data.py
+*** /usr/local/lib/python2.7/site-packages/nltk/data.py	2012-05-25 02:32:31.000000000 -0400
+--- nltk/data.py	2013-02-23 17:05:09.000000000 -0500
+*************** path = []
+*** 72,93 ****
+  
+  # User-specified locations:
+  path += [d for d in os.environ.get('NLTK_DATA', '').split(os.pathsep) if d]
+! if os.path.expanduser('~/') != '~/': path += [
+!     os.path.expanduser('~/nltk_data')]
+  
+! # Common locations on Windows:
+! if sys.platform.startswith('win'): path += [
+!     r'C:\nltk_data', r'D:\nltk_data', r'E:\nltk_data',
+!     os.path.join(sys.prefix, 'nltk_data'),
+!     os.path.join(sys.prefix, 'lib', 'nltk_data'),
+!     os.path.join(os.environ.get('APPDATA', 'C:\\'), 'nltk_data')]
+! 
+! # Common locations on UNIX & OS X:
+! else: path += [
+!     '/usr/share/nltk_data',
+!     '/usr/local/share/nltk_data',
+!     '/usr/lib/nltk_data',
+!     '/usr/local/lib/nltk_data']
+  
+  ######################################################################
+  # Path Pointers
+--- 72,93 ----
+  
+  # User-specified locations:
+  path += [d for d in os.environ.get('NLTK_DATA', '').split(os.pathsep) if d]
+! # if os.path.expanduser('~/') != '~/': path += [
+! #     os.path.expanduser('~/nltk_data')]
+  
+! # # Common locations on Windows:
+! # if sys.platform.startswith('win'): path += [
+! #     r'C:\nltk_data', r'D:\nltk_data', r'E:\nltk_data',
+! #     os.path.join(sys.prefix, 'nltk_data'),
+! #     os.path.join(sys.prefix, 'lib', 'nltk_data'),
+! #     os.path.join(os.environ.get('APPDATA', 'C:\\'), 'nltk_data')]
+! 
+! # # Common locations on UNIX & OS X:
+! # else: path += [
+! #     '/usr/share/nltk_data',
+! #     '/usr/local/share/nltk_data',
+! #     '/usr/lib/nltk_data',
+! #     '/usr/local/lib/nltk_data']
+  
+  ######################################################################
+  # Path Pointers
+*************** class ZipFilePathPointer(PathPointer):
+*** 332,338 ****
+          self._entry = entry
+  
+      @property
+!     def zipfile(self): 
+          """
+          The zipfile.ZipFile object used to access the zip file
+          containing the entry identified by this path pointer.
+--- 332,338 ----
+          self._entry = entry
+  
+      @property
+!     def zipfile(self):
+          """
+          The zipfile.ZipFile object used to access the zip file
+          containing the entry identified by this path pointer.
+diff -p -r -x '*.pyc' /usr/local/lib/python2.7/site-packages/nltk/tag/hunpos.py nltk/tag/hunpos.py
+*** /usr/local/lib/python2.7/site-packages/nltk/tag/hunpos.py	2012-05-25 02:32:31.000000000 -0400
+--- nltk/tag/hunpos.py	2013-02-23 14:00:20.000000000 -0500
+*************** A module for interfacing with the HunPos
+*** 13,19 ****
+  """
+  
+  import os
+! from subprocess import Popen, PIPE
+  
+  from nltk.internals import find_binary, find_file
+  from nltk.tag.api import TaggerI
+--- 13,19 ----
+  """
+  
+  import os
+! # from subprocess import Popen, PIPE
+  
+  from nltk.internals import find_binary, find_file
+  from nltk.tag.api import TaggerI
+diff -p -r -x '*.pyc' /usr/local/lib/python2.7/site-packages/nltk/tag/stanford.py nltk/tag/stanford.py
+*** /usr/local/lib/python2.7/site-packages/nltk/tag/stanford.py	2012-05-25 02:32:31.000000000 -0400
+--- nltk/tag/stanford.py	2013-02-23 14:00:30.000000000 -0500
+*************** A module for interfacing with the Stanfo
+*** 13,19 ****
+  
+  import os
+  import tempfile
+! from subprocess import PIPE
+  
+  from nltk.internals import find_file, find_jar, config_java, java, _java_options
+  from nltk.tag.api import TaggerI
+--- 13,19 ----
+  
+  import os
+  import tempfile
+! # from subprocess import PIPE
+  
+  from nltk.internals import find_file, find_jar, config_java, java, _java_options
+  from nltk.tag.api import TaggerI
