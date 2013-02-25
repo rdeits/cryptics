@@ -10,7 +10,7 @@ def index (answers, clue, err_msg):
     extend_([u"<link href='/static/crypticweb.css' rel='stylesheet' type='text/css'>\n"])
     extend_([u'\n'])
     extend_([u'<h1><a href="/">Cryptic Crossword Clue Solver</a></h1>\n'])
-    extend_([u'<a href="https://github.com/rdeits/cryptics">Source code</a><br>\n'])
+    extend_([u'<a href="https://github.com/rdeits/cryptics">Source code</a> | <a href="http://blog.robindeits.com/2013/02/11/a-cryptic-crossword-clue-solver/">More information</a><br>\n'])
     extend_([u'This is a general tool for solving cryptic (or "British-style") crossword clues.  Run it by entering a cryptic clue along with the answer length (or lengths) in parenthesis. If you know some of the letters in the answer, you can type them in after the lengths, using a single \'.\' for each unknown letter. Here are some examples of clues it can solve correctly:<br><br>\n'])
     extend_([u'\n'])
     extend_([u'<a href="/solve/Spin%20broken%20shingle%20(7)">Spin broken shingle (7)</a><br>\n'])
@@ -43,7 +43,7 @@ def index (answers, clue, err_msg):
             extend_(['            ', u'    <div id="similarities">\n'])
             extend_(['            ', u'    <b>Score</b><br>\n'])
             for (sim, ans) in loop.setup(answers.sorted_answers()):
-                extend_(['                ', u'    ', escape_("{:.2g}".format(sim), True), u' <br>\n'])
+                extend_(['                ', u'    ', escape_("{:.0%}".format(sim), True), u' <br>\n'])
             extend_(['            ', u'    </div>\n'])
             extend_(['            ', u'    <div id="answers">\n'])
             extend_(['            ', u'    <b>Answer</b><br>\n'])
@@ -53,9 +53,10 @@ def index (answers, clue, err_msg):
             extend_(['            ', u'    </div>\n'])
             extend_(['            ', u'    <div id="derivations">\n'])
             for (sim, ans) in loop.setup(answers.sorted_answers()[:200]):
-                extend_(['                        ', u'    <span class="answer_header" id="ans_header_', escape_(ans, True), u'">', escape_(ans, True), u': ', escape_(sim, True), u' </span> <br>\n'])
+                extend_(['                        ', u'    <span class="answer_header" id="ans_header_', escape_(ans, True), u'">', escape_(ans, True), u': ', escape_("{:.0%}".format(sim), True), u' </span> <br>\n'])
                 for ann in loop.setup(answers.answer_derivations[ans][:5]):
-                    extend_(['                            ', u'    ', escape_(ann, True), u' <br>\n'])
+                    extend_(['                            ', u'    ', escape_(ann.derivation(), True), u' <br>\n'])
+                    extend_(['                            ', u'    ', escape_(ann.long_derivation(), True), u' <br><br>\n'])
             extend_(['            ', u'    </div>\n'])
     extend_([u'</div>\n'])
 

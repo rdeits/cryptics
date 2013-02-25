@@ -36,7 +36,7 @@ Longer clues take longer to solve. You can help the solver by connecting words w
 			<div id="similarities">
 			<b>Score</b><br>
 			$for (sim, ans) in answers.sorted_answers():
-				$"{:.2g}".format(sim) <br>
+				$"{:.0%}".format(sim) <br>
 			</div>
 			<div id="answers">
 			<b>Answer</b><br>
@@ -46,8 +46,9 @@ Longer clues take longer to solve. You can help the solver by connecting words w
 			</div>
 			<div id="derivations">
 				$for (sim, ans) in answers.sorted_answers()[:200]:
-					<span class="answer_header" id="ans_header_$ans">$ans: $sim </span> <br>
+					<span class="answer_header" id="ans_header_$ans">$ans: $"{:.0%}".format(sim) </span> <br>
 					$for ann in answers.answer_derivations[ans][:5]:
-						$ann <br>
+						$ann.derivation() <br>
+						$ann.long_derivation() <br><br>
 			</div>
 </div>

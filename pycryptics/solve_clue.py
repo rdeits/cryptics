@@ -27,8 +27,8 @@ class AnnotatedAnswer:
         self.answer = ans
         self.clue = clue
         d_tree = clue[[x.node for x in clue].index('d')]
-        self._definition = d_tree[0]
-        self.similarity = semantic_similarity(self.answer, self._definition)
+        self.definition = d_tree[0]
+        self.similarity = semantic_similarity(self.answer, self.definition)
 
     def __cmp__(self, other):
         return cmp((self.similarity, self.answer), (other.similarity, other.answer))
@@ -36,16 +36,33 @@ class AnnotatedAnswer:
     def __str__(self):
         return str([self.answer, self.similarity, self.clue.derivations(self.answer)])
 
+    def derivation(self):
+        return "{:.0%}: ".format(self.similarity) + self.clue.derivations(self.answer)
+
+    def long_derivation(self):
+        return self.clue.long_derivation(self.answer, self.similarity)
+
 
 class PatternAnswer(AnnotatedAnswer):
     def __init__(self, ans, phrasing):
         self.answer = ans
-        self.similarity = max(semantic_similarity(ans, phrasing[0]),
-                              semantic_similarity(ans, phrasing[-1]))
+        sim0 = semantic_similarity(ans, phrasing[0])
+        sim1 = semantic_similarity(ans, phrasing[-1])
+        if sim0 > sim1:
+            self.definition = phrasing[0]
+        else:
+            self.definition = phrasing[1]
+        self.similarity = max(sim0, sim1)
         self.clue = "???"
 
     def __str__(self):
         return str([self.answer, self.similarity, self.clue])
+
+    def derivation(self):
+        return "???"
+
+    def long_derivation(self):
+        return "I don't understand the wordplay for this clue, but {} matches '{}' with confidence score {:.1%}".format(self.answer.upper(), self.definition, self.similarity)
 
 class ClueSolutions:
     def __init__(self, anns):
@@ -91,16 +108,6 @@ class CrypticClueSolver(object):
     def __exit__(self, type, value, traceback):
         self.stop()
         # self.stop_go_server()
-
-    def start_go_server(self):
-        self.go_proc = subprocess.Popen(['cryptics'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-
-    def stop_go_server(self):
-        try:
-            self.go_proc.stdin.write('..\n')
-            self.go_proc.wait()
-        except IOError:
-            self.go_proc.kill()
 
     def stop(self):
         self.running = False
@@ -250,15 +257,17 @@ def parse_clue_text(clue_text):
 
 
 if __name__ == '__main__':
+    # clue = "spin broken shingle (7)"
     # clue = "sink graduate with sin (5)"
     # clue = "you finally beat iowa perfect world (6)"
     # clue = "be aware of nerd's flip_flop (4) k..."
     # clue = "Bottomless sea, stormy sea - waters' surface rises_and_falls (7) s.es..."
-    clue = "foo bar (8) n....... | NEEDLESS"
+    clue = "gratuitous indicators on_top_of screen (8) n....... | NEEDLESS"
     # phrasing = Phrasing([],(7,),'s.es...')
     # print valid_partial_answer('se', phrasing)
     with CrypticClueSolver() as solver:
         solver.setup(clue)
         answers = solver.run()
-        for a in answers[:5]: print a
+        print answers[0].long_derivation()
+        # for a in answers[:5]: print a
 

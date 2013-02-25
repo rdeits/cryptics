@@ -1,3 +1,4 @@
+from __future__ import division
 from nltk.parse.earleychart import IncrementalChart
 from nltk.parse.chart import LeafEdge, Tree
 
@@ -29,6 +30,78 @@ class ClueTree(Tree):
         result += ")"
         return result
 
+    def long_derivation(self, answer, score=None):
+        result = ""
+        arg_answers = self.answers[answer]
+        if len(self) == 0:
+            return result
+        if len(self) == 1 and answer == arg_answers[0]:
+            if isinstance(self[0], ClueTree):
+                return self[0].long_derivation(arg_answers[0])
+            else:
+                return ""
+        indicator = None
+        for i, child in enumerate(self):
+            if isinstance(child, basestring):
+                continue
+            if child.node.endswith('_'):
+                indicator = child[0]
+            else:
+                result += child.long_derivation(arg_answers[i])
+        if self.node != 'top':
+            result += '\n'
+
+        if indicator is not None:
+            result += "'" + indicator + "' means to "
+        non_empty_args = ["'" + a + "'" for a in arg_answers if a != ""]
+        if self.node == 'rev':
+            result += "reverse " + non_empty_args[0]
+        elif self.node == 'sub':
+            result += "take a substring of " + non_empty_args[0]
+        elif self.node == 'ins':
+            result += "insert " + non_empty_args[0] + " and " + non_empty_args[1]
+        elif self.node == 'ana':
+            result += "anagram " + non_empty_args[0]
+        elif self.node == 'syn':
+            result += "Take a synonym of " + non_empty_args[0]
+        elif self.node == 'first':
+            result += "Take the first letter of " + non_empty_args[0]
+        elif self.node == 'null':
+            result += non_empty_args[0] + " is a filler word."
+        elif self.node == 'd':
+            result += non_empty_args[0] + " is the definition."
+        elif self.node == 'top' and len(non_empty_args) > 1:
+            result += "\nCombine " + comma_list(non_empty_args)
+
+        if answer != "" and (self.node != 'top' or len(non_empty_args) > 1):
+            result += " to get " + answer.upper() + "."
+
+        if self.node == 'top' and score is not None:
+            result += "\n" + answer.upper() + " matches "
+            for child in self:
+                if child.node == 'd':
+                    result += "'" + child[0] + "'"
+                    break
+            result += " with confidence score {:.0%}.".format(score)
+        return result
+
+def comma_list(args):
+    result = ""
+    for i, a in enumerate(args):
+        result += a
+        if i < len(args) - 1 and len(args) > 2:
+            result += ","
+        if i == len(args) - 2:
+            result += " and "
+        else:
+            result += " "
+    return result
+
+if __name__ == '__main__':
+    print comma_list(['foo'])
+    print comma_list(['foo', 'bar'])
+    print comma_list(['foo', 'bar', 'baz'])
+    print comma_list(['foo', 'bar', 'baz', 'bap'])
 
 class MemoChart(IncrementalChart):
     def parses(self, root, tree_class=Tree):
