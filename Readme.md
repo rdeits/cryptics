@@ -63,9 +63,8 @@ You can give the solver a hint that a set of words form a phrase (and need not b
 
 The output is given both as a hierarchical representation of the clue structure and as a natural-language description:
 
-	100%: (top (sub (sub_ "initially") (syn "babies" -> BABE) -> B) (lit "are") (d "naked") -> BARE) 
-	Take a synonym of 'babies' to get BABE. 
-	'initially' means to take a substring of 'babe' to get B. 
+	100%: (top (sub (sub_ "initially") (lit "babies") -> B) (lit "are") (d "naked") -> BARE) 
+	'initially' means to take a substring of 'babies' to get B. 
 	'naked' is the definition. 
 	Combine 'b' and 'are' to get BARE. 
 	BARE matches 'naked' with confidence score 100%. 
