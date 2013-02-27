@@ -71,7 +71,7 @@ class ClueTree(Tree):
         elif self.node == 'd':
             result += non_empty_args[0] + " is the definition."
         elif self.node == 'top' and len(non_empty_args) > 1:
-            result += "\nCombine " + comma_list(non_empty_args)
+            result += "\nCombine " + comma_list(map(str.upper, non_empty_args))
 
         if answer != "" and (self.node != 'top' or len(non_empty_args) > 1):
             result += " to get " + answer.upper() + "."
