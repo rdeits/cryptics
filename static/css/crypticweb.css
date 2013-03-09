@@ -1,23 +1,64 @@
-div#answers {
+#answers {
 	float: left;
 	margin-left: 10px;
 }
 
-div#answers a {
-	color: black;
-}
-
-div#similarities {
+.title {
 	float: left;
 }
 
-div#answer_nav {
+/*.page {
+	width: 700px;
+}
+*/
+.info {
+	float: right;
+}
+
+.sample {
+	padding-bottom: 5px;
+}
+
+.preamble {
+	border: 2px solid #414141;
+	padding: 5px;
+}
+
+.sample_button {
+	float: left;
+	vertical-align: middle;
+	/*width: 100px;*/
+}
+
+.clue_ans_labels {
+	float: left;
+	padding-right: 5px;
+	text-align: right;
+}
+
+.solver_desc {
+	width: 650px;
+}
+
+.header {
+	height: 80px;
+}
+
+#answers a {
+	color: black;
+}
+
+#similarities {
+	float: left;
+}
+
+#answer_nav {
 	float: left;
 	padding: 5px;
 	border: 2px solid #414141;
 }
 
-div#derivations {
+#derivations {
 	float:left;
 	border: 2px solid #414141;
 	margin-left: 20px;
@@ -33,3 +74,19 @@ div#derivations {
 	padding: 5px;
 	/*border: 5px solid #414141;*/
 }
+
+#clue_entry {
+	/*border: 2px solid #414141;*/
+}
+
+#clue_form input {
+	width: 100%;
+	font-size: larger;
+}
+
+#solution img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
