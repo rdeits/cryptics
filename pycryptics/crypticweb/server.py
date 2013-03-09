@@ -1,20 +1,23 @@
 import web
-from web import form
+# from web import form
 from pycryptics.solve_clue import CrypticClueSolver, split_clue_text
 import webbrowser
+import re
 # from fake_solve_clue import FakeCrypticClueSolver as CrypticClueSolver
 # from fake_solve_clue import split_clue_text
 
 
 class index:
     def GET(self):
-        raise web.seeother('/solve/')
-        # return render.index(None, form.d.Clue, "")
+        return render.index()
 
 
 class solve:
     def GET(self, clue):
-        if clue.strip() != "":
+        clue = clue.strip()
+        if clue != "":
+            if not re.match(r"[^\(\)]*\([0-9]+ *[,[0-9 ]*]*\)[ \.a-zA-Z]*", clue):
+                return render.solver(None, clue, "I don't quite understand the formatting of that clue. Please make sure that the clue is of the form: <br>clue text (length)<br>or<br>clue text (length) pattern<br> as in the examples above.")
             try:
                 phrases, lengths, pattern, answer = split_clue_text(clue)
                 if sum(lengths) != len(pattern) and pattern != '':
@@ -24,47 +27,44 @@ class solve:
             except Exception as e:
                 raise e
                 print e
-                return render.index(None, clue, "Something went wrong that I don't know how to handle. Here's python's attempt at an explanation:<br>" + str(e))
+                return render.solver(None, clue, "Something went wrong that I don't know how to handle. Here's python's attempt at an explanation:<br>" + str(e))
             if len(phrases) > 7:
-                return render.index(None, clue, "Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them")
+                return render.solver(None, clue, "Sorry, I can't reliably handle clues longer than 7 phrases yet. Try grouping some words into phrases by putting an underscore instead of a space between them")
             solver.setup(clue)
             solver.run()
             answers = solver.collect_answers()
             print "returning:", answers
-            return render.index(answers, solver.clue_text, "")
+            return render.solver(answers, solver.clue_text, "")
         else:
-            return render.index(None, "", "")
+            return render.solver(None, "", "")
 
-    def POST(self, clue):
-        if not form.validates():
-            return render.index(None, form.d.Clue, "I don't quite understand the formatting of that clue. Please make sure that the clue is of the form: Clue Text (Length) Pattern, as in the examples above.")
-        raise web.seeother('/solve/'+form.d.Clue.replace('?', ''))
+    # def POST(self, clue):
+    #     if not form.validates():
+    #         return render.solver(None, form.d.Clue, "I don't quite understand the formatting of that clue. Please make sure that the clue is of the form: Clue Text (Length) Pattern, as in the examples above.")
+    #     raise web.seeother('/solve/'+form.d.Clue.replace('?', ''))
 
-class halt:
-    def POST(self):
-        print "trying to halt"
-        solver.stop()
-        raise web.seeother('/')
+# class halt:
+#     def POST(self):
+#         print "trying to halt"
+#         solver.stop()
+#         raise web.seeother('/')
+
 
 if __name__ == '__main__':
     render = web.template.render('pycryptics/crypticweb/templates/')
 
     urls = ('/', 'index',
-            '/solve/(.*)', 'solve',
-            '/halt', 'halt')
+            '/solve/(.*)', 'solve')
 
-    vclue = form.regexp(r"[^\(\)]*\([0-9]+ *[,[0-9 ]*]*\)[ \.a-zA-Z]*", "invalid clue format")
-    myform = form.Form(
-        form.Textbox("Clue", vclue, size="100"))
-    form = myform()
+    # vclue = form.regexp(r"[^\(\)]*\([0-9]+ *[,[0-9 ]*]*\)[ \.a-zA-Z]*", "invalid clue format")
+    # myform = form.Form(
+    #     form.Textbox("Clue", vclue, size="100"))
+    # form = myform()
 
     solver = CrypticClueSolver()
 
     app = web.application(urls, globals())
     print "Starting up server. Press Ctrl+c to shut down"
-    # t = threading.Thread(target=app.run)
-    # t.start()
     webbrowser.open("http://localhost:8080", new=2)
     app.run()
-    # t.join()
     print "Shutting down...."
