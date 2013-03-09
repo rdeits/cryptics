@@ -10,7 +10,13 @@ function solve_clue(clue_text) {
     var request = $.ajax({type: 'GET',
         url: SERVER + encodeURIComponent(clue_text),
         dataType: "html"});
-    request.done(function (html) {$("#solution").html(html);});
+    request.done(function (html) {
+        $("#solution").html(html);
+        // $("#answers a").click(function (evt) {
+        //     var target_id = "#" + evt.target.href.split("#").pop();
+        //     $(target_id).css("color", "#2222gg");
+        // });
+    });
     request.fail(function () {$("#solution").html("Sorry, I couldn't contact the server. You may want to try this again later");});
 }
 
