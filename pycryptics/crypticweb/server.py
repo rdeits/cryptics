@@ -1,15 +1,15 @@
 import web
-# from web import form
 from pycryptics.solve_clue import CrypticClueSolver, split_clue_text
 import webbrowser
 import re
 # from fake_solve_clue import FakeCrypticClueSolver as CrypticClueSolver
 # from fake_solve_clue import split_clue_text
 
+SERVER = "http://localhost:8080/solve/"
 
 class index:
     def GET(self):
-        return render.index()
+        return render.index(SERVER)
 
 
 class solve:
@@ -38,11 +38,6 @@ class solve:
         else:
             return render.solver(None, "", "")
 
-    # def POST(self, clue):
-    #     if not form.validates():
-    #         return render.solver(None, form.d.Clue, "I don't quite understand the formatting of that clue. Please make sure that the clue is of the form: Clue Text (Length) Pattern, as in the examples above.")
-    #     raise web.seeother('/solve/'+form.d.Clue.replace('?', ''))
-
 # class halt:
 #     def POST(self):
 #         print "trying to halt"
@@ -56,15 +51,10 @@ if __name__ == '__main__':
     urls = ('/', 'index',
             '/solve/(.*)', 'solve')
 
-    # vclue = form.regexp(r"[^\(\)]*\([0-9]+ *[,[0-9 ]*]*\)[ \.a-zA-Z]*", "invalid clue format")
-    # myform = form.Form(
-    #     form.Textbox("Clue", vclue, size="100"))
-    # form = myform()
-
     solver = CrypticClueSolver()
 
     app = web.application(urls, globals())
     print "Starting up server. Press Ctrl+c to shut down"
-    webbrowser.open("http://localhost:8080", new=2)
+    # webbrowser.open("http://localhost:8080", new=2)
     app.run()
     print "Shutting down...."

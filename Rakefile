@@ -15,7 +15,7 @@ file "en/__init__.py" do
 	sh "unzip /tmp/en.zip"
 end
 
-task :server => [:data] do
+task :server => [:data, :compile_templates] do
 	sh "python pycryptics/crypticweb/server.py"
 end
 
