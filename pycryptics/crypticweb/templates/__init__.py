@@ -27,7 +27,7 @@ def index (server):
     extend_([u'\n'])
     extend_([u'      <div class="preamble">\n'])
     extend_([u'        <div class="solver_desc">\n'])
-    extend_([u'          This is a general tool for solving cryptic (or "British-style") crossword clues.  Run it by entering a cryptic clue along with the answer length (or lengths) in parenthesis. If you know some of the letters in the answer, you can type them in after the lengths, using a single \'.\' for each unknown letter. Here are some examples of clues it can solve correctly:\n'])
+    extend_([u'          This is a general tool for solving cryptic (or "British-style") crossword clues.  Run it by entering a cryptic clue along with the answer length (or lengths) in parentheses. If you know some of the letters in the answer, you can type them in after the lengths, using a single \'.\' for each unknown letter. Here are some examples of clues it can solve correctly:\n'])
     extend_([u'        </div>\n'])
     extend_([u'        <br>\n'])
     extend_([u'\n'])

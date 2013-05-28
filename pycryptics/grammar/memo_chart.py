@@ -32,7 +32,7 @@ class ClueTree(Tree):
 
     def long_derivation(self, answer, score=None):
         result = ""
-        arg_answers = self.answers[answer]
+        arg_answers = [a.encode('ascii', 'replace') for a in self.answers[answer]]
         if len(self) == 0:
             return result
         if len(self) == 1 and answer == arg_answers[0]:

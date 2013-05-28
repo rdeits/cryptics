@@ -24,7 +24,7 @@ class Phrasing:
 
 class AnnotatedAnswer:
     def __init__(self, ans, clue):
-        self.answer = ans
+        self.answer = ans.encode('ascii', 'replace')
         self.clue = clue
         d_tree = clue[[x.node for x in clue].index('d')]
         self.definition = d_tree[0]
