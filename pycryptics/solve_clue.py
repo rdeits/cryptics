@@ -5,7 +5,9 @@ from pycryptics.utils.transforms import TRANSFORMS, valid_partial_answer
 from pycryptics.utils.clue_funcs import FUNCTIONS
 from pycryptics.utils.phrasings import phrasings
 from pycryptics.utils.synonyms import SYNONYMS
-import subprocess
+from collections import namedtuple
+# import subprocess
+# import itertools
 import re
 
 RULES = TRANSFORMS
@@ -14,12 +16,14 @@ RULES.update(FUNCTIONS)
 class ClueUnsolvableError(Exception):
     pass
 
-class Phrasing:
-    def __init__(self, phrases, lengths, pattern, known_answer=None):
-        self.phrases = phrases
-        self.lengths = lengths
-        self.pattern = pattern
-        self.known_answer = known_answer
+Phrasing = namedtuple('Phrasing', 'phrases lengths pattern known_answer')
+
+# class Phrasing:
+#     def __init__(self, phrases, lengths, pattern, known_answer=None):
+#         self.phrases = phrases
+#         self.lengths = lengths
+#         self.pattern = pattern
+#         self.known_answer = known_answer
 
 
 class AnnotatedAnswer:
@@ -216,6 +220,7 @@ class CrypticClueSolver(object):
         return [s[0] for s in arg_sets if s[1] == target_len]
 
     def make_arg_sets(self, child_answers):
+        # return itertools.product(*child_answers)
         arg_sets = [[]]
         for ans_list in child_answers:
             new_arg_sets = []
