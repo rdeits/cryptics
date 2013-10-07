@@ -15,6 +15,7 @@ file "en/__init__.py" do
 	sh "unzip /tmp/en.zip"
 end
 
+desc "Serve crypticweb locally"
 task :server => [:data, :compile_templates] do
 	sh "python pycryptics/crypticweb/server.py"
 end
@@ -22,10 +23,6 @@ end
 task :test => [:data] do
 	sh "nosetests --nocapture pycryptics"
 end
-
-# task :go do
-# 	sh "go install cryptics"
-# end
 
 task :puz => [:data] do
 	sh "python pycryptics/solve_puz.py sample_puzzles/kegler_cryptic_1.puz"
@@ -39,8 +36,10 @@ file wordnet_path + "/corpora/wordnet.zip" do
 	sh "python -m nltk.downloader -d " + wordnet_path + " wordnet"
 end
 
+desc "Download the NLTK wordnet corpus and the en module"
 task :download => [:download_corpus, "en/__init__.py"]
 
+desc "Generate the App Engine app"
 task :app => ["app_build/data/ngrams.00.pck", 
 	          "app_build/data/synonyms.00.pck",
 			  "app_build/en/__init__.py",
@@ -90,7 +89,7 @@ end
 
 task :compile_templates do
 	Dir.chdir "pycryptics/crypticweb"
-	sh "python /usr/local/lib/python2.7/site-packages/web/template.py --compile templates"
+	sh "python -m web.template --compile templates"
 	Dir.chdir "../.."
 end
 
