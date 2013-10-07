@@ -39,7 +39,7 @@ Test cases (requires the python nose package):
 
 ## Clue format:
 
-For each clue, you _must_ give the number of letters in the answer, and you _may_ give a letter pattern for the answer to follow, where a '.' represents an unknown letter. For example:
+For each clue, you _must_ give the number of letters in the answer, and you _may_ give a letter pattern for the answer to follow, where a '.' represents an unknown letter (ignoring spaces). For example:
 
 Clue:
 
