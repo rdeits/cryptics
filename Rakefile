@@ -16,7 +16,7 @@ file "en/__init__.py" do
 end
 
 desc "Serve crypticweb locally"
-task :server => [:data, :compile_templates] do
+task :serve => [:data, :compile_templates] do
 	sh "python pycryptics/crypticweb/server.py"
 end
 
@@ -52,7 +52,7 @@ task :app => ["app_build/data/ngrams.00.pck",
 			  :copy_static,
 			  :copy_app]
 
-task :app_server => [:app] do
+task :app_serve => [:app] do
 	sh "dev_appserver.py app_build"
 end
 
