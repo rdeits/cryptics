@@ -19,7 +19,7 @@ class solve:
                 phrases, lengths, pattern, answer = split_clue_text(clue)
                 if sum(lengths) != len(pattern) and pattern != '':
                     print "length mismatch"
-                    return render.index(None, clue, "The length of the pattern must exactly match the number of letters in the answer, or you can just leave it blank. Here are some allowable patterns:<br>(5) ....s<br>(3,2) a.e..<br>(9)<br>")
+                    return render.solver(None, clue, "The length of the pattern must exactly match the number of letters in the answer, or you can just leave it blank. Here are some allowable patterns:<br>(5) ....s<br>(3,2) a.e..<br>(9)<br>")
                 assert len(pattern) == 0 or len(pattern) == sum(lengths), "Answer lengths and length of pattern string must match: sum(%s) != %d" % (lengths, len(pattern))
             except Exception as e:
                 raise e
