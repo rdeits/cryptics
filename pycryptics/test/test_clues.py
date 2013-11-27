@@ -11,5 +11,6 @@ class TestClues(unittest.TestCase):
                 solver.setup(clue_text)
                 answers = solver.run()
                 print answers[0].long_derivation()
-                for a in answers[:5]: print a
+                for a in answers[:5]:
+                    print a
                 self.assertEqual(answers[0].answer.lower(), known_answer.lower().strip())

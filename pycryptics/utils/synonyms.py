@@ -2,15 +2,6 @@ import cPickle as pickle
 import os.path
 
 
-# def load_synonyms():
-#     with open('data/synonyms.pck', 'rb') as f:
-#         syns = pickle.load(f)
-#         return syns
-
-
-# SYNONYMS = load_synonyms()
-# WORDS = SYNONYMS.keys()
-
 SYNONYMS = dict()
 
 i = 0

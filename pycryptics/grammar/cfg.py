@@ -10,6 +10,7 @@ A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword
 
 top = gram.Nonterminal('top')
 lit = gram.Nonterminal('lit')
+
 d = gram.Nonterminal('d')
 syn = gram.Nonterminal('syn')
 first = gram.Nonterminal('first')
