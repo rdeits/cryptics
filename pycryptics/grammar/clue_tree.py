@@ -1,6 +1,8 @@
 from nltk.parse.chart import Tree
 from pycryptics.utils.transforms import TRANSFORMS, valid_partial_answer
 from pycryptics.utils.clue_funcs import FUNCTIONS
+
+
 RULES = TRANSFORMS
 RULES.update(FUNCTIONS)
 
@@ -26,39 +28,39 @@ class ClueTree(Tree):
     def __repr__(self):
         return self.__str__()
 
-    def solve(self, phrasing):
-        child_answers = [self.get_answers(c, phrasing) for c in self]
+    def solve(self, constraints):
+        child_answers = [self.get_answers(c, constraints) for c in self]
         for i, s in enumerate(child_answers):
             if isinstance(s, dict):
                 child_answers[i] = s.keys()
         if self.node == 'top':
-            arg_sets = self.make_top_arg_sets(child_answers, phrasing)
+            arg_sets = self.make_top_arg_sets(child_answers, constraints)
         else:
-            arg_sets = self.make_arg_sets(child_answers, phrasing)
+            arg_sets = self.make_arg_sets(child_answers, constraints)
         for args in arg_sets:
-            answers = RULES[self.node](arg_filter(args), phrasing)
+            answers = RULES[self.node](arg_filter(args), constraints)
             if answers is None:
                 answers = []
             for ans in answers:
                 self.answers[ans] = args[:]
 
     @staticmethod
-    def make_top_arg_sets(child_answers, phrasing):
-        target_len = sum(phrasing.lengths)
+    def make_top_arg_sets(child_answers, constraints):
+        target_len = sum(constraints.lengths)
         arg_sets = [([], 0, '')]
         for ans_list in child_answers:
             new_arg_sets = []
             for ans in ans_list:
                 for s in arg_sets:
                     candidate = (s[0] + [ans], s[1] + len(ans), s[2] + ans)
-                    if valid_partial_answer(candidate[2], phrasing):
+                    if valid_partial_answer(candidate[2], constraints):
                     # if candidate[1] <= target_len:
                         new_arg_sets.append(candidate)
             arg_sets = new_arg_sets
         return [s[0] for s in arg_sets if s[1] == target_len]
 
     @staticmethod
-    def make_arg_sets(child_answers, phrasing):
+    def make_arg_sets(child_answers, constraints):
         # return itertools.product(*child_answers)
         arg_sets = [[]]
         for ans_list in child_answers:
@@ -70,13 +72,13 @@ class ClueTree(Tree):
         return arg_sets
 
     @staticmethod
-    def get_answers(tree_or_leaf, phrasing):
+    def get_answers(tree_or_leaf, constraints):
         if isinstance(tree_or_leaf, str):
             return [tree_or_leaf]
         tree = tree_or_leaf
         if tree.answers is None:
             tree.answers = {}
-            tree.solve(phrasing)
+            tree.solve(constraints)
         if tree.answers == {}:
             raise ClueUnsolvableError
         return tree.answers

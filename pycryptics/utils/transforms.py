@@ -25,40 +25,40 @@ def matches_pattern(ans, pattern):
 def valid_words(words):
     return "_".join(words) in SYNONYMS
 
-def valid_answer(ans, phrasing):
-    if len(ans) != sum(phrasing.lengths) or not matches_pattern(ans, phrasing.pattern) or ans in phrasing.phrases:
+def valid_answer(ans, constraints):
+    if len(ans) != sum(constraints.lengths) or not matches_pattern(ans, constraints.pattern) or ans in constraints.phrases:
         return False, None
-    words = split_words(ans, phrasing.lengths)
+    words = split_words(ans, constraints.lengths)
     return valid_words(words), words
 
-def valid_partial_answer(ans, phrasing):
-    if len(ans) > sum(phrasing.lengths):
+def valid_partial_answer(ans, constraints):
+    if len(ans) > sum(constraints.lengths):
         return False
-    if not matches_pattern(ans, phrasing.pattern):
+    if not matches_pattern(ans, constraints.pattern):
         return False
-    words = split_words(ans, phrasing.lengths)
+    words = split_words(ans, constraints.lengths)
     for i, word in enumerate(words):
-        if word not in INITIAL_NGRAMS[phrasing.lengths[i]]:
+        if word not in INITIAL_NGRAMS[constraints.lengths[i]]:
             return False
     return True
 
-def lit(s, phrasing):
+def lit(s, constraints):
     return s
 
-def null(s, phrasing):
+def null(s, constraints):
     return [""]
 
-def first(s, phrasing):
+def first(s, constraints):
     assert(len(s) == 1)
     return [s[0][0]]
 
-def syn(s, phrasing):
+def syn(s, constraints):
     assert(len(s) == 1)
-    return cached_synonyms(s[0], sum(phrasing.lengths) + 2)
+    return cached_synonyms(s[0], sum(constraints.lengths) + 2)
 
-def top(s, phrasing):
+def top(s, constraints):
     ans = "".join(s)
-    is_valid, words = valid_answer(ans, phrasing)
+    is_valid, words = valid_answer(ans, constraints)
     if is_valid:
         return ['_'.join(words)]
 

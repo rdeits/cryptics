@@ -4,14 +4,14 @@ from pycryptics.utils.ngrams import NGRAMS
 from pycryptics.utils.transforms import split_words
 
 
-def reverse(s, phrasing):
+def reverse(s, constraints):
     assert len(s) == 1
-    return bigram_filter([''.join(reversed(s[0]))], phrasing)
+    return bigram_filter([''.join(reversed(s[0]))], constraints)
 
-def all_legal_substrings(words, phrasing):
+def all_legal_substrings(words, constraints):
     assert len(words) == 1
     word = words[0].lower().replace('_', "")
-    length = sum(phrasing.lengths)
+    length = sum(constraints.lengths)
     subs = set([])
     if len(word) <= 1:
         return subs
@@ -34,27 +34,27 @@ def all_legal_substrings(words, phrasing):
         subs.add(word[1:])
         subs.add(word[:len(word)-1])
         subs.add(word[1:-1])
-    return bigram_filter(subs, phrasing)
+    return bigram_filter(subs, constraints)
 
 
-def all_insertions(words, phrasing):
+def all_insertions(words, constraints):
     assert len(words) == 2
     word1, word2 = [w.lower().replace('_', "") for w in words]
     results = set([])
-    if len(word1) + len(word2) > sum(phrasing.lengths):
+    if len(word1) + len(word2) > sum(constraints.lengths):
         return None
     for j in range(1, len(word2)):
         results.add(word2[:j] + word1 + word2[j:])
     word2, word1 = word1, word2
     for j in range(len(word2)):
         results.add(word2[:j] + word1 + word2[j:])
-    return bigram_filter(results, phrasing)
+    return bigram_filter(results, constraints)
 
 
-def anagrams(words, phrasing):
+def anagrams(words, constraints):
     assert len(words) == 1
     word = words[0].lower().replace('_', '')
-    if len(word) > sum(phrasing.lengths):
+    if len(word) > sum(constraints.lengths):
         return None
     letter_count = dict()
     for c in word:
@@ -72,8 +72,8 @@ def anagrams(words, phrasing):
                 # print "adding letter:", l
                 candidate = partial + l
                 valid = True
-                for j, w in enumerate(split_words(candidate, phrasing.lengths)):
-                    if not w in NGRAMS[phrasing.lengths[j]]:
+                for j, w in enumerate(split_words(candidate, constraints.lengths)):
+                    if not w in NGRAMS[constraints.lengths[j]]:
                         valid = False
                         break
                 if valid:
@@ -91,15 +91,15 @@ def anagrams(words, phrasing):
     # return active_set
     return [a for a in active_set if a != word]
 
-def bigram_filter(answers, phrasing):
-    threshold = len(phrasing.lengths) - 1  # allow violations across word boundaries
+def bigram_filter(answers, constraints):
+    threshold = len(constraints.lengths) - 1  # allow violations across word boundaries
 
     valid_answers = []
     for ans in answers:
         violations = 0
         for i in range(len(ans)-1):
             ok = False
-            for l in phrasing.lengths:
+            for l in constraints.lengths:
                 if ans[i:i+2] in NGRAMS[l]:
                     ok = True
                     break
@@ -116,6 +116,6 @@ FUNCTIONS = {'sub': all_legal_substrings,
              'ins': all_insertions}
 
 if __name__ == '__main__':
-    from pycryptics.parse_and_solve import Phrasing
-    print reverse(['soda'], Phrasing([], [4,], ""))
+    from pycryptics.parse_and_solve import constraints
+    print reverse(['soda'], constraints([], [4,], ""))
 

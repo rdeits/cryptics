@@ -8,9 +8,7 @@ from collections import namedtuple
 import re
 
 
-Phrasing = namedtuple('Phrasing', 'phrases lengths pattern known_answer')
-
-# Constraints = namedtuple('Constraints', 'lengths pattern known_answer')
+Constraints = namedtuple('Constraints', 'phrases lengths pattern known_answer')
 
 class AnnotatedAnswer:
     def __init__(self, ans, clue):
@@ -78,8 +76,6 @@ class CrypticClueSolver(object):
         self.running = False
         self.answers_with_clues = None
         self.clue_text = None
-        self.phrasing = None
-        self.memo = {}
 
     def __enter__(self):
         # self.start_go_server()
@@ -94,7 +90,6 @@ class CrypticClueSolver(object):
 
     def setup(self, clue_text):
         self.clue_text = clue_text
-        self.memo = {}
 
     def run(self):
         self.running = True
@@ -103,36 +98,32 @@ class CrypticClueSolver(object):
         self.answers_with_clues = []
 
         for p in all_phrasings:
-            self.phrasing = Phrasing(p, lengths, pattern, answer)
+            constraints = Constraints(p, lengths, pattern, answer)
             if not self.running:
                 break
             print p
-            for ann_ans in self.solve_phrasing(p):
+            for ann_ans in self.solve_constraints(constraints):
                 self.answers_with_clues.append(ann_ans)
         if len(self.answers_with_clues) == 0 and pattern.replace('.', '') != "":
             self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS if matches_pattern(x, pattern, lengths)]
         self.answers_with_clues.sort(reverse=True)
         return self.answers_with_clues
 
-    def solve_phrasing(self, phrasing):
-        """
-        Solve a clue which has been broken down into phrases, like:
-        ['initially', 'babies', 'are', 'naked']
-        """
+    def solve_constraints(self, constraints):
         answers_with_clues = []
-        possible_clues = list(generate_clues(phrasing))
+        possible_clues = list(generate_clues(constraints.phrases))
 
         for i, clue in enumerate(possible_clues):
             if not self.running:
                 break
             # print "solving:", clue
             try:
-                answers = clue.get_answers(clue, self.phrasing)
+                answers = clue.get_answers(clue, constraints)
                 # answers = self.get_answers(clue)
             except ClueUnsolvableError:
                 answers = []
             for answer in answers:
-                if answer in phrasing or any(x.startswith(answer) for x in phrasing) or any(answer == x for p in phrasing for x in p.split('_')):
+                if answer in constraints.phrases or any(x.startswith(answer) for x in constraints.phrases) or any(answer == x for p in constraints.phrases for x in p.split('_')):
                     pass
                 else:
                     answers_with_clues.append(AnnotatedAnswer(answer, clue))
