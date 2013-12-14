@@ -142,64 +142,6 @@ class CrypticClueSolver(object):
         if self.answers_with_clues is not None:
             return ClueSolutions(self.answers_with_clues)
 
-    # def get_answers(self, t):
-    #     if isinstance(t, str):
-    #         return [t]
-
-    #     # t_hash = t._pprint_flat('', '()', '"')
-    #     # if t_hash in self.memo:
-    #     #     t.answers = self.memo[t_hash]
-    #     if t.answers is None:
-    #         t.answers = {}
-    #         self.solve_clue_tree(t)
-    #     if t.answers == {}:
-    #         # print "clue:", t, "unsolvable"
-    #         raise ClueUnsolvableError
-    #     # print "solved:", t, "\ngot:", t.answers
-    #     # self.memo[t_hash] = t.answers
-    #     return t.answers
-
-    # def solve_clue_tree(self, t):
-    #     child_answers = [self.get_answers(c) for c in t]
-    #     for i, s in enumerate(child_answers):
-    #         if isinstance(s, dict):
-    #             child_answers[i] = s.keys()
-    #     if t.node == 'top':
-    #         arg_sets = self.make_top_arg_sets(child_answers)
-    #     else:
-    #         arg_sets = self.make_arg_sets(child_answers)
-    #     for args in arg_sets:
-    #         answers = RULES[t.node](arg_filter(args), self.phrasing)
-    #         if answers is None:
-    #             answers = []
-    #         for ans in answers:
-    #             t.answers[ans] = args[:]
-
-    # def make_top_arg_sets(self, child_answers):
-    #     target_len = sum(self.phrasing.lengths)
-    #     arg_sets = [([], 0, '')]
-    #     for ans_list in child_answers:
-    #         new_arg_sets = []
-    #         for ans in ans_list:
-    #             for s in arg_sets:
-    #                 candidate = (s[0] + [ans], s[1] + len(ans), s[2] + ans)
-    #                 if valid_partial_answer(candidate[2], self.phrasing):
-    #                 # if candidate[1] <= target_len:
-    #                     new_arg_sets.append(candidate)
-    #         arg_sets = new_arg_sets
-    #     return [s[0] for s in arg_sets if s[1] == target_len]
-
-    # def make_arg_sets(self, child_answers):
-    #     # return itertools.product(*child_answers)
-    #     arg_sets = [[]]
-    #     for ans_list in child_answers:
-    #         new_arg_sets = []
-    #         for ans in ans_list:
-    #             for s in arg_sets:
-    #                 new_arg_sets.append(s + [ans])
-    #         arg_sets = new_arg_sets
-    #     return arg_sets
-
 
 def matches_pattern(word, pattern, lengths):
     return (tuple(len(x) for x in word.split('_')) == lengths) and all(c == pattern[i] or pattern[i] == '.' for i, c in enumerate(word.replace('_', '')))
