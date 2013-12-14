@@ -98,16 +98,6 @@ def generate_grammar(phrases):
             prods.append(gram.Production(t, [p]))
     return gram.ContextFreeGrammar(top, base_prods + prods)
 
-
-def clue_from_tree(tree):
-    if not isinstance(tree, Tree):
-        return tree
-    elif "_arg" in tree.node:
-        return clue_from_tree(tree[0])
-    else:
-        return tuple([tree.node] + [clue_from_tree(t) for t in tree])
-
-
 def generate_clues(phrases):
     g = generate_grammar(phrases)
     parser = parse.EarleyChartParser(g, chart_class=MemoChart)

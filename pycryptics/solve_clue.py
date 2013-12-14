@@ -1,30 +1,16 @@
 from __future__ import division
 from pycryptics.utils.language import semantic_similarity
 from pycryptics.grammar.cfg import generate_clues
-from pycryptics.utils.transforms import TRANSFORMS, valid_partial_answer
-from pycryptics.utils.clue_funcs import FUNCTIONS
 from pycryptics.utils.phrasings import phrasings
 from pycryptics.utils.synonyms import SYNONYMS
+from pycryptics.grammar.clue_tree import ClueUnsolvableError
 from collections import namedtuple
-# import subprocess
-# import itertools
 import re
 
-RULES = TRANSFORMS
-RULES.update(FUNCTIONS)
-
-class ClueUnsolvableError(Exception):
-    pass
 
 Phrasing = namedtuple('Phrasing', 'phrases lengths pattern known_answer')
 
-# class Phrasing:
-#     def __init__(self, phrases, lengths, pattern, known_answer=None):
-#         self.phrases = phrases
-#         self.lengths = lengths
-#         self.pattern = pattern
-#         self.known_answer = known_answer
-
+# Constraints = namedtuple('Constraints', 'lengths pattern known_answer')
 
 class AnnotatedAnswer:
     def __init__(self, ans, clue):
@@ -92,18 +78,8 @@ class CrypticClueSolver(object):
         self.running = False
         self.answers_with_clues = None
         self.clue_text = None
-        self.total_phrasings = 0
-        self.finished_phrasings = 0
-        self.phrasing_clues = 0
-        self.finished_phrasing_clues = 0
         self.phrasing = None
         self.memo = {}
-
-    @property
-    def progress(self):
-        if self.total_phrasings == 0 or self.phrasing_clues == 0:
-            return None
-        return self.finished_phrasings / self.total_phrasings + (self.finished_phrasing_clues / self.phrasing_clues) * 1 / (self.total_phrasings)
 
     def __enter__(self):
         # self.start_go_server()
@@ -124,8 +100,6 @@ class CrypticClueSolver(object):
         self.running = True
         self.clue_text = self.clue_text.encode('ascii', 'ignore')
         all_phrasings, lengths, pattern, answer = parse_clue_text(self.clue_text)
-        self.total_phrasings = len(all_phrasings)
-        self.finished_phrasings = 0
         self.answers_with_clues = []
 
         for p in all_phrasings:
@@ -135,8 +109,6 @@ class CrypticClueSolver(object):
             print p
             for ann_ans in self.solve_phrasing(p):
                 self.answers_with_clues.append(ann_ans)
-            self.finished_phrasing_clues = 0
-            self.finished_phrasings += 1
         if len(self.answers_with_clues) == 0 and pattern.replace('.', '') != "":
             self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS if matches_pattern(x, pattern, lengths)]
         self.answers_with_clues.sort(reverse=True)
@@ -149,15 +121,14 @@ class CrypticClueSolver(object):
         """
         answers_with_clues = []
         possible_clues = list(generate_clues(phrasing))
-        self.phrasing_clues = len(possible_clues)
-        self.finished_phrasing_clues = 0
 
         for i, clue in enumerate(possible_clues):
             if not self.running:
                 break
             # print "solving:", clue
             try:
-                answers = self.get_answers(clue)
+                answers = clue.get_answers(clue, self.phrasing)
+                # answers = self.get_answers(clue)
             except ClueUnsolvableError:
                 answers = []
             for answer in answers:
@@ -165,73 +136,70 @@ class CrypticClueSolver(object):
                     pass
                 else:
                     answers_with_clues.append(AnnotatedAnswer(answer, clue))
-            self.finished_phrasing_clues += 1
         return sorted(answers_with_clues, reverse=True)
 
     def collect_answers(self):
         if self.answers_with_clues is not None:
             return ClueSolutions(self.answers_with_clues)
 
-    def get_answers(self, t):
-        if isinstance(t, str):
-            return [t]
+    # def get_answers(self, t):
+    #     if isinstance(t, str):
+    #         return [t]
 
-        # t_hash = t._pprint_flat('', '()', '"')
-        # if t_hash in self.memo:
-        #     t.answers = self.memo[t_hash]
-        if t.answers is None:
-            t.answers = {}
-            self.solve_clue_tree(t)
-        if t.answers == {}:
-            # print "clue:", t, "unsolvable"
-            raise ClueUnsolvableError
-        # print "solved:", t, "\ngot:", t.answers
-        # self.memo[t_hash] = t.answers
-        return t.answers
+    #     # t_hash = t._pprint_flat('', '()', '"')
+    #     # if t_hash in self.memo:
+    #     #     t.answers = self.memo[t_hash]
+    #     if t.answers is None:
+    #         t.answers = {}
+    #         self.solve_clue_tree(t)
+    #     if t.answers == {}:
+    #         # print "clue:", t, "unsolvable"
+    #         raise ClueUnsolvableError
+    #     # print "solved:", t, "\ngot:", t.answers
+    #     # self.memo[t_hash] = t.answers
+    #     return t.answers
 
-    def solve_clue_tree(self, t):
-        child_answers = [self.get_answers(c) for c in t]
-        for i, s in enumerate(child_answers):
-            if isinstance(s, dict):
-                child_answers[i] = s.keys()
-        if t.node == 'top':
-            arg_sets = self.make_top_arg_sets(child_answers)
-        else:
-            arg_sets = self.make_arg_sets(child_answers)
-        for args in arg_sets:
-            answers = RULES[t.node](arg_filter(args), self.phrasing)
-            if answers is None:
-                answers = []
-            for ans in answers:
-                t.answers[ans] = args[:]
+    # def solve_clue_tree(self, t):
+    #     child_answers = [self.get_answers(c) for c in t]
+    #     for i, s in enumerate(child_answers):
+    #         if isinstance(s, dict):
+    #             child_answers[i] = s.keys()
+    #     if t.node == 'top':
+    #         arg_sets = self.make_top_arg_sets(child_answers)
+    #     else:
+    #         arg_sets = self.make_arg_sets(child_answers)
+    #     for args in arg_sets:
+    #         answers = RULES[t.node](arg_filter(args), self.phrasing)
+    #         if answers is None:
+    #             answers = []
+    #         for ans in answers:
+    #             t.answers[ans] = args[:]
 
-    def make_top_arg_sets(self, child_answers):
-        target_len = sum(self.phrasing.lengths)
-        arg_sets = [([], 0, '')]
-        for ans_list in child_answers:
-            new_arg_sets = []
-            for ans in ans_list:
-                for s in arg_sets:
-                    candidate = (s[0] + [ans], s[1] + len(ans), s[2] + ans)
-                    if valid_partial_answer(candidate[2], self.phrasing):
-                    # if candidate[1] <= target_len:
-                        new_arg_sets.append(candidate)
-            arg_sets = new_arg_sets
-        return [s[0] for s in arg_sets if s[1] == target_len]
+    # def make_top_arg_sets(self, child_answers):
+    #     target_len = sum(self.phrasing.lengths)
+    #     arg_sets = [([], 0, '')]
+    #     for ans_list in child_answers:
+    #         new_arg_sets = []
+    #         for ans in ans_list:
+    #             for s in arg_sets:
+    #                 candidate = (s[0] + [ans], s[1] + len(ans), s[2] + ans)
+    #                 if valid_partial_answer(candidate[2], self.phrasing):
+    #                 # if candidate[1] <= target_len:
+    #                     new_arg_sets.append(candidate)
+    #         arg_sets = new_arg_sets
+    #     return [s[0] for s in arg_sets if s[1] == target_len]
 
-    def make_arg_sets(self, child_answers):
-        # return itertools.product(*child_answers)
-        arg_sets = [[]]
-        for ans_list in child_answers:
-            new_arg_sets = []
-            for ans in ans_list:
-                for s in arg_sets:
-                    new_arg_sets.append(s + [ans])
-            arg_sets = new_arg_sets
-        return arg_sets
+    # def make_arg_sets(self, child_answers):
+    #     # return itertools.product(*child_answers)
+    #     arg_sets = [[]]
+    #     for ans_list in child_answers:
+    #         new_arg_sets = []
+    #         for ans in ans_list:
+    #             for s in arg_sets:
+    #                 new_arg_sets.append(s + [ans])
+    #         arg_sets = new_arg_sets
+    #     return arg_sets
 
-# def matches_pattern(word, pattern, lengths):
-#     return (tuple(len(x) for x in word.split('_')) == lengths) and re.match("^" + pattern + "$", word)
 
 def matches_pattern(word, pattern, lengths):
     return (tuple(len(x) for x in word.split('_')) == lengths) and all(c == pattern[i] or pattern[i] == '.' for i, c in enumerate(word.replace('_', '')))
