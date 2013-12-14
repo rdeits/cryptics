@@ -21,7 +21,7 @@ task :serve => [:data, :compile_templates] do
 end
 
 task :test => [:data] do
-	sh "nosetests --nocapture pycryptics"
+	sh "python -m nose --nocapture pycryptics"
 end
 
 task :puz => [:data] do
