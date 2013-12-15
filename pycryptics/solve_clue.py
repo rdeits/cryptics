@@ -22,10 +22,10 @@ class AnnotatedAnswer:
         return cmp((self.similarity, self.answer), (other.similarity, other.answer))
 
     def __str__(self):
-        return str([self.answer, self.similarity, self.clue.derivations(self.answer)])
+        return str([self.answer, self.similarity, self.clue.derivation(self.answer)])
 
     def derivation(self):
-        return "{:.0%}: ".format(self.similarity) + self.clue.derivations(self.answer)
+        return "{:.0%}: ".format(self.similarity) + self.clue.derivation(self.answer)
 
     def long_derivation(self):
         return self.clue.long_derivation(self.answer, self.similarity)
@@ -111,14 +111,14 @@ class CrypticClueSolver(object):
 
     def solve_constraints(self, constraints):
         answers_with_clues = []
-        possible_clues = generate_clues(constraints.phrases)
+        possible_clues = generate_clues(constraints)
 
         for i, clue in enumerate(possible_clues):
             if not self.running:
                 break
             # print "solving:", clue
             try:
-                answers = clue.get_answers(clue, constraints)
+                answers = clue.answers
             except ClueUnsolvableError:
                 answers = []
             for answer in answers:

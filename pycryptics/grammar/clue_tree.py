@@ -19,8 +19,11 @@ class ClueTree(Tree):
     cryptic crossword clue, along with all of the mechanisms required
     to solve that clue and explain the answer
     """
+    __slots__ = ['_answers', 'constraints']
+
     def __init__(self, node_or_str, children=None):
-        self.answers = None
+        self._answers = None
+        self._constraints = None
         super(ClueTree, self).__init__(node_or_str, children)
 
     def __str__(self):
@@ -29,39 +32,45 @@ class ClueTree(Tree):
     def __repr__(self):
         return self.__str__()
 
-    def solve(self, constraints):
-        child_answers = [self.get_answers(c, constraints) for c in self]
+    def set_constraints(self, constraints):
+        self._constraints = constraints
+        for c in self:
+            if (not isinstance(c, str)) and c._constraints is None:
+                c.set_constraints(constraints)
+
+    def solve(self):
+        child_answers = [ClueTree.get_answers(c) for c in self]
         for i, s in enumerate(child_answers):
             if isinstance(s, dict):
                 child_answers[i] = s.keys()
         if self.node == 'top':
-            arg_sets = self.make_top_arg_sets(child_answers, constraints)
+            arg_sets = self.make_top_arg_sets(child_answers)
         else:
-            arg_sets = self.make_arg_sets(child_answers, constraints)
+            arg_sets = self.make_arg_sets(child_answers)
+        if self._answers is None:
+            self._answers = {}
         for args in arg_sets:
-            answers = RULES[self.node](arg_filter(args), constraints)
+            answers = RULES[self.node](arg_filter(args), self._constraints)
             if answers is None:
                 answers = []
             for ans in answers:
-                self.answers[ans] = args[:]
+                self._answers[ans] = args[:]
 
-    @staticmethod
-    def make_top_arg_sets(child_answers, constraints):
-        target_len = sum(constraints.lengths)
+    def make_top_arg_sets(self, child_answers):
+        target_len = sum(self._constraints.lengths)
         arg_sets = [([], 0, '')]
         for ans_list in child_answers:
             new_arg_sets = []
             for ans in ans_list:
                 for s in arg_sets:
                     candidate = (s[0] + [ans], s[1] + len(ans), s[2] + ans)
-                    if valid_partial_answer(candidate[2], constraints):
+                    if valid_partial_answer(candidate[2], self._constraints):
                     # if candidate[1] <= target_len:
                         new_arg_sets.append(candidate)
             arg_sets = new_arg_sets
         return [s[0] for s in arg_sets if s[1] == target_len]
 
-    @staticmethod
-    def make_arg_sets(child_answers, constraints):
+    def make_arg_sets(self, child_answers):
         # return itertools.product(*child_answers)
         arg_sets = [[]]
         for ans_list in child_answers:
@@ -73,28 +82,31 @@ class ClueTree(Tree):
         return arg_sets
 
     @staticmethod
-    def get_answers(tree_or_leaf, constraints):
+    def get_answers(tree_or_leaf):
         if isinstance(tree_or_leaf, str):
             return [tree_or_leaf]
-        tree = tree_or_leaf
-        if tree.answers is None:
-            tree.answers = {}
-            tree.solve(constraints)
-        if tree.answers == {}:
-            raise ClueUnsolvableError
-        return tree.answers
+        else:
+            return tree_or_leaf.answers
 
+    @property
+    def answers(self):
+        if self._answers is None:
+            self._answers = {}
+            self.solve()
+        if self._answers == {}:
+            raise ClueUnsolvableError("This clue has no solutions under the given constraints: " + str(self._constraints))
+        return self._answers
 
-    def derivations(self, answer):
+    def derivation(self, answer):
         if self.node.endswith('_arg'):
-            return self[0].derivations(self.answers[answer][0])
+            return self[0].derivation(self.answers[answer][0])
         result = "(" + self.node + " "
         arg_answers = self.answers[answer]
         for i, child in enumerate(self):
             if isinstance(child, basestring):
                 result += '"' + child + '"'
             else:
-                result += child.derivations(arg_answers[i])
+                result += child.derivation(arg_answers[i])
             if i < len(self) - 1:
                 result += " "
         if answer != "" and not any(answer == a for a in arg_answers):
