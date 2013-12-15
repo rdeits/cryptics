@@ -4,7 +4,7 @@ from pycryptics.utils.transforms import lit_fun, null_fun, top_fun, syn_fun, fir
 from pycryptics.utils.clue_funcs import all_legal_substrings, reverse, anagrams, all_insertions
 
 """
-A Context Free Grammar (CFG) to describe allowed structures of cryptic crossword clues.
+A Context Free Grammar (CFG) to describe allowed substructures of cryptic crossword clues and how to solve each substructure.
 """
 
 RULES = {}

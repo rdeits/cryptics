@@ -1,6 +1,5 @@
 from pycryptics.utils.synonyms import cached_synonyms, SYNONYMS
 from pycryptics.utils.ngrams import INITIAL_NGRAMS
-import re
 
 def split_words(ans, lengths):
     j = 0
@@ -61,20 +60,3 @@ def top_fun(s, constraints):
     is_valid, words = valid_answer(ans, constraints)
     if is_valid:
         return ['_'.join(words)]
-
-
-# TRANSFORMS = {'lit': lit,
-#               'd': null,
-#               'null': null,
-#               'sub_': null,
-#               'sub_arg': lit,
-#               'clue_arg': lit,
-#               'rev_': null,
-#               'rev_arg': lit,
-#               'ins_': null,
-#               'ins_arg': lit,
-#               'ana_': null,
-#               'ana_arg': lit,
-#               'top': top,
-#               'syn': syn,
-#               'first': first}
