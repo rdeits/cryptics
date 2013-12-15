@@ -1,6 +1,6 @@
 from __future__ import division
 from pycryptics.utils.language import semantic_similarity
-from pycryptics.grammar.cfg import generate_clues
+from pycryptics.grammar.clue_parse import generate_clues
 from pycryptics.utils.phrasings import phrasings
 from pycryptics.utils.synonyms import SYNONYMS
 from pycryptics.grammar.clue_tree import ClueUnsolvableError
@@ -111,7 +111,7 @@ class CrypticClueSolver(object):
 
     def solve_constraints(self, constraints):
         answers_with_clues = []
-        possible_clues = list(generate_clues(constraints.phrases))
+        possible_clues = generate_clues(constraints.phrases)
 
         for i, clue in enumerate(possible_clues):
             if not self.running:
@@ -119,7 +119,6 @@ class CrypticClueSolver(object):
             # print "solving:", clue
             try:
                 answers = clue.get_answers(clue, constraints)
-                # answers = self.get_answers(clue)
             except ClueUnsolvableError:
                 answers = []
             for answer in answers:

@@ -3,6 +3,7 @@ import os.path
 
 
 SYNONYMS = dict()
+print "Loading synonyms from file..."
 
 i = 0
 while True:
@@ -13,6 +14,7 @@ while True:
         i += 1
     else:
         break
+print "...done."
 
 def cached_synonyms(x, length=None):
     x = x.lower()
@@ -21,3 +23,4 @@ def cached_synonyms(x, length=None):
         return list(syns)
     else:
         return []
+

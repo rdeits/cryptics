@@ -42,39 +42,39 @@ def valid_partial_answer(ans, constraints):
             return False
     return True
 
-def lit(s, constraints):
+def lit_fun(s, constraints):
     return s
 
-def null(s, constraints):
+def null_fun(s, constraints):
     return [""]
 
-def first(s, constraints):
+def first_fun(s, constraints):
     assert(len(s) == 1)
     return [s[0][0]]
 
-def syn(s, constraints):
+def syn_fun(s, constraints):
     assert(len(s) == 1)
     return cached_synonyms(s[0], sum(constraints.lengths) + 2)
 
-def top(s, constraints):
+def top_fun(s, constraints):
     ans = "".join(s)
     is_valid, words = valid_answer(ans, constraints)
     if is_valid:
         return ['_'.join(words)]
 
 
-TRANSFORMS = {'lit': lit,
-              'd': null,
-              'null': null,
-              'sub_': null,
-              'sub_arg': lit,
-              'clue_arg': lit,
-              'rev_': null,
-              'rev_arg': lit,
-              'ins_': null,
-              'ins_arg': lit,
-              'ana_': null,
-              'ana_arg': lit,
-              'top': top,
-              'syn': syn,
-              'first': first}
+# TRANSFORMS = {'lit': lit,
+#               'd': null,
+#               'null': null,
+#               'sub_': null,
+#               'sub_arg': lit,
+#               'clue_arg': lit,
+#               'rev_': null,
+#               'rev_arg': lit,
+#               'ins_': null,
+#               'ins_arg': lit,
+#               'ana_': null,
+#               'ana_arg': lit,
+#               'top': top,
+#               'syn': syn,
+#               'first': first}

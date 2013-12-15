@@ -109,12 +109,6 @@ def bigram_filter(answers, constraints):
             valid_answers.append(ans)
     return valid_answers
 
-
-FUNCTIONS = {'sub': all_legal_substrings,
-             'rev': reverse,
-             'ana': anagrams,
-             'ins': all_insertions}
-
 if __name__ == '__main__':
     from pycryptics.parse_and_solve import constraints
     print reverse(['soda'], constraints([], [4,], ""))

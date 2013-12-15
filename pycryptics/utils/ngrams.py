@@ -1,7 +1,7 @@
 import cPickle as pickle
 import os.path
 
-
+print "Loading ngrams from file..."
 INITIAL_NGRAMS = dict()
 NGRAMS = dict()
 i = 0
@@ -16,3 +16,5 @@ while True:
         i += 1
     else:
         break
+
+print "...done"

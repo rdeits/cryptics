@@ -1,10 +1,6 @@
 from nltk.parse.chart import Tree
-from pycryptics.utils.transforms import TRANSFORMS, valid_partial_answer
-from pycryptics.utils.clue_funcs import FUNCTIONS
-
-
-RULES = TRANSFORMS
-RULES.update(FUNCTIONS)
+from pycryptics.utils.transforms import valid_partial_answer
+from pycryptics.grammar.cfg import RULES
 
 
 def arg_filter(arg_set):
@@ -18,6 +14,11 @@ class ClueUnsolvableError(Exception):
 
 
 class ClueTree(Tree):
+    """
+    A tree data structure designed to reflect the CFG structure of a
+    cryptic crossword clue, along with all of the mechanisms required
+    to solve that clue and explain the answer
+    """
     def __init__(self, node_or_str, children=None):
         self.answers = None
         super(ClueTree, self).__init__(node_or_str, children)
@@ -168,8 +169,3 @@ def comma_list(args):
             result += " "
     return result
 
-if __name__ == '__main__':
-    print comma_list(['foo'])
-    print comma_list(['foo', 'bar'])
-    print comma_list(['foo', 'bar', 'baz'])
-    print comma_list(['foo', 'bar', 'baz', 'bap'])
