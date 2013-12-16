@@ -40,23 +40,3 @@ def valid_partial_answer(ans, constraints):
         if word not in INITIAL_NGRAMS[constraints.lengths[i]]:
             return False
     return True
-
-def lit_fun(s, constraints):
-    return s
-
-def null_fun(s, constraints):
-    return [""]
-
-def first_fun(s, constraints):
-    assert(len(s) == 1)
-    return [s[0][0]]
-
-def syn_fun(s, constraints):
-    assert(len(s) == 1)
-    return cached_synonyms(s[0], sum(constraints.lengths) + 2)
-
-def top_fun(s, constraints):
-    ans = "".join(s)
-    is_valid, words = valid_answer(ans, constraints)
-    if is_valid:
-        return ['_'.join(words)]

@@ -1,6 +1,5 @@
 from nltk.parse.chart import Tree
 from pycryptics.utils.transforms import valid_partial_answer
-from pycryptics.grammar.cfg import RULES
 
 
 def arg_filter(arg_set):
@@ -43,14 +42,15 @@ class ClueTree(Tree):
         for i, s in enumerate(child_answers):
             if isinstance(s, dict):
                 child_answers[i] = s.keys()
-        if self.node == 'top':
+        if self.node.name == 'top':
             arg_sets = self.make_top_arg_sets(child_answers)
         else:
             arg_sets = self.make_arg_sets(child_answers)
         if self._answers is None:
             self._answers = {}
         for args in arg_sets:
-            answers = RULES[self.node](arg_filter(args), self._constraints)
+            answers = self.node.apply_rule(arg_filter(args), self._constraints)
+            # answers = RULES[self.node](arg_filter(args), self._constraints)
             if answers is None:
                 answers = []
             for ans in answers:
@@ -98,9 +98,9 @@ class ClueTree(Tree):
         return self._answers
 
     def derivation(self, answer):
-        if self.node.endswith('_arg'):
+        if self.node.is_argument:
             return self[0].derivation(self.answers[answer][0])
-        result = "(" + self.node + " "
+        result = "(" + self.node.name + " "
         arg_answers = self.answers[answer]
         for i, child in enumerate(self):
             if isinstance(child, basestring):
@@ -128,56 +128,47 @@ class ClueTree(Tree):
         for i, child in enumerate(self):
             if isinstance(child, basestring):
                 continue
-            if child.node.endswith('_'):
+            if child.node.is_indicator:
+            # if child.node.endswith('_'):
                 indicator = child[0]
             else:
                 result += child.long_derivation(arg_answers[i])
-        if self.node != 'top':
+        if self.node.name != 'top':
             result += '\n'
 
         if indicator is not None:
             result += "'" + indicator + "' means to "
         non_empty_args = ["'" + a + "'" for a in arg_answers if a != ""]
-        if self.node == 'rev':
-            result += "reverse " + non_empty_args[0]
-        elif self.node == 'sub':
-            result += "take a substring of " + non_empty_args[0]
-        elif self.node == 'ins':
-            result += "insert " + non_empty_args[0] + " and " + non_empty_args[1]
-        elif self.node == 'ana':
-            result += "anagram " + non_empty_args[0]
-        elif self.node == 'syn':
-            result += "Take a synonym of " + non_empty_args[0]
-        elif self.node == 'first':
-            result += "Take the first letter of " + non_empty_args[0]
-        elif self.node == 'null':
-            result += non_empty_args[0] + " is a filler word."
-        elif self.node == 'd':
-            result += non_empty_args[0] + " is the definition."
-        elif self.node == 'top' and len(non_empty_args) > 1:
-            result += "\nCombine " + comma_list(map(str.upper, non_empty_args))
+        result += self.node.long_derivation(non_empty_args)
+        # if self.node == 'rev':
+        #     result += "reverse " + non_empty_args[0]
+        # elif self.node == 'sub':
+        #     result += "take a substring of " + non_empty_args[0]
+        # elif self.node == 'ins':
+        #     result += "insert " + non_empty_args[0] + " and " + non_empty_args[1]
+        # elif self.node == 'ana':
+        #     result += "anagram " + non_empty_args[0]
+        # elif self.node == 'syn':
+        #     result += "Take a synonym of " + non_empty_args[0]
+        # elif self.node == 'first':
+        #     result += "Take the first letter of " + non_empty_args[0]
+        # elif self.node == 'null':
+        #     result += non_empty_args[0] + " is a filler word."
+        # elif self.node == 'd':
+        #     result += non_empty_args[0] + " is the definition."
+        # elif self.node == 'top' and len(non_empty_args) > 1:
+        #     result += "\nCombine " + comma_list(map(str.upper, non_empty_args))
 
-        if answer != "" and (self.node != 'top' or len(non_empty_args) > 1):
+        if answer != "" and (self.node.name != 'top' or len(non_empty_args) > 1):
             result += " to get " + answer.upper() + "."
 
-        if self.node == 'top' and score is not None:
+        if self.node.name == 'top' and score is not None:
             result += "\n" + answer.upper() + " matches "
             for child in self:
-                if child.node == 'd':
+                if child.node.name == 'd':
                     result += "'" + child[0] + "'"
                     break
             result += " with confidence score {:.0%}.".format(score)
         return result
 
-def comma_list(args):
-    result = ""
-    for i, a in enumerate(args):
-        result += a
-        if i < len(args) - 1 and len(args) > 2:
-            result += ","
-        if i == len(args) - 2:
-            result += " and "
-        else:
-            result += " "
-    return result
 

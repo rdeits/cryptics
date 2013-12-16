@@ -1,61 +1,184 @@
 import nltk.grammar as gram
 from pycryptics.utils.indicators import INDICATORS
-from pycryptics.utils.transforms import lit_fun, null_fun, top_fun, syn_fun, first_fun
+from pycryptics.utils.synonyms import cached_synonyms
+from pycryptics.utils.transforms import valid_answer
 from pycryptics.utils.clue_funcs import all_legal_substrings, reverse, anagrams, all_insertions
 
 """
 A Context Free Grammar (CFG) to describe allowed substructures of cryptic crossword clues and how to solve each substructure.
 """
 
-RULES = {}
+
+class BaseNode:
+    is_indicator = False
+    is_argument = False
+    name = "base"
+    __slots__ = []
+
+    def apply_rule(self, filtered_args, constraints):
+        return [""]
+
+    def long_derivation(self, non_empty_args):
+        return ""
+
+def comma_list(args):
+    result = ""
+    for i, a in enumerate(args):
+        result += a
+        if i < len(args) - 1 and len(args) > 2:
+            result += ","
+        if i == len(args) - 2:
+            result += " and "
+        else:
+            result += " "
+    return result
+
+class TopNode(BaseNode):
+    name = 'top'
+
+    def apply_rule(self, filtered_args, constraints):
+        ans = "".join(filtered_args)
+        is_valid, words = valid_answer(ans, constraints)
+        if is_valid:
+            return ['_'.join(words)]
+
+    def long_derivation(self, non_empty_args):
+        if len(non_empty_args) > 1:
+            return "\nCombine " + comma_list(map(str.upper, non_empty_args))
+        else:
+            return ""
+
+class LitNode(BaseNode):
+    name = 'lit'
+
+    def apply_rule(self, s, c):
+        return s
+
+class NullNode(BaseNode):
+    name = 'null'
+
+class DNode(BaseNode):
+    name = 'd'
+
+class SynNode(BaseNode):
+    name = 'syn'
+
+    def apply_rule(self, s, constraints):
+        assert(len(s) == 1)
+        return cached_synonyms(s[0], sum(constraints.lengths) + 2)
+
+class FirstNode(BaseNode):
+    name = 'first'
+
+    def apply_rule(self, s, c):
+        assert(len(s) == 1)
+        return [s[0][0]]
+
+class AnaNode(BaseNode):
+    name = 'ana'
+
+    def apply_rule(self, s, c):
+        return anagrams(s, c)
+
+    def long_derivation(self, non_empty_args):
+        return "anagram {}".format(*non_empty_args)
+
+class SubNode(BaseNode):
+    name = 'sub'
+
+    def apply_rule(self, s, c):
+        return all_legal_substrings(s, c)
+
+    def long_derivation(self, non_empty_args):
+        return "take a substring of {}".format(*non_empty_args)
+
+class InsNode(BaseNode):
+    name = 'ins'
+
+    def apply_rule(self, s, c):
+        return all_insertions(s, c)
+
+    def long_derivation(self, non_empty_args):
+        return "insert {} and {}".format(*non_empty_args)
+
+class RevNode(BaseNode):
+    name = 'rev'
+
+    def apply_rule(self, s, c):
+        return reverse(s, c)
+
+    def long_derivation(self, non_empty_args):
+        return "reverse {}".format(*non_empty_args)
+
+class IndNode(BaseNode):
+    is_indicator = True
+
+class AnaIndNode(IndNode):
+    name = 'ana_'
+
+class SubIndNode(IndNode):
+    name = 'sub_'
+
+class InsIndNode(IndNode):
+    name = 'ins_'
+
+class RevIndNode(IndNode):
+    name = 'rev_'
+
+class ArgNode(BaseNode):
+    is_argument = True
+
+    def apply_rule(self, s, c):
+        return s
+
+class ClueArgNode(ArgNode):
+    name = 'clue_arg'
+
+class InsArgNode(ArgNode):
+    name = 'ins_arg'
+
+class AnaArgNode(ArgNode):
+    name = 'ana_arg'
+
+class SubArgNode(ArgNode):
+    name = 'sub_arg'
+
+class RevArgNode(ArgNode):
+    name = 'rev_arg'
+
 
 # The basic wordplay transforms
-top = gram.Nonterminal('top')
-RULES['top'] = top_fun
-lit = gram.Nonterminal('lit')
-RULES['lit'] = lit_fun
-d = gram.Nonterminal('d')
-RULES['d'] = null_fun
-syn = gram.Nonterminal('syn')
-RULES['syn'] = syn_fun
-first = gram.Nonterminal('first')
-RULES['first'] = first_fun
-null = gram.Nonterminal('null')
-RULES['null'] = null_fun
+top = gram.Nonterminal(TopNode())
+lit = gram.Nonterminal(LitNode())
+d = gram.Nonterminal(DNode())
+syn = gram.Nonterminal(SynNode())
+first = gram.Nonterminal(FirstNode())
+null = gram.Nonterminal(NullNode())
 
 # Clue functions
-ana = gram.Nonterminal('ana')
-RULES['ana'] = anagrams
-sub = gram.Nonterminal('sub')
-RULES['sub'] = all_legal_substrings
-ins = gram.Nonterminal('ins')
-RULES['ins'] = all_insertions
-rev = gram.Nonterminal('rev')
-RULES['rev'] = reverse
+ana = gram.Nonterminal(AnaNode())
+sub = gram.Nonterminal(SubNode())
+ins = gram.Nonterminal(InsNode())
+rev = gram.Nonterminal(RevNode())
 
 # ana_, rev_, etc. are anagram/reversal/etc indicators,
 # so they produce no text in the wordplay output
-ana_ = gram.Nonterminal('ana_')
-RULES['ana_'] = null_fun
-sub_ = gram.Nonterminal('sub_')
-RULES['sub_'] = null_fun
-ins_ = gram.Nonterminal('ins_')
-RULES['ins_'] = null_fun
-rev_ = gram.Nonterminal('rev_')
-RULES['rev_'] = null_fun
+ana_ind_node = AnaIndNode()
+ana_ = gram.Nonterminal(ana_ind_node)
+sub_ind_node = SubIndNode()
+sub_ = gram.Nonterminal(sub_ind_node)
+ins_ind_node = InsIndNode()
+ins_ = gram.Nonterminal(ins_ind_node)
+rev_ind_node = RevIndNode()
+rev_ = gram.Nonterminal(rev_ind_node)
 
 # All the *_arg elements just exist to make the production rules more clear
 # so they just pass their inputs literally
-clue_arg = gram.Nonterminal('clue_arg')
-RULES['clue_arg'] = lit_fun
-ins_arg = gram.Nonterminal('ins_arg')
-RULES['ins_arg'] = lit_fun
-ana_arg = gram.Nonterminal('ana_arg')
-RULES['ana_arg'] = lit_fun
-sub_arg = gram.Nonterminal('sub_arg')
-RULES['sub_arg'] = lit_fun
-rev_arg = gram.Nonterminal('rev_arg')
-RULES['rev_arg'] = lit_fun
+clue_arg = gram.Nonterminal(ClueArgNode())
+ins_arg = gram.Nonterminal(InsArgNode())
+ana_arg = gram.Nonterminal(AnaArgNode())
+sub_arg = gram.Nonterminal(SubArgNode())
+rev_arg = gram.Nonterminal(RevArgNode())
 
 production_rules = {
     ins: [[ins_arg, ins_, ins_arg], [ins_arg, ins_arg, ins_]],
@@ -108,7 +231,11 @@ def generate_grammar(phrases):
             tags = [lit, d, syn, first]
             for kind in INDICATORS:
                 if any(w == p or (len(w) > 5 and abs(len(w) - len(p)) <= 3 and p.startswith(w[:-3])) for w in INDICATORS[kind]):
-                    tags.append(gram.Nonterminal(kind))
+                    ind_nodes = {'ana_': ana_ind_node,
+                                 'ins_': ins_ind_node,
+                                 'rev_': rev_ind_node,
+                                 'sub_': sub_ind_node}
+                    tags.append(gram.Nonterminal(ind_nodes[kind]))
                     found = True
             if not found:
                 # tags = word_tags
