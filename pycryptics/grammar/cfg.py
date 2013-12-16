@@ -15,10 +15,12 @@ class BaseNode:
     name = "base"
     __slots__ = []
 
-    def apply_rule(self, filtered_args, constraints):
+    @staticmethod
+    def apply_rule(filtered_args, constraints):
         return [""]
 
-    def long_derivation(self, non_empty_args):
+    @staticmethod
+    def long_derivation(non_empty_args):
         return ""
 
 def comma_list(args):
@@ -36,13 +38,15 @@ def comma_list(args):
 class TopNode(BaseNode):
     name = 'top'
 
-    def apply_rule(self, filtered_args, constraints):
+    @staticmethod
+    def apply_rule(filtered_args, constraints):
         ans = "".join(filtered_args)
         is_valid, words = valid_answer(ans, constraints)
         if is_valid:
             return ['_'.join(words)]
 
-    def long_derivation(self, non_empty_args):
+    @staticmethod
+    def long_derivation(non_empty_args):
         if len(non_empty_args) > 1:
             return "\nCombine " + comma_list(map(str.upper, non_empty_args))
         else:
@@ -51,7 +55,8 @@ class TopNode(BaseNode):
 class LitNode(BaseNode):
     name = 'lit'
 
-    def apply_rule(self, s, c):
+    @staticmethod
+    def apply_rule(s, c):
         return s
 
 class NullNode(BaseNode):
@@ -63,51 +68,61 @@ class DNode(BaseNode):
 class SynNode(BaseNode):
     name = 'syn'
 
-    def apply_rule(self, s, constraints):
+    @staticmethod
+    def apply_rule(s, constraints):
         assert(len(s) == 1)
         return cached_synonyms(s[0], sum(constraints.lengths) + 2)
 
 class FirstNode(BaseNode):
     name = 'first'
 
-    def apply_rule(self, s, c):
+    @staticmethod
+    def apply_rule(s, c):
         assert(len(s) == 1)
         return [s[0][0]]
 
 class AnaNode(BaseNode):
     name = 'ana'
 
-    def apply_rule(self, s, c):
+    @staticmethod
+    def apply_rule(s, c):
         return anagrams(s, c)
 
-    def long_derivation(self, non_empty_args):
+    @staticmethod
+    def long_derivation(non_empty_args):
         return "anagram {}".format(*non_empty_args)
 
 class SubNode(BaseNode):
     name = 'sub'
 
-    def apply_rule(self, s, c):
+    @staticmethod
+    def apply_rule(s, c):
         return all_legal_substrings(s, c)
 
-    def long_derivation(self, non_empty_args):
+    @staticmethod
+    def long_derivation(non_empty_args):
         return "take a substring of {}".format(*non_empty_args)
 
 class InsNode(BaseNode):
     name = 'ins'
 
-    def apply_rule(self, s, c):
+    @staticmethod
+    def apply_rule(s, c):
         return all_insertions(s, c)
 
-    def long_derivation(self, non_empty_args):
+    @staticmethod
+    def long_derivation(non_empty_args):
         return "insert {} and {}".format(*non_empty_args)
 
 class RevNode(BaseNode):
     name = 'rev'
 
-    def apply_rule(self, s, c):
+    @staticmethod
+    def apply_rule(s, c):
         return reverse(s, c)
 
-    def long_derivation(self, non_empty_args):
+    @staticmethod
+    def long_derivation(non_empty_args):
         return "reverse {}".format(*non_empty_args)
 
 class IndNode(BaseNode):
@@ -128,7 +143,8 @@ class RevIndNode(IndNode):
 class ArgNode(BaseNode):
     is_argument = True
 
-    def apply_rule(self, s, c):
+    @staticmethod
+    def apply_rule(s, c):
         return s
 
 class ClueArgNode(ArgNode):
@@ -148,37 +164,33 @@ class RevArgNode(ArgNode):
 
 
 # The basic wordplay transforms
-top = gram.Nonterminal(TopNode())
-lit = gram.Nonterminal(LitNode())
-d = gram.Nonterminal(DNode())
-syn = gram.Nonterminal(SynNode())
-first = gram.Nonterminal(FirstNode())
-null = gram.Nonterminal(NullNode())
+top = gram.Nonterminal(TopNode)
+lit = gram.Nonterminal(LitNode)
+d = gram.Nonterminal(DNode)
+syn = gram.Nonterminal(SynNode)
+first = gram.Nonterminal(FirstNode)
+null = gram.Nonterminal(NullNode)
 
 # Clue functions
-ana = gram.Nonterminal(AnaNode())
-sub = gram.Nonterminal(SubNode())
-ins = gram.Nonterminal(InsNode())
-rev = gram.Nonterminal(RevNode())
+ana = gram.Nonterminal(AnaNode)
+sub = gram.Nonterminal(SubNode)
+ins = gram.Nonterminal(InsNode)
+rev = gram.Nonterminal(RevNode)
 
 # ana_, rev_, etc. are anagram/reversal/etc indicators,
 # so they produce no text in the wordplay output
-ana_ind_node = AnaIndNode()
-ana_ = gram.Nonterminal(ana_ind_node)
-sub_ind_node = SubIndNode()
-sub_ = gram.Nonterminal(sub_ind_node)
-ins_ind_node = InsIndNode()
-ins_ = gram.Nonterminal(ins_ind_node)
-rev_ind_node = RevIndNode()
-rev_ = gram.Nonterminal(rev_ind_node)
+ana_ = gram.Nonterminal(AnaIndNode)
+sub_ = gram.Nonterminal(SubIndNode)
+ins_ = gram.Nonterminal(InsIndNode)
+rev_ = gram.Nonterminal(RevIndNode)
 
 # All the *_arg elements just exist to make the production rules more clear
 # so they just pass their inputs literally
-clue_arg = gram.Nonterminal(ClueArgNode())
-ins_arg = gram.Nonterminal(InsArgNode())
-ana_arg = gram.Nonterminal(AnaArgNode())
-sub_arg = gram.Nonterminal(SubArgNode())
-rev_arg = gram.Nonterminal(RevArgNode())
+clue_arg = gram.Nonterminal(ClueArgNode)
+ins_arg = gram.Nonterminal(InsArgNode)
+ana_arg = gram.Nonterminal(AnaArgNode)
+sub_arg = gram.Nonterminal(SubArgNode)
+rev_arg = gram.Nonterminal(RevArgNode)
 
 production_rules = {
     ins: [[ins_arg, ins_, ins_arg], [ins_arg, ins_arg, ins_]],
@@ -231,10 +243,10 @@ def generate_grammar(phrases):
             tags = [lit, d, syn, first]
             for kind in INDICATORS:
                 if any(w == p or (len(w) > 5 and abs(len(w) - len(p)) <= 3 and p.startswith(w[:-3])) for w in INDICATORS[kind]):
-                    ind_nodes = {'ana_': ana_ind_node,
-                                 'ins_': ins_ind_node,
-                                 'rev_': rev_ind_node,
-                                 'sub_': sub_ind_node}
+                    ind_nodes = {'ana_': AnaIndNode,
+                                 'ins_': InsIndNode,
+                                 'rev_': RevIndNode,
+                                 'sub_': SubIndNode}
                     tags.append(gram.Nonterminal(ind_nodes[kind]))
                     found = True
             if not found:
