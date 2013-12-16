@@ -26,7 +26,10 @@ class ClueTree(Tree):
         super(ClueTree, self).__init__(node_or_str, children)
 
     def __str__(self):
-        return self._pprint_flat('', '()', False)
+        child_strs = []
+        for child in self:
+            child_strs.append(str(child))
+        return "({} {})".format(self.node.name, ' '.join(child_strs))
 
     def __repr__(self):
         return self.__str__()
@@ -136,7 +139,7 @@ class ClueTree(Tree):
         if self.node.name != 'top':
             result += '\n'
 
-        if indicator is not None:
+        if indicator is not None and self.node.name != 'top':
             result += "'" + indicator + "' means to "
         non_empty_args = ["'" + a + "'" for a in arg_answers if a != ""]
         result += self.node.long_derivation(non_empty_args)

@@ -20,8 +20,8 @@ def all_legal_substrings(words, constraints):
             s = word[i:i+length]
             if s in SYNONYMS:
                 subs.add(s)
-    for l in range(1, min(len(word), length + 1, 4)):
-        subs.add(word[:l])
+    # for l in range(1, min(len(word), length + 1, 4)):
+    #     subs.add(word[:l])
     subs.add(word[-1:])
     if len(word) > 2:
         subs.add(word[:1] + word[-1:])
