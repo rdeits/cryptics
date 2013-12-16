@@ -2,7 +2,7 @@ import nltk.grammar as gram
 from pycryptics.utils.indicators import INDICATORS
 from pycryptics.utils.synonyms import cached_synonyms
 from pycryptics.utils.transforms import valid_answer
-from pycryptics.utils.clue_funcs import all_legal_substrings, reverse, anagrams, all_insertions, bigram_filter
+from pycryptics.utils.clue_funcs import internal_substrings, reverse, anagrams, all_insertions, bigram_filter
 
 """
 A Context Free Grammar (CFG) to describe allowed substructures of cryptic crossword clues and how to solve each substructure.
@@ -108,7 +108,7 @@ class SubNode(BaseNode):
 
     @staticmethod
     def apply_rule(s, c):
-        return all_legal_substrings(s, c)
+        return internal_substrings(s, c)
 
 class SubInitNode(BaseNode):
     name = 'sub_init'
@@ -124,8 +124,24 @@ class SubInitNode(BaseNode):
             return subs
         for l in range(1, min(len(word), length + 1, 4)):
             subs.add(word[:l])
+        if len(word) > 2:
+            subs.add(word[:len(word)-1])
         return bigram_filter(subs, constraints)
 
+class SubFinalNode(BaseNode):
+    name = 'sub_final'
+    derivation_string = "take a final substring of {}"
+
+    @staticmethod
+    def apply_rule(words, constraints):
+        assert len(words) == 1
+        word = words[0].lower().replace('_', "")
+        subs = set([])
+        if len(word) <= 1:
+            return subs
+        subs.add(word[1:])
+        subs.add(word[-1:])
+        return bigram_filter(subs, constraints)
 
 class InsNode(BaseNode):
     name = 'ins'
@@ -154,6 +170,9 @@ class SubIndNode(IndNode):
 
 class SubInitIndNode(IndNode):
     name = 'sub_init_'
+
+class SubFinalIndNode(IndNode):
+    name = 'sub_final_'
 
 class InsIndNode(IndNode):
     name = 'ins_'
@@ -196,6 +215,7 @@ null = gram.Nonterminal(NullNode)
 ana = gram.Nonterminal(AnaNode)
 sub = gram.Nonterminal(SubNode)
 sub_init = gram.Nonterminal(SubInitNode)
+sub_final = gram.Nonterminal(SubFinalNode)
 ins = gram.Nonterminal(InsNode)
 rev = gram.Nonterminal(RevNode)
 
@@ -204,9 +224,10 @@ rev = gram.Nonterminal(RevNode)
 ana_ = gram.Nonterminal(AnaIndNode)
 sub_ = gram.Nonterminal(SubIndNode)
 sub_init_ = gram.Nonterminal(SubInitIndNode)
+sub_final_ = gram.Nonterminal(SubFinalIndNode)
 ins_ = gram.Nonterminal(InsIndNode)
 rev_ = gram.Nonterminal(RevIndNode)
-ind_nodes = [AnaIndNode, SubIndNode, SubInitIndNode, InsIndNode, RevIndNode]
+ind_nodes = [AnaIndNode, SubIndNode, SubFinalIndNode, SubInitIndNode, InsIndNode, RevIndNode]
 
 # All the *_arg elements just exist to make the production rules more clear
 # so they just pass their inputs literally
@@ -221,9 +242,10 @@ production_rules = {
     ana: [[ana_arg, ana_], [ana_, ana_arg]],
     sub: [[sub_arg, sub_], [sub_, sub_arg]],
     sub_init: [[sub_arg, sub_init_], [sub_init_, sub_arg]],
+    sub_final: [[sub_arg, sub_final_], [sub_final_, sub_arg]],
     rev: [[rev_arg, rev_], [rev_, rev_arg]],
-    clue_arg: [[lit], [syn], [first], [null], [ana], [sub], [ins], [rev], [sub_init]],
-    ins_arg: [[lit], [ana], [syn], [sub], [sub_init], [first], [rev]],
+    clue_arg: [[lit], [syn], [first], [null], [ana], [sub], [ins], [rev], [sub_init], [sub_final]],
+    ins_arg: [[lit], [ana], [syn], [sub], [sub_init], [sub_final], [first], [rev]],
     ana_arg: [[lit]],
     sub_arg: [[lit], [syn], [rev]],
     rev_arg: [[lit], [syn]],
@@ -272,7 +294,7 @@ def generate_grammar(phrases):
                     found = True
             if not found:
                 # tags = word_tags
-                tags = [lit, d, syn, first, ana_, sub_, sub_init_, rev_]
+                tags = [lit, d, syn, first, ana_, sub_, sub_init_, sub_final_, rev_]
         for t in tags:
             prods.append(gram.Production(t, [p]))
     return gram.ContextFreeGrammar(top, base_prods + prods)
