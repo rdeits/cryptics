@@ -10,18 +10,27 @@ A Context Free Grammar (CFG) to describe allowed substructures of cryptic crossw
 
 
 class BaseNode:
+    """
+    Each *Node class is a data structure which represents a single node
+    in a parsed cryptic clue tree. That node must have a name, a method for
+    applying its wordplay rule, and a (possibly empty) explanation string
+    for its long derivation. These classes are just for conveniently
+    defining and storing those methods for each type of node, and are
+    never meant to be instantiated.
+    """
     is_indicator = False
     is_argument = False
     name = "base"
+    derivation_string = ""
     __slots__ = []
 
     @staticmethod
     def apply_rule(filtered_args, constraints):
         return [""]
 
-    @staticmethod
-    def long_derivation(non_empty_args):
-        return ""
+    @classmethod
+    def long_derivation(cls, non_empty_args):
+        return cls.derivation_string.format(*non_empty_args)
 
 def comma_list(args):
     result = ""
@@ -61,12 +70,15 @@ class LitNode(BaseNode):
 
 class NullNode(BaseNode):
     name = 'null'
+    derivation_string = "{} is a filler word"
 
 class DNode(BaseNode):
     name = 'd'
+    derivation_string = "{} is the definition"
 
 class SynNode(BaseNode):
     name = 'syn'
+    derivation_string = "Take a synonym of {}"
 
     @staticmethod
     def apply_rule(s, constraints):
@@ -75,6 +87,7 @@ class SynNode(BaseNode):
 
 class FirstNode(BaseNode):
     name = 'first'
+    derivation_string = "Take the first letter of {}"
 
     @staticmethod
     def apply_rule(s, c):
@@ -83,47 +96,35 @@ class FirstNode(BaseNode):
 
 class AnaNode(BaseNode):
     name = 'ana'
+    derivation_string = "anagram {}"
 
     @staticmethod
     def apply_rule(s, c):
         return anagrams(s, c)
 
-    @staticmethod
-    def long_derivation(non_empty_args):
-        return "anagram {}".format(*non_empty_args)
-
 class SubNode(BaseNode):
     name = 'sub'
+    derivation_string = "take a substring of {}"
 
     @staticmethod
     def apply_rule(s, c):
         return all_legal_substrings(s, c)
 
-    @staticmethod
-    def long_derivation(non_empty_args):
-        return "take a substring of {}".format(*non_empty_args)
-
 class InsNode(BaseNode):
     name = 'ins'
+    derivation_string = "insert {} and {}"
 
     @staticmethod
     def apply_rule(s, c):
         return all_insertions(s, c)
 
-    @staticmethod
-    def long_derivation(non_empty_args):
-        return "insert {} and {}".format(*non_empty_args)
-
 class RevNode(BaseNode):
     name = 'rev'
+    derivation_string = "reverse {}"
 
     @staticmethod
     def apply_rule(s, c):
         return reverse(s, c)
-
-    @staticmethod
-    def long_derivation(non_empty_args):
-        return "reverse {}".format(*non_empty_args)
 
 class IndNode(BaseNode):
     is_indicator = True
@@ -241,12 +242,12 @@ def generate_grammar(phrases):
         else:
             found = False
             tags = [lit, d, syn, first]
+            ind_nodes = {'ana_': AnaIndNode,
+                         'ins_': InsIndNode,
+                         'rev_': RevIndNode,
+                         'sub_': SubIndNode}
             for kind in INDICATORS:
                 if any(w == p or (len(w) > 5 and abs(len(w) - len(p)) <= 3 and p.startswith(w[:-3])) for w in INDICATORS[kind]):
-                    ind_nodes = {'ana_': AnaIndNode,
-                                 'ins_': InsIndNode,
-                                 'rev_': RevIndNode,
-                                 'sub_': SubIndNode}
                     tags.append(gram.Nonterminal(ind_nodes[kind]))
                     found = True
             if not found:
