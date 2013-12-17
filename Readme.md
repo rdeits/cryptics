@@ -77,6 +77,10 @@ and
 	Combine 'lees' and 'hores' to get LEE_SHORES. 
 	LEE_SHORES matches 'to_dangerous_coasts' with confidence score 90%. 
 
+# Interacting with the solver
+
+Here's a demo of more ways you can play with the solver interactively: [cryptic_demo.ipynb](http://nbviewer.ipython.org/github/rdeits/cryptics/blob/master/cryptic_demo.ipynb)
+
 # More Information
 
 To learn more about how the solver works, see this blog post: [http://blog.robindeits.com/2013/02/11/a-cryptic-crossword-clue-solver/](http://blog.robindeits.com/2013/02/11/a-cryptic-crossword-clue-solver/).
