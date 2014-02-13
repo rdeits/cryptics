@@ -173,5 +173,3 @@ class ClueTree(Tree):
                     break
             result += " with confidence score {:.0%}.".format(score)
         return result
-
-
