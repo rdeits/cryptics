@@ -24,8 +24,9 @@ def matches_pattern(ans, pattern):
 def valid_words(words):
     return "_".join(words) in SYNONYMS
 
+
 def valid_answer(ans, constraints):
-    if len(ans) != sum(constraints.lengths) or not matches_pattern(ans, constraints.pattern) or ans in constraints.phrases:
+    if len(ans) != sum(constraints.lengths) or not matches_pattern(ans, constraints.pattern) or ans in constraints.phrases or any(x.startswith(ans) for x in constraints.phrases) or any(ans ==x for p in constraints.phrases for x in p.split('_')):
         return False, None
     words = split_words(ans, constraints.lengths)
     return valid_words(words), words

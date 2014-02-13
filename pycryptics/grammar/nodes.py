@@ -38,6 +38,7 @@ def comma_list(args):
             result += " "
     return result
 
+
 class TopNode(BaseNode):
     name = 'top'
 

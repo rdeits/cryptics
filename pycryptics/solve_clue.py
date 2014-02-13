@@ -73,9 +73,9 @@ def arg_filter(arg_set):
 
 class CrypticClueSolver(object):
     def __init__(self):
-        self.running = False
         self.answers_with_clues = None
         self.clue_text = None
+        self.quiet = False
 
     def __enter__(self):
         # self.start_go_server()
@@ -86,26 +86,31 @@ class CrypticClueSolver(object):
         # self.stop_go_server()
 
     def stop(self):
-        self.running = False
+        pass
 
     def setup(self, clue_text):
         self.clue_text = clue_text
 
     def run(self):
-        self.running = True
         self.clue_text = self.clue_text.encode('ascii', 'ignore')
-        all_phrasings, lengths, pattern, answer = parse_clue_text(self.clue_text)
+        constraints = parse_clue_text(self.clue_text)
+        return self.solve_all_phrasings(constraints)
+        # all_phrasings, lengths, pattern, answer = parse_clue_text(self.clue_text)
+
+    def solve_all_phrasings(self, constraints):
+        all_phrasings = phrasings(constraints.phrases)
+
         self.answers_with_clues = []
 
         for p in all_phrasings:
-            constraints = Constraints(p, lengths, pattern, answer)
-            if not self.running:
-                break
-            print p
+            constraints = constraints._replace(phrases=p)
+            # constraints = Constraints(p, lengths, pattern, answer)
+            if not self.quiet:
+                print p
             for ann_ans in self.solve_constraints(constraints):
                 self.answers_with_clues.append(ann_ans)
-        if len(self.answers_with_clues) == 0 and pattern.replace('.', '') != "":
-            self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS if matches_pattern(x, pattern, lengths)]
+        if len(self.answers_with_clues) == 0 and constraints.pattern.replace('.', '') != "":
+            self.answers_with_clues = [PatternAnswer(x, all_phrasings[0]) for x in SYNONYMS if matches_pattern(x, constraints.pattern, constraints.lengths)]
         self.answers_with_clues.sort(reverse=True)
         return self.answers_with_clues
 
@@ -114,18 +119,13 @@ class CrypticClueSolver(object):
         possible_clues = generate_clues(constraints)
 
         for i, clue in enumerate(possible_clues):
-            if not self.running:
-                break
             # print "solving:", clue
             try:
                 answers = clue.answers
             except ClueUnsolvableError:
                 answers = []
             for answer in answers:
-                if answer in constraints.phrases or any(x.startswith(answer) for x in constraints.phrases) or any(answer == x for p in constraints.phrases for x in p.split('_')):
-                    pass
-                else:
-                    answers_with_clues.append(AnnotatedAnswer(answer, clue))
+                answers_with_clues.append(AnnotatedAnswer(answer, clue))
         return sorted(answers_with_clues, reverse=True)
 
     def collect_answers(self):
@@ -158,7 +158,9 @@ def split_clue_text(clue_text):
 
 def parse_clue_text(clue_text):
     phrases, lengths, pattern, answer = split_clue_text(clue_text)
-    return phrasings(phrases), lengths, pattern, answer
+    return Constraints(phrases=phrases, lengths=lengths, pattern=pattern,
+                       known_answer=answer)
+    # return phrasings(phrases), lengths, pattern, answer
 
 
 if __name__ == '__main__':
