@@ -36,9 +36,9 @@ def semantic_similarity(word1, word2):
 
 def fast_semantic_similarity(word1, word2):
     syns1 = cached_synonyms(word1)
-    syns1.append(word1)
+    syns1.add(word1)
     syns2 = cached_synonyms(word2)
-    syns2.append(word2)
+    syns2.add(word2)
     for s1 in syns1:
         if s1 in syns2:
             return 1

@@ -1,20 +1,11 @@
-import cPickle as pickle
-import os.path
+import msgpack
 
-print "Loading ngrams from file..."
-INITIAL_NGRAMS = dict()
-NGRAMS = dict()
-i = 0
-while True:
-    if os.path.exists('data/ngrams.%02d.pck' % i):
-        with open('data/initial_ngrams.%02d.pck' % i, 'rb') as f:
-            d = pickle.load(f)
-            INITIAL_NGRAMS.update(d)
-        with open('data/ngrams.%02d.pck' % i, 'rb') as f:
-            d = pickle.load(f)
-            NGRAMS.update(d)
-        i += 1
-    else:
-        break
+with open('data/ngrams.msgpack', 'r') as f:
+    NGRAMS = msgpack.load(f, use_list=False)
+    for k in NGRAMS:
+        NGRAMS[k] = set(NGRAMS[k])
 
-print "...done."
+with open('data/initial_ngrams.msgpack', 'r') as f:
+    INITIAL_NGRAMS = msgpack.load(f, use_list=False)
+    for k in INITIAL_NGRAMS:
+        INITIAL_NGRAMS[k] = set(INITIAL_NGRAMS[k])

@@ -1,4 +1,4 @@
-import cPickle as pickle
+import msgpack
 from pycryptics.utils.synonyms import SYNONYMS
 
 initial_ngrams = dict()
@@ -13,9 +13,14 @@ for word in SYNONYMS:
         for j in range(len(word) - i + 1):
             ngrams.setdefault(l, set([])).add(word[j: j + i])
 
-for i in initial_ngrams:
-    with open('data/initial_ngrams.%02d.pck' % i, 'wb') as f:
-        pickle.dump({i: initial_ngrams[i]}, f)
-for i in ngrams:
-    with open('data/ngrams.%02d.pck' %i, 'wb') as f:
-        pickle.dump({i: ngrams[i]}, f)
+for k in initial_ngrams:
+    initial_ngrams[k] = list(initial_ngrams[k])
+for k in ngrams:
+    ngrams[k] = list(ngrams[k])
+
+with open('data/initial_ngrams.msgpack', 'w') as f:
+    msgpack.dump(initial_ngrams, f)
+
+with open('data/ngrams.msgpack', 'w') as f:
+    msgpack.dump(ngrams, f)
+

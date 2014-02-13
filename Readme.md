@@ -7,6 +7,7 @@ This is a general cryptic crossword clue solver, written in Python
 	web
 	nltk
 	tk
+	msgpack-python
 
 # Other requirements:
 

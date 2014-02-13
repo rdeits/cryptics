@@ -1,5 +1,5 @@
 import re
-import cPickle as pickle
+import msgpack
 from nltk.corpus import wordnet as wn
 # from nltk.tag import pos_tag
 import json
@@ -48,6 +48,7 @@ def cleanup(clue):
     clue = clue.encode('ascii', 'ignore')
     clue = clue.lower().strip().strip('_')
     return clue
+
 
 def main():
     all_synonyms = dict()
@@ -108,15 +109,8 @@ def main():
         all_synonyms[k] = list(set(v))
     print 'removed duplicates'
 
-    words = all_synonyms.keys()
-    splits = range(0, len(all_synonyms), 10000) + [len(all_synonyms)]
-    syn_dicts = [dict() for s in splits]
-    for i in range(len(splits)-1):
-        for w in words[splits[i]:splits[i+1]]:
-            syn_dicts[i][w] = all_synonyms[w]
-        with open('data/synonyms.%02d.pck' %i, 'wb') as f:
-            pickle.dump(syn_dicts[i], f)
-            # pickle.dump(dict(all_synonyms), f)
+    with open('data/synonyms.msgpack', 'w') as f:
+        msgpack.dump(all_synonyms, f)
 
     with open('data/synonyms.json', 'w') as f:
         json.dump(all_synonyms, f, separators=(',', ':'), indent=0)

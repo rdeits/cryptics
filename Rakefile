@@ -1,12 +1,12 @@
 desc "Generate all data sets"
-task :data => ["data/synonyms.00.pck", "data/ngrams.00.pck"]
+task :data => ["data/synonyms.msgpack", "data/ngrams.msgpack"]
 
-file "data/synonyms.00.pck" => ["en/__init__.py"] do
-	sh "mkdir -p data"
+file "data/synonyms.msgpack" do
+	mkdir_p "data"
 	sh "python pycryptics/data_generators/generate_synonyms.py"
 end
 
-file "data/ngrams.00.pck" do
+file "data/ngrams.msgpack" do
 	sh "python pycryptics/data_generators/generate_ngrams.py"
 end
 
