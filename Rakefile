@@ -20,7 +20,7 @@ task :serve => [:data, :compile_templates] do
 	sh "python pycryptics/crypticweb/server.py"
 end
 
-task :test => [:data, :download] do
+task :test => [:data] do
 	sh "python -m nose --nocapture pycryptics"
 end
 
