@@ -6,3 +6,4 @@ data
 en
 app_build
 .ipynb_checkpoints
+env/*
