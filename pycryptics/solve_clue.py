@@ -14,7 +14,7 @@ class AnnotatedAnswer:
     def __init__(self, ans, clue):
         self.answer = ans.encode('ascii', 'replace')
         self.clue = clue
-        d_tree = clue[[x.node.name for x in clue].index('d')]
+        d_tree = clue[[x.label().name for x in clue].index('d')]
         self.definition = d_tree[0]
         self.similarity = semantic_similarity(self.answer, self.definition)
 

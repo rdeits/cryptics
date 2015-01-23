@@ -2,6 +2,7 @@ from __future__ import division
 from nltk.parse.earleychart import IncrementalChart
 from nltk.parse.chart import LeafEdge, Tree
 from pycryptics.grammar.clue_tree import ClueTree
+import itertools
 
 
 class MemoChart(IncrementalChart):
@@ -18,7 +19,7 @@ class MemoChart(IncrementalChart):
 
     def trees(self, edge, tree_class=ClueTree, complete=False):
         """
-        Return a list of the tree structures that are associated
+        Return an iterator of the tree structures that are associated
         with ``edge``.
 
         If ``edge`` is incomplete, then the unexpanded children will be
@@ -31,9 +32,9 @@ class MemoChart(IncrementalChart):
             both trees.  If you need to eliminate this subtree
             sharing, then create a deep copy of each tree.
         """
-        return self._trees(edge, complete, tree_class=tree_class)
+        return iter(self._trees(edge, complete, memo={}, tree_class=tree_class))
 
-    def _trees(self, edge, complete, tree_class):
+    def _trees(self, edge, complete, memo, tree_class):
         """
         A helper function for ``trees``.
 
@@ -42,44 +43,38 @@ class MemoChart(IncrementalChart):
             than once, we can reuse the same trees.
         """
         # If we've seen this edge before, then reuse our old answer.
-        # print "edge:", edge
-        # print "memo:", self.memo
-        # import pdb; pdb.set_trace()
-        if edge in self.memo:
-            # print "cache hit for edge:", edge
-            return self.memo[edge]
-
-        trees = []
+        if edge in memo:
+            return memo[edge]
 
         # when we're reading trees off the chart, don't use incomplete edges
         if complete and edge.is_incomplete():
-            return trees
+            return []
+
+        # Leaf edges.
+        if isinstance(edge, LeafEdge):
+            leaf = self._tokens[edge.start()]
+            memo[edge] = [leaf]
+            return [leaf]
 
         # Until we're done computing the trees for edge, set
         # memo[edge] to be empty.  This has the effect of filtering
         # out any cyclic trees (i.e., trees that contain themselves as
         # descendants), because if we reach this edge via a cycle,
-        # then it will appear that the edge doesn't generate any
-        # trees.
-        self.memo[edge] = []
-
-        # Leaf edges.
-        if isinstance(edge, LeafEdge):
-            leaf = self._tokens[edge.start()]
-            self.memo[edge] = leaf
-            return [leaf]
+        # then it will appear that the edge doesn't generate any trees.
+        memo[edge] = []
+        trees = []
+        lhs = edge.lhs().symbol()
 
         # Each child pointer list can be used to form trees.
         for cpl in self.child_pointer_lists(edge):
             # Get the set of child choices for each child pointer.
             # child_choices[i] is the set of choices for the tree's
             # ith child.
-            child_choices = [self._trees(cp, complete, tree_class)
+            child_choices = [self._trees(cp, complete, memo, tree_class)
                              for cp in cpl]
 
             # For each combination of children, add a tree.
-            for children in self._choose_children(child_choices):
-                lhs = edge.lhs().symbol()
+            for children in itertools.product(*child_choices):
                 trees.append(tree_class(lhs, children))
 
         # If the edge is incomplete, then extend it with "partial trees":
@@ -90,8 +85,7 @@ class MemoChart(IncrementalChart):
                 tree.extend(unexpanded)
 
         # Update the memoization dictionary.
-        self.memo[edge] = trees
+        memo[edge] = trees
 
         # Return the list of trees.
-        # print "returning trees:", trees
         return trees

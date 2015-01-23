@@ -99,4 +99,4 @@ def generate_grammar(phrases):
                 tags = [lit, d, syn, first, ana_, sub_, sub_init_, sub_final_, rev_]
         for t in tags:
             prods.append(gram.Production(t, [p]))
-    return gram.ContextFreeGrammar(top, base_prods + prods)
+    return gram.CFG(top, base_prods + prods)

@@ -14,8 +14,8 @@ def synonyms(word):
         all_synsets = synset.similar_tos()
         all_synsets.append(synset)
         for similar_synset in all_synsets:
-            for lemma in similar_synset.lemmas:
-                candidate = correct_form(lemma.name, word).lower()
+            for lemma in similar_synset.lemmas():
+                candidate = correct_form(lemma.name(), word).lower()
                 if candidate != word and candidate != "" and not any(c in word.split('_') for c in candidate.split('_')) and not any(c in candidate.split('_') for c in word.split('_')):
                     answers.add(candidate)
     return answers

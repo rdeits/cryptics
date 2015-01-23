@@ -18,18 +18,19 @@ class ClueTree(Tree):
     cryptic crossword clue, along with all of the mechanisms required
     to solve that clue and explain the answer
     """
-    __slots__ = ['_answers', 'constraints']
+    # __slots__ = ['_answers', '_constraints']
 
     def __init__(self, node_or_str, children=None):
         self._answers = None
         self._constraints = None
-        super(ClueTree, self).__init__(node_or_str, children)
+        Tree.__init__(self, node_or_str, children)
+        # super(ClueTree, self).__init__(node_or_str, children)
 
     def __str__(self):
         child_strs = []
         for child in self:
             child_strs.append(str(child))
-        return "({} {})".format(self.node.name, ' '.join(child_strs))
+        return "({} {})".format(self.label().name, ' '.join(child_strs))
 
     def __repr__(self):
         return self.__str__()
@@ -45,15 +46,15 @@ class ClueTree(Tree):
         for i, s in enumerate(child_answers):
             if isinstance(s, dict):
                 child_answers[i] = s.keys()
-        if self.node.name == 'top':
+        if self.label().name == 'top':
             arg_sets = self.make_top_arg_sets(child_answers)
         else:
             arg_sets = self.make_arg_sets(child_answers)
         if self._answers is None:
             self._answers = {}
         for args in arg_sets:
-            answers = self.node.apply_rule(arg_filter(args), self._constraints)
-            # answers = RULES[self.node](arg_filter(args), self._constraints)
+            answers = self.label().apply_rule(arg_filter(args), self._constraints)
+            # answers = RULES[self.label()](arg_filter(args), self._constraints)
             if answers is None:
                 answers = []
             for ans in answers:
@@ -101,9 +102,9 @@ class ClueTree(Tree):
         return self._answers
 
     def derivation(self, answer):
-        if self.node.is_argument:
+        if self.label().is_argument:
             return self[0].derivation(self.answers[answer][0])
-        result = "(" + self.node.name + " "
+        result = "(" + self.label().name + " "
         arg_answers = self.answers[answer]
         for i, child in enumerate(self):
             if isinstance(child, basestring):
@@ -131,44 +132,44 @@ class ClueTree(Tree):
         for i, child in enumerate(self):
             if isinstance(child, basestring):
                 continue
-            if child.node.is_indicator:
-            # if child.node.endswith('_'):
+            if child.label().is_indicator:
+            # if child.label().endswith('_'):
                 indicator = child[0]
             else:
                 result += child.long_derivation(arg_answers[i])
-        if self.node.name != 'top':
+        if self.label().name != 'top':
             result += '\n'
 
-        if indicator is not None and self.node.name != 'top':
+        if indicator is not None and self.label().name != 'top':
             result += "'" + indicator + "' means to "
         non_empty_args = ["'" + a + "'" for a in arg_answers if a != ""]
-        result += self.node.long_derivation(non_empty_args)
-        # if self.node == 'rev':
+        result += self.label().long_derivation(non_empty_args)
+        # if self.label() == 'rev':
         #     result += "reverse " + non_empty_args[0]
-        # elif self.node == 'sub':
+        # elif self.label() == 'sub':
         #     result += "take a substring of " + non_empty_args[0]
-        # elif self.node == 'ins':
+        # elif self.label() == 'ins':
         #     result += "insert " + non_empty_args[0] + " and " + non_empty_args[1]
-        # elif self.node == 'ana':
+        # elif self.label() == 'ana':
         #     result += "anagram " + non_empty_args[0]
-        # elif self.node == 'syn':
+        # elif self.label() == 'syn':
         #     result += "Take a synonym of " + non_empty_args[0]
-        # elif self.node == 'first':
+        # elif self.label() == 'first':
         #     result += "Take the first letter of " + non_empty_args[0]
-        # elif self.node == 'null':
+        # elif self.label() == 'null':
         #     result += non_empty_args[0] + " is a filler word."
-        # elif self.node == 'd':
+        # elif self.label() == 'd':
         #     result += non_empty_args[0] + " is the definition."
-        # elif self.node == 'top' and len(non_empty_args) > 1:
+        # elif self.label() == 'top' and len(non_empty_args) > 1:
         #     result += "\nCombine " + comma_list(map(str.upper, non_empty_args))
 
-        if answer != "" and (self.node.name != 'top' or len(non_empty_args) > 1):
+        if answer != "" and (self.label().name != 'top' or len(non_empty_args) > 1):
             result += " to get " + answer.upper() + "."
 
-        if self.node.name == 'top' and score is not None:
+        if self.label().name == 'top' and score is not None:
             result += "\n" + answer.upper() + " matches "
             for child in self:
-                if child.node.name == 'd':
+                if child.label().name == 'd':
                     result += "'" + child[0] + "'"
                     break
             result += " with confidence score {:.0%}.".format(score)
