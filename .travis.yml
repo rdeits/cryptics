@@ -5,3 +5,6 @@ install:
   - "pip install -r requirements.txt"
   - "rake download"
 script: "rake test"
+
+sudo: false
+cache: pip
