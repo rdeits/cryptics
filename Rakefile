@@ -20,7 +20,7 @@ task :serve => [:data, :compile_templates] do
 	sh "python pycryptics/crypticweb/server.py"
 end
 
-task :test => [:data] do
+task :test => [:data, :download] do
 	sh "python -m nose --nocapture pycryptics"
 end
 
@@ -40,7 +40,7 @@ desc "Download the NLTK wordnet corpus and the en module"
 task :download => [:download_corpus, "en/__init__.py"]
 
 desc "Generate the App Engine app"
-task :app => ["app_build/data/ngrams.00.pck", 
+task :app => ["app_build/data/ngrams.00.pck",
 	          "app_build/data/synonyms.00.pck",
 			  "app_build/en/__init__.py",
 			  "app_build/nltk/__init__.py",
