@@ -28,7 +28,7 @@ task :puz => [:data] do
 	sh "python pycryptics/solve_puz.py sample_puzzles/kegler_cryptic_1.puz"
 end
 
-wordnet_path = "/usr/share/nltk_data"
+wordnet_path = "~/nltk_data"
 
 task :download_corpus => [wordnet_path + "/corpora/wordnet.zip"]
 
