@@ -2,8 +2,6 @@ language: python
 python:
   - "2.7"
 install:
-  - "git submodule init"
-  - "git submodule update"
   - "pip install -r requirements.txt"
   - "rake download"
 script: "rake test"
