@@ -11,7 +11,7 @@ file "data/ngrams.msgpack" do
 end
 
 file "en/__init__.py" do
-	sh "git submodule update --init""
+	sh "git submodule update --init"
 end
 
 desc "Serve crypticweb locally"
