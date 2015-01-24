@@ -11,8 +11,7 @@ file "data/ngrams.msgpack" do
 end
 
 file "en/__init__.py" do
-	sh "curl -o en.zip http://nodebox.net/code/data/media/linguistics.zip"
-	sh "unzip en.zip"
+	sh "git submodule update --init""
 end
 
 desc "Serve crypticweb locally"
