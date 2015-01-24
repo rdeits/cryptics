@@ -1,6 +1,8 @@
 # Introduction
 This is a general cryptic crossword clue solver, written in Python
 
+[![Build Status](https://travis-ci.org/rdeits/cryptics.svg?branch=master)](https://travis-ci.org/rdeits/cryptics)
+
 # Required python packages:
 	
 (see `requirements.txt`)
