@@ -2,12 +2,19 @@
 This is a general cryptic crossword clue solver, written in Python
 
 # Required python packages:
+	
+(see `requirements.txt`)
+The easiest way to install the correct version of all the required packages is:
 
-	nose
-	web
-	nltk
-	tk
-	msgpack-python
+Optionally, create a new virtual environment so that your system python isn't affected:
+
+	pip install virtualenv
+	virtualenv env
+	source env/bin/activate
+
+Install all required python packages:
+
+	pip install -r requirements.txt
 
 # Other requirements:
 
@@ -18,7 +25,7 @@ This is a general cryptic crossword clue solver, written in Python
 
 Clone this repository somewhere convenient, then `cd` to the folder containing this file. 
 
-Run this command to download the Nodebox Linguistics library from [http://nodebox.net/code/index.php/Linguistics](http://nodebox.net/code/index.php/Linguistics) and the python NLTK Wordnet corpus from [http://nltk.org/data.html](http://nltk.org/data.html):
+Run this command to download the python NLTK Wordnet corpus from [http://nltk.org/data.html](http://nltk.org/data.html):
 
 	rake download
 	

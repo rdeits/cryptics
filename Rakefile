@@ -10,10 +10,6 @@ file "data/ngrams.msgpack" do
 	sh "python pycryptics/data_generators/generate_ngrams.py"
 end
 
-file "en/__init__.py" do
-	sh "git submodule update --init"
-end
-
 desc "Serve crypticweb locally"
 task :serve => [:data, :compile_templates] do
 	sh "python pycryptics/crypticweb/server.py"
@@ -35,8 +31,8 @@ file wordnet_path + "/corpora/wordnet.zip" do
 	sh "python -m nltk.downloader -d " + wordnet_path + " wordnet"
 end
 
-desc "Download the NLTK wordnet corpus and the en module"
-task :download => [:download_corpus, "en/__init__.py"]
+desc "Download the NLTK wordnet corpus"
+task :download => [:download_corpus]
 
 desc "Generate the App Engine app"
 task :app => ["app_build/data/ngrams.00.pck",
