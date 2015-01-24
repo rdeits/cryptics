@@ -1,3 +1,4 @@
+
 desc "Generate all data sets"
 task :data => ["data/synonyms.msgpack", "data/ngrams.msgpack"]
 
@@ -7,7 +8,7 @@ file "data/synonyms.msgpack" do
 end
 
 file "data/ngrams.msgpack" do
-	sh "python pycryptics/data_generators/generate_ngrams.py"
+	sh "PYTHONPATH=#{File.dirname(__FILE__)}:$PYTHONPATH python pycryptics/data_generators/generate_ngrams.py"
 end
 
 desc "Serve crypticweb locally"
@@ -16,9 +17,7 @@ task :serve => [:data, :compile_templates] do
 end
 
 task :test => [:data] do
-	Dir.chdir(File.dirname(__FILE__)) do
-		sh "PYTHONPATH=#{File.dirname(__FILE__)}:$PYTHONPATH python -m nose --nocapture pycryptics"
-	end
+	sh "PYTHONPATH=#{File.dirname(__FILE__)}:$PYTHONPATH python -m nose --nocapture pycryptics"
 end
 
 task :puz => [:data] do
