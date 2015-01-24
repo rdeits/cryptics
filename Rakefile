@@ -16,7 +16,9 @@ task :serve => [:data, :compile_templates] do
 end
 
 task :test => [:data] do
-	sh "python -m nose --nocapture pycryptics"
+	Dir.chdir(File.dirname(__FILE__)) do
+		sh "PYTHONPATH=#{File.dirname(__FILE__)}:$PYTHONPATH python -m nose --nocapture pycryptics"
+	end
 end
 
 task :puz => [:data] do
