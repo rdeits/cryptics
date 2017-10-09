@@ -41,7 +41,7 @@ in the main cryptics folder (this will take a few minutes to finish).
 
 Web interface: http://localhost:8080/
 
-	rake server
+	rake serve
 
 Test cases (requires the python nose package):
 
